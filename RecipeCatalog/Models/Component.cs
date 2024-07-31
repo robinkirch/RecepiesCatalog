@@ -1,6 +1,6 @@
 ﻿namespace RecipeCatalog.Models
 {
-    internal class Components
+    internal class Component
     {
         public byte[]? Image {  get; set; }
         public string Name { get; set; }
