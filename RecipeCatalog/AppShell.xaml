@@ -4,12 +4,17 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:RecipeCatalog"
-    Shell.FlyoutBehavior="Disabled"
-    Title="RecipeCatalog">
+    xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
+    Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Home"
+        Title="{x:Static resx:AppLanguage.Title}"
         ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Route="MainPage" 
+        Shell.TabBarIsVisible="False"/>
 
+    <FlyoutItem >
+        <ShellContent Title="{x:Static resx:AppLanguage.Title}" Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent Title="{x:Static resx:AppLanguage.Title}" Route="SearchAndViewPage" ContentTemplate="{DataTemplate local:SearchAndViewPage}" />
+    </FlyoutItem>
 </Shell>
