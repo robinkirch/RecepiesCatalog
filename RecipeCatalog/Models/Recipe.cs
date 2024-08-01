@@ -26,6 +26,6 @@ namespace RecipeCatalog.Models
     {
         [Key]
         public int Id { get; set; }
-        public int GroupName { get; set; }
+        public string GroupName { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using RecipeCatalog.Resources.Language;
 using System;
 using System.Globalization;
 using System.Resources;
+using System.Text.RegularExpressions;
 
 namespace RecipeCatalog
 {
@@ -42,9 +43,21 @@ namespace RecipeCatalog
                 //TODO: Test
                 var context = new Context(connectionstring);
                 activityIndicator.IsRunning = false;
-                //App.Current.MainPage = new MainPage();
-                Shell.Current.GoToAsync($"{nameof(SearchAndViewPage)}");
+                ContinueBtn.IsVisible = true;
+                StatusText.IsVisible = false;
+                WaitText.IsVisible = false;
             }
+        }
+
+        private void OnContinue(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new SearchAndViewPage();
+        }
+
+        private void OnSettings(object sender, EventArgs e)
+        {
+            //TODO: Change to Popup
+            SetLanguage("de");
         }
 
         private void SetLanguage(string culture)
@@ -55,7 +68,6 @@ namespace RecipeCatalog
             ResourceManager rm = AppLanguage.ResourceManager;
             rm.ReleaseAllResources();
             MauiProgram.configuration["DefaultLanguage"] = culture;
-
             App.Current.MainPage = new MainPage();
         }
 

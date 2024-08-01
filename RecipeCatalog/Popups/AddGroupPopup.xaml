@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="RecipeCatalog.Popups.AddGroupPopup">
+
+    <VerticalStackLayout Padding="20" BackgroundColor="White">
+        <Label Text="Geben Sie Ihre Informationen ein:" FontSize="Medium"/>
+        <Entry x:Name="NameEntry" Placeholder="Name" />
+        <Entry x:Name="EmailEntry" Placeholder="E-Mail" Keyboard="Email" />
+        <Button Text="Senden" Clicked="OnSendButtonClicked"/>
+        <Button Text="Abbrechen" Clicked="OnCancelButtonClicked"/>
+    </VerticalStackLayout>
+</toolkit:Popup>

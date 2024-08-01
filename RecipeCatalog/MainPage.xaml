@@ -4,47 +4,69 @@
              xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
              x:Class="RecipeCatalog.MainPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Image
-                Source="recepies.png"
-                HeightRequest="185"
-                Aspect="AspectFit"/>
-            <ActivityIndicator
-                x:Name="ActSpinner"
-                IsRunning="True" Color="BlueViolet"/>
-            <Label
-                Text="{x:Static resx:AppLanguage.Main_PleaseWait}"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+    <Grid Padding="0,0">
+        <!-- Define the Rows -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
 
-            <Label
-                x:Name="StatusText"
-                Text="{x:Static resx:AppLanguage.Main_CheckingConnection}"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2"/>
+        <!-- Scrollable Content -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout
+                Spacing="25">
+                <Image
+                    Source="recepies.png"
+                    HeightRequest="185"
+                    Aspect="AspectFit"/>
+                <ActivityIndicator
+                    x:Name="ActSpinner"
+                    IsRunning="True" Color="BlueViolet"/>
+                <Label
+                    x:Name="WaitText"
+                    Text="{x:Static resx:AppLanguage.Main_PleaseWait}"
+                    Style="{StaticResource Headline}"
+                    SemanticProperties.HeadingLevel="Level1" />
+                <Label
+                    x:Name="StatusText"
+                    Text="{x:Static resx:AppLanguage.Main_CheckingConnection}"
+                    Style="{StaticResource SubHeadline}"
+                    SemanticProperties.HeadingLevel="Level2"/>
 
-            <HorizontalStackLayout Padding="10" VerticalOptions="Center" x:Name="ConnectionStringBlock" IsVisible="False">
-                <Entry 
-                    x:Name="ConnectionStringInput"
-                    Placeholder="{x:Static resx:AppLanguage.Main_ConnectionInputPlaceholder}" 
-                    Completed="OnEntryCompleted" />
+                <HorizontalStackLayout Padding="10" VerticalOptions="Center" x:Name="ConnectionStringBlock" IsVisible="False">
+                    <Entry 
+                        x:Name="ConnectionStringInput"
+                        Placeholder="{x:Static resx:AppLanguage.Main_ConnectionInputPlaceholder}" 
+                        Completed="OnEntryCompleted" />
+                    <Button Text="{x:Static resx:AppLanguage.Save}"
+                        Clicked="OnEntryCompleted"
+                        Margin="10,0,0,0" />
+                </HorizontalStackLayout>
 
-                <!-- Button -->
-                <Button Text="{x:Static resx:AppLanguage.Save}"
-                Clicked="OnEntryCompleted"
-                Margin="10,0,0,0" />
-            </HorizontalStackLayout>
-            
-            <Button
-                x:Name="LanguageBtn"
-                Text="Click me" 
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnLanguageClicked"
-                HorizontalOptions="Fill" />
-        </VerticalStackLayout>
-    </ScrollView>
+                <Button
+                    x:Name="ContinueBtn"
+                    IsVisible="False"
+                    Text="{x:Static resx:AppLanguage.Main_FindYourRecipes}" 
+                    Clicked="OnContinue"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </ScrollView>
 
+        <!-- Button for settings at the bottom -->
+        <Button Grid.Row="1"
+                x:Name="SettingsBtn"
+                Clicked="OnSettings"
+                BackgroundColor="#50D3D3D3"
+                HorizontalOptions="End"
+                Margin="20, 0">
+            <Button.ImageSource>
+                <FontImageSource Glyph="&#xf013;"
+                                 FontFamily="FontAwesomeSolid"
+                                 Size="20"
+                                 Color="Black" />
+            </Button.ImageSource>
+        </Button>
+        <ScrollView Grid.Row="2" Padding="50"></ScrollView>
+    </Grid>
 </ContentPage>

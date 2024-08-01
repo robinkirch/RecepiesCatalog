@@ -88,6 +88,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Find your recipes.
+        /// </summary>
+        internal static string Main_FindYourRecipes {
+            get {
+                return ResourceManager.GetString("Main_FindYourRecipes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please wait....
         /// </summary>
         internal static string Main_PleaseWait {
@@ -102,6 +111,33 @@ namespace RecipeCatalog.Resources.Language {
         internal static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Component.
+        /// </summary>
+        internal static string SV_AddComponent {
+            get {
+                return ResourceManager.GetString("SV_AddComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        internal static string SV_AddGroup {
+            get {
+                return ResourceManager.GetString("SV_AddGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe.
+        /// </summary>
+        internal static string SV_AddRecipe {
+            get {
+                return ResourceManager.GetString("SV_AddRecipe", resourceCulture);
             }
         }
         
