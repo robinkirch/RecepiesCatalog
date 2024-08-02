@@ -2,30 +2,50 @@
 
 namespace RecipeCatalog.Models
 {
-    internal class Recipe
+    public class Recipe
     {
+        public Recipe()
+        {
+            Components = new HashSet<RecipeComponents>();
+        }
+
         [Key]
         public int Id { get; set; }
         public byte[]? Image { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public string[]? Aliases { get; set; }
-        public List<RecipeComponents>? Components { get; set; } = new();
-        public Group? Group { get; set; }
+        public int? GroupId { get; set; }
+
+        public virtual Group? GroupNavigation { get; set; }
+        public virtual ICollection<RecipeComponents> Components { get; set; }
     }
 
-    internal class RecipeComponents
+    public class RecipeComponents
     {
         [Key]
         public int Id { get; set; }
         public int Count { get; set; }
-        public Component Component { get; set; }
+        public int? ComponentId { get; set; }
+        public int? RecipeId { get; set; }
+
+        public virtual Recipe? RecipeNavigation { get; set; } 
+        public virtual Component? ComponentNavigation { get; set; }
     }
 
-    internal class Group
+    public class Group
     {
+        public Group()
+        {
+            Components = new HashSet<Component>();
+            Recipes = new HashSet<Recipe>();
+        }
+
         [Key]
         public int Id { get; set; }
         public string GroupName { get; set; }
+
+        public virtual ICollection<Component> Components { get; set; }
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

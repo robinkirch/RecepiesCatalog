@@ -23,18 +23,22 @@ public partial class SearchAndViewPage : ContentPage
         //TODO
     }
 
-    private void OnAddComponent(object sender, EventArgs e)
+    private async void OnAddComponent(object sender, EventArgs e)
     {
-        App.Current.MainPage = new SearchAndViewPage();
+        var popup = new AddComponentPopup();
+        var result = (Component?)await this.ShowPopupAsync(popup);
+        //TODO
     }
 
-    private void OnAddRecipe(object sender, EventArgs e)
+    private async void OnAddRecipe(object sender, EventArgs e)
     {
-        App.Current.MainPage = new SearchAndViewPage();
+        var popup = new AddRecipePopup();
+        var result = (Recipe?)await this.ShowPopupAsync(popup);
+        //TODO
     }
 
-    
-    
+
+
     //doubeled
     private void OnSettings(object sender, EventArgs e)
     {

@@ -41,7 +41,7 @@ namespace RecipeCatalog
             else
             {
                 //TODO: Test
-                var context = new Context(connectionstring);
+                MauiProgram._context = new Context(connectionstring);
                 activityIndicator.IsRunning = false;
                 ContinueBtn.IsVisible = true;
                 StatusText.IsVisible = false;

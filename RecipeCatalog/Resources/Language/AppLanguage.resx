@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Component_InformationText" xml:space="preserve">
+    <value>Please add all Information. Pictures and aliases are optional. Aliases are with , listed.</value>
+  </data>
+  <data name="Group_InformationText" xml:space="preserve">
+    <value>Please insert a Group name</value>
+  </data>
   <data name="Main_CheckingConnection" xml:space="preserve">
     <value>Checking connection</value>
   </data>
@@ -132,8 +141,26 @@
   <data name="Main_PleaseWait" xml:space="preserve">
     <value>Please wait...</value>
   </data>
+  <data name="Placeholder_Aliases" xml:space="preserve">
+    <value>Alias,Alias</value>
+  </data>
+  <data name="Placeholder_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Placeholder_Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="Placeholder_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Recipies_InformationText" xml:space="preserve">
+    <value>Please add all Information. Pictures and aliases are optional. Aliases are with , listed.</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="Select_Picture" xml:space="preserve">
+    <value>Select Picture...</value>
   </data>
   <data name="SV_AddComponent" xml:space="preserve">
     <value>Component</value>

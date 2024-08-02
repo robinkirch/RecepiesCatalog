@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Component_InformationText" xml:space="preserve">
+    <value>Bitte gib alle Informationen an. Bilder und Aliase sind optional. Aliase mit , auflisten.</value>
+  </data>
+  <data name="Group_InformationText" xml:space="preserve">
+    <value>Bitte gib einen Gruppennamen an</value>
+  </data>
   <data name="Main_CheckingConnection" xml:space="preserve">
     <value>Überpürfe Verbindung</value>
   </data>
@@ -132,8 +141,26 @@
   <data name="Main_PleaseWait" xml:space="preserve">
     <value>Bitte warten...</value>
   </data>
+  <data name="Placeholder_Aliases" xml:space="preserve">
+    <value>Alias,Alias</value>
+  </data>
+  <data name="Placeholder_Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="Placeholder_Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="Placeholder_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Recipies_InformationText" xml:space="preserve">
+    <value>Bitte gib alle Informationen an. Bilder und Aliase sind optional. Aliase mit , auflisten.</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>
+  </data>
+  <data name="Select_Picture" xml:space="preserve">
+    <value>Bild auswählen...</value>
   </data>
   <data name="SV_AddComponent" xml:space="preserve">
     <value>Komponente</value>

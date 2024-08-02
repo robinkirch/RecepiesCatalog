@@ -12,6 +12,7 @@ namespace RecipeCatalog
     public static class MauiProgram
     {
         public static IConfiguration configuration {get; private set;}
+        public static Context _context {get; set;}
 
         public static MauiApp CreateMauiApp()
         {

@@ -2,9 +2,17 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
                x:Class="RecipeCatalog.Popups.AddRecipePopup">
 
     <VerticalStackLayout Padding="20" BackgroundColor="White">
-
+        <Label Text="{x:Static resx:AppLanguage.Recipies_InformationText}" FontSize="Medium"/>
+        <Button Text="{x:Static resx:AppLanguage.Select_Picture}" Clicked="OnSelectImageClicked"/>
+        <Entry x:Name="NameEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Name}" />
+        <Entry x:Name="DescriptionEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}" />
+        <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
+        <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" />
+        <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked"/>
+        <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked"/>
     </VerticalStackLayout>
 </toolkit:Popup>

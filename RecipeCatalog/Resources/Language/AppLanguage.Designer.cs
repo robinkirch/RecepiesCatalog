@@ -61,6 +61,33 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add all Information. Pictures and aliases are optional. Aliases are with , listed..
+        /// </summary>
+        internal static string Component_InformationText {
+            get {
+                return ResourceManager.GetString("Component_InformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please insert a Group name.
+        /// </summary>
+        internal static string Group_InformationText {
+            get {
+                return ResourceManager.GetString("Group_InformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checking connection.
         /// </summary>
         internal static string Main_CheckingConnection {
@@ -106,11 +133,65 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alias,Alias.
+        /// </summary>
+        internal static string Placeholder_Aliases {
+            get {
+                return ResourceManager.GetString("Placeholder_Aliases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string Placeholder_Description {
+            get {
+                return ResourceManager.GetString("Placeholder_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        internal static string Placeholder_Groups {
+            get {
+                return ResourceManager.GetString("Placeholder_Groups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string Placeholder_Name {
+            get {
+                return ResourceManager.GetString("Placeholder_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add all Information. Pictures and aliases are optional. Aliases are with , listed..
+        /// </summary>
+        internal static string Recipies_InformationText {
+            get {
+                return ResourceManager.GetString("Recipies_InformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Picture....
+        /// </summary>
+        internal static string Select_Picture {
+            get {
+                return ResourceManager.GetString("Select_Picture", resourceCulture);
             }
         }
         

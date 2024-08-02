@@ -12,7 +12,9 @@ public partial class AddGroupPopup : Popup
 
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
-        Close(new Group { GroupName = NameEntry.Text });
+        var newGroup = MauiProgram._context.Groups.Add(new Group { GroupName = NameEntry.Text });
+        MauiProgram._context.SaveChanges();
+        Close(MauiProgram._context.Groups.Single(g => g.GroupName == NameEntry.Text));
     }
 
     private void OnCancelButtonClicked(object sender, EventArgs e)

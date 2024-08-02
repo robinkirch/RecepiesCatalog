@@ -11,10 +11,10 @@ namespace RecipeCatalog.Data
         {
             _connectionString = connectionString;
         }
-        DbSet<Component> Components { get; set; }
-        DbSet<Recipe> Recepies { get; set; }
-        DbSet<RecipeComponents> RecipeComponents { get; set; }
-        DbSet<Group> Groups { get; set; }
+        public DbSet<Component> Components { get; set; }
+        public DbSet<Recipe> Recepies { get; set; }
+        public DbSet<RecipeComponents> RecipeComponents { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,49 +25,68 @@ namespace RecipeCatalog.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Definieren der Primärschlüssel
-            modelBuilder.Entity<Recipe>().HasKey(r => r.Id);
-            modelBuilder.Entity<Component>().HasKey(c => c.Id);
-            modelBuilder.Entity<RecipeComponents>().HasKey(rc => rc.Id);
-            modelBuilder.Entity<Group>().HasKey(g => g.Id);
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.HasKey(g => g.Id);
 
-            // Konfigurieren der Relationen
-            modelBuilder.Entity<RecipeComponents>()
-                .HasOne(rc => rc.Component)
-                .WithMany()  // Da keine explizite Rückreferenz definiert ist
-                .HasForeignKey(rc => rc.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(g => g.GroupName)
+                    .IsRequired()
+                    .IsUnicode(false);
 
-            modelBuilder.Entity<RecipeComponents>()
-                .HasOne<Recipe>()
-                .WithMany(r => r.Components)
-                .HasForeignKey(rc => rc.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(g => g.Components)
+                    .WithOne(c => c.GroupNavigation)
+                    .HasForeignKey(c => c.GroupId);
 
-            modelBuilder.Entity<Component>()
-                .HasOne(c => c.Group)
-                .WithMany()  // Falls Group viele Components haben kann
-                .HasForeignKey(c => c.Id);
+                entity.HasMany(g => g.Recipes)
+                    .WithOne(r => r.GroupNavigation)
+                    .HasForeignKey(r => r.GroupId);
+            });
 
-            modelBuilder.Entity<Recipe>()
-                .HasOne(r => r.Group)
-                .WithMany()  // Falls Group viele Recipes haben kann
-                .HasForeignKey(r => r.Id);
+            modelBuilder.Entity<Component>(entity =>
+            {
+                entity.HasKey(c => c.Id);
 
-            // Konvertieren der Aliases als JSON oder CSV
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Aliases)
-                .HasConversion(
-                    v => string.Join(',', v), // Konvertiert Array zu CSV
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)); // Konvertiert CSV zu Array
+                entity.Property(c => c.Name)
+                    .IsRequired()
+                    .IsUnicode(false);
 
-            modelBuilder.Entity<Component>()
-                .Property(c => c.Aliases)
-                .HasConversion(
-                    v => string.Join(',', v),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                entity.HasMany(c => c.RecipeComponents)
+                    .WithOne(rc => rc.ComponentNavigation)
+                    .HasForeignKey(rc => rc.ComponentId);
+            });
+
+            modelBuilder.Entity<Recipe>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+
+                entity.Property(r => r.Name)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.HasMany(r => r.Components)
+                    .WithOne(rc => rc.RecipeNavigation)
+                    .HasForeignKey(rc => rc.RecipeId);
+
+                entity.HasOne(r => r.GroupNavigation)
+                    .WithMany(g => g.Recipes)
+                    .HasForeignKey(r => r.GroupId);
+            });
+
+            modelBuilder.Entity<RecipeComponents>(entity =>
+            {
+                entity.HasKey(rc => rc.Id);
+
+                entity.Property(rc => rc.Count)
+                    .IsRequired();
+
+                entity.HasOne(rc => rc.RecipeNavigation)
+                    .WithMany(r => r.Components)
+                    .HasForeignKey(rc => rc.RecipeId);
+
+                entity.HasOne(rc => rc.ComponentNavigation)
+                    .WithMany()
+                    .HasForeignKey(rc => rc.ComponentId);
+            });
         }
-
-
     }
 }
