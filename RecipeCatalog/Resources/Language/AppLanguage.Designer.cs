@@ -79,11 +79,38 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Components.
+        /// </summary>
+        internal static string Filter_Components {
+            get {
+                return ResourceManager.GetString("Filter_Components", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipes.
+        /// </summary>
+        internal static string Filter_Recipes {
+            get {
+                return ResourceManager.GetString("Filter_Recipes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please insert a Group name.
         /// </summary>
         internal static string Group_InformationText {
             get {
                 return ResourceManager.GetString("Group_InformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language:.
+        /// </summary>
+        internal static string LanguageTitle {
+            get {
+                return ResourceManager.GetString("LanguageTitle", resourceCulture);
             }
         }
         
@@ -183,6 +210,15 @@ namespace RecipeCatalog.Resources.Language {
         internal static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search....
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
             }
         }
         

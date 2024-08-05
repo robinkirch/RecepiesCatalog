@@ -1,7 +1,7 @@
-﻿using RecipeCatalog.Data;
+﻿using CommunityToolkit.Maui.Views;
+using RecipeCatalog.Data;
+using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
-using System.Globalization;
-using System.Resources;
 
 namespace RecipeCatalog
 {
@@ -12,12 +12,6 @@ namespace RecipeCatalog
             InitializeComponent();
 
             CheckConnection();
-        }
-
-
-        private void OnLanguageClicked(object sender, EventArgs e)
-        {
-            SetLanguage("de");
         }
 
         private void CheckConnection(string connectionstring = "")
@@ -49,21 +43,9 @@ namespace RecipeCatalog
             App.Current.MainPage = new SearchAndViewPage();
         }
 
-        private void OnSettings(object sender, EventArgs e)
+        private async void OnSettings(object sender, EventArgs e)
         {
-            //TODO: Change to Popup
-            SetLanguage("de");
-        }
-
-        private void SetLanguage(string culture)
-        {
-            CultureInfo cultureInfo = new CultureInfo(culture);
-            Thread.CurrentThread.CurrentUICulture = cultureInfo;
-            Thread.CurrentThread.CurrentCulture = cultureInfo;
-            ResourceManager rm = AppLanguage.ResourceManager;
-            rm.ReleaseAllResources();
-            MauiProgram.configuration["DefaultLanguage"] = culture;
-            App.Current.MainPage = new MainPage();
+            await this.ShowPopupAsync(new SettingsPopup(new MainPage()));
         }
 
         private void OnEntryCompleted(object sender, EventArgs e)
@@ -72,6 +54,5 @@ namespace RecipeCatalog
             MauiProgram.configuration["Connection:DataSource"] = ConnectionStringInput.Text;
             CheckConnection(MauiProgram.configuration.GetSection("Connection:DataSource").Value!);
         }
-
     }
 }

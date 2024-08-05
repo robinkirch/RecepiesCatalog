@@ -123,8 +123,17 @@
   <data name="Component_InformationText" xml:space="preserve">
     <value>Please add all Information. Pictures and aliases are optional. Aliases are with , listed.</value>
   </data>
+  <data name="Filter_Components" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="Filter_Recipes" xml:space="preserve">
+    <value>Recipes</value>
+  </data>
   <data name="Group_InformationText" xml:space="preserve">
     <value>Please insert a Group name</value>
+  </data>
+  <data name="LanguageTitle" xml:space="preserve">
+    <value>Language:</value>
   </data>
   <data name="Main_CheckingConnection" xml:space="preserve">
     <value>Checking connection</value>
@@ -158,6 +167,9 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search...</value>
   </data>
   <data name="Select_Picture" xml:space="preserve">
     <value>Select Picture...</value>

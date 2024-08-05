@@ -13,7 +13,7 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <HorizontalStackLayout Grid.Row="0" Padding="20" HorizontalOptions="Center">
-            <Entry x:Name="SearchEntry" Placeholder="Suche..." WidthRequest="400" HeightRequest="50" Margin="20,0" Completed="OnEntryCompleted" />
+            <Entry x:Name="SearchEntry" Placeholder="{x:Static resx:AppLanguage.Search}" WidthRequest="400" HeightRequest="50" Margin="20,0" Completed="OnEntryCompleted" />
             <Picker x:Name="TypeGroupPicker" SelectedIndexChanged="OnEntryCompleted"/>
         </HorizontalStackLayout>
         <ScrollView Grid.Row="1">

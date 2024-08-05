@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using RecipeCatalog.Models;
+using RecipeCatalog.Resources.Language;
 
 namespace RecipeCatalog.Popups;
 
@@ -31,7 +32,7 @@ public partial class AddComponentPopup : Popup
     {
         var result = await FilePicker.PickAsync(new PickOptions
         {
-            PickerTitle = "Wählen Sie ein Bild",
+            PickerTitle = AppLanguage.Select_Picture,
             FileTypes = FilePickerFileType.Images
         });
 
