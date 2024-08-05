@@ -12,7 +12,7 @@ namespace RecipeCatalog.Data
             _connectionString = connectionString;
         }
         public DbSet<Component> Components { get; set; }
-        public DbSet<Recipe> Recepies { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeComponents> RecipeComponents { get; set; }
         public DbSet<Group> Groups { get; set; }
 
@@ -79,12 +79,15 @@ namespace RecipeCatalog.Data
                 entity.Property(rc => rc.Count)
                     .IsRequired();
 
+                entity.Property(rc => rc.ComponentId)
+                    .IsRequired();
+
                 entity.HasOne(rc => rc.RecipeNavigation)
                     .WithMany(r => r.Components)
                     .HasForeignKey(rc => rc.RecipeId);
 
                 entity.HasOne(rc => rc.ComponentNavigation)
-                    .WithMany()
+                    .WithMany(c => c.RecipeComponents)
                     .HasForeignKey(rc => rc.ComponentId);
             });
         }

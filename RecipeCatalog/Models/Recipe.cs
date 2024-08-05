@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RecipeCatalog.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace RecipeCatalog.Models
 {
-    public class Recipe
+    public class Recipe : IData
     {
         public Recipe()
         {

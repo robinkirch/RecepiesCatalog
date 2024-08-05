@@ -52,7 +52,7 @@ public partial class AddComponentPopup : Popup
             Image = selectedImage,
             Name = NameEntry.Text,
             Description = DescriptionEntry.Text,
-            Aliases = AliasesEntry.Text.Split(','),
+            Aliases = (AliasesEntry.Text != null) ? AliasesEntry.Text.Split(',') : [],
             GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null,
 
         });

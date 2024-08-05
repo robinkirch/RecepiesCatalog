@@ -75,5 +75,16 @@ namespace RecipeCatalog
 
             return builder.Build();
         }
+
+        public static ImageSource ByteArrayToImageSource(byte[]? imageData)
+        {
+            if (imageData == null || imageData.Length == 0)
+                return ImageSource.FromFile("Resources/Images/no_image_by_riskywas.png");
+
+            using (var stream = new MemoryStream(imageData))
+            {
+                return ImageSource.FromStream(() => stream);
+            }
+        }
     }
 }

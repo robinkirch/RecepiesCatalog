@@ -1,12 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Maui.Platform;
-using RecipeCatalog.Data;
+﻿using RecipeCatalog.Data;
 using RecipeCatalog.Resources.Language;
-using System;
 using System.Globalization;
 using System.Resources;
-using System.Text.RegularExpressions;
 
 namespace RecipeCatalog
 {

@@ -5,65 +5,74 @@
              xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
              Title="SearchAndViewPage">
     <Grid Padding="0,0">
-        <!-- Define the Rows -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-
-        <!-- Scrollable Content -->
-        <ScrollView Grid.Row="0">
-            <VerticalStackLayout
+        <HorizontalStackLayout Grid.Row="0" Padding="20" HorizontalOptions="Center">
+            <Entry x:Name="SearchEntry" Placeholder="Suche..." WidthRequest="400" HeightRequest="50" Margin="20,0" Completed="OnEntryCompleted" />
+            <Picker x:Name="TypeGroupPicker" SelectedIndexChanged="OnEntryCompleted"/>
+        </HorizontalStackLayout>
+        <ScrollView Grid.Row="1">
+            <Grid x:Name="ResultView" Padding="30,0" ColumnSpacing="10" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <!-- Zeilen werden dynamisch hinzugefügt -->
+                </Grid.RowDefinitions>
+            </Grid>
+        </ScrollView>
+        <VerticalStackLayout 
+            Grid.Row="2"
             Spacing="25">
-                <HorizontalStackLayout 
+            <HorizontalStackLayout 
                     Padding="10" 
                     Spacing="20"
                     VerticalOptions="EndAndExpand" 
                     HorizontalOptions="Center"
                     x:Name="AdminArea">
-                    <Button
+                <Button
                         x:Name="AddGroupBtn"
                         Text="{x:Static resx:AppLanguage.SV_AddGroup}" 
                         Clicked="OnAddGroup"
                         HorizontalOptions="Center">
-                        <Button.ImageSource>
-                            <FontImageSource Glyph="&#xf067;"
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf067;"
                                  FontFamily="FontAwesomeSolid"
                                  Size="20"
                                  Color="Black" />
-                        </Button.ImageSource>
-                    </Button>
-                    <Button
+                    </Button.ImageSource>
+                </Button>
+                <Button
                         x:Name="AddComponentBtn"
                         Text="{x:Static resx:AppLanguage.SV_AddComponent}" 
                         Clicked="OnAddComponent"
                         HorizontalOptions="Center">
-                        <Button.ImageSource>
-                            <FontImageSource Glyph="&#xf067;"
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf067;"
                                  FontFamily="FontAwesomeSolid"
                                  Size="20"
                                  Color="Black" />
-                        </Button.ImageSource>
-                    </Button>
-                    <Button
+                    </Button.ImageSource>
+                </Button>
+                <Button
                         x:Name="AddRecipeBtn"
                         Text="{x:Static resx:AppLanguage.SV_AddRecipe}" 
                         Clicked="OnAddRecipe"
                         HorizontalOptions="Center">
-                        <Button.ImageSource>
-                            <FontImageSource Glyph="&#xf067;"
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf067;"
                                  FontFamily="FontAwesomeSolid"
                                  Size="20"
                                  Color="Black" />
-                        </Button.ImageSource>
-                    </Button>
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
 
         <!-- Button for settings at the bottom -->
-        <Button Grid.Row="1"
+        <Button Grid.Row="3"
             x:Name="SettingsBtn"
             Clicked="OnSettings"
             BackgroundColor="#50D3D3D3"
@@ -76,6 +85,6 @@
                              Color="Black" />
             </Button.ImageSource>
         </Button>
-        <ScrollView Grid.Row="2" Padding="50"></ScrollView>
+        <ScrollView Grid.Row="4" Padding="50"></ScrollView>
     </Grid>
 </ContentPage>

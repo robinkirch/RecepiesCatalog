@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RecipeCatalog.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace RecipeCatalog.Models
 {
-    public class Component
+    public class Component : IData
     {
         public Component()
         {
@@ -19,5 +20,13 @@ namespace RecipeCatalog.Models
 
         public virtual Group? GroupNavigation { get; set; }
         public virtual ICollection<RecipeComponents> RecipeComponents { get; set; }
+    }
+
+    public class ComponentView()
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsSelected { get; set; }
+        public int Count { get; set; }
     }
 }

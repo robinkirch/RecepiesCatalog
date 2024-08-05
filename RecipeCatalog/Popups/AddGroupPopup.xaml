@@ -5,10 +5,12 @@
                xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
                x:Class="RecipeCatalog.Popups.AddGroupPopup">
 
-    <VerticalStackLayout Padding="20" BackgroundColor="White">
+    <VerticalStackLayout Padding="20" BackgroundColor="#50D3D3D3">
         <Label Text="{x:Static resx:AppLanguage.Group_InformationText}" FontSize="Medium"/>
         <Entry x:Name="NameEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Name}" />
-        <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked"/>
-        <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked"/>
+        <HorizontalStackLayout Spacing="10" Padding="0,10">
+            <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked" HorizontalOptions="StartAndExpand"/>
+            <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="End"/>
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </toolkit:Popup>
