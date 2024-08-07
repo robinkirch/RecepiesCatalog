@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Views;
+using Microsoft.Identity.Client;
 using RecipeCatalog.Data;
 using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
@@ -81,13 +82,15 @@ public partial class SearchAndViewPage : ContentPage
                         },
                         new Label
                         {
-                            Text = c.Description,
+                            Text = (c.Description != null && c.Description.Length > 200) ? c.Description.Substring(0,200) + "..." : c.Description,
                             FontSize = 14
                         },
                         new Label
                         {
-                            Text = c.GroupId.ToString(),
-                            FontSize = 10
+                            Text = MauiProgram._context.Groups.Where(g => g.Id == c.GroupId).Select(g => g.GroupName).Single(),
+                            FontSize = 9,
+                            TextColor = Color.Parse("DarkGray"),
+                            VerticalOptions = LayoutOptions.EndAndExpand,
                         }
                     }
                 }
@@ -179,8 +182,17 @@ public partial class SearchAndViewPage : ContentPage
 
     private void OnFrameTapped(int id, Type type)
     {
-        // TODO
-        Console.WriteLine("Frame wurde angetippt.");
+        switch (type)
+        {
+            case Type t when t == typeof(Component):
+                App.Current.MainPage = new DetailPage(MauiProgram._context.Components.Single(c => c.Id == id));
+                break;
+            case Type t when t == typeof(Recipe):
+                App.Current.MainPage = new DetailPage(MauiProgram._context.Recipes.Single(c => c.Id == id));
+                break;
+            default:
+                throw new NotImplementedException("type not implemented");
+        }
     }
 
     private async void OnAddGroup(object sender, EventArgs e)

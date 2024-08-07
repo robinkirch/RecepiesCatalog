@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeCatalog.DetailPage"
+             xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
+             Title="DetailPage">
+    <Grid Padding="0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <ScrollView Grid.Row="0" Padding="50"></ScrollView>
+        <Button Grid.Row="1"
+            x:Name="BackBtn"
+            Clicked="OnBack"
+            HorizontalOptions="End"
+            Margin="20, 0">
+            <Button.ImageSource>
+                <FontImageSource Glyph="&#xf00d;"
+                     FontFamily="FontAwesomeSolid"
+                     Size="20"
+                     Color="Black" />
+            </Button.ImageSource>
+        </Button>
+
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Padding="20, 0">
+                <Image
+                    Source="no_image_by_riskywas.png"
+                    x:Name="DetailImage"
+                    HeightRequest="185"
+                    Aspect="AspectFit"
+                    Margin="0, 10"/>
+
+                <Label
+                    x:Name="NameText"
+                    FontAttributes = "Bold"
+                    FontSize="Title"  
+                    />
+                <Label
+                    x:Name="AliasText"
+                    FontSize="Micro"
+                    TextColor="DarkGray"
+                    Margin="0, 0, 0, 20"/>
+                <Label
+                    x:Name="DescriptionText"
+                    FontSize="Small"/>
+                <Label
+                    x:Name="GroupText"
+                    FontSize="Micro"
+                    TextColor="DarkGray"  
+                    Margin="0, 10"/>
+                
+                <BoxView x:Name="HR" HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" Margin="0, 20"/>
+
+                <Label
+                    x:Name="Components"
+                    Text="Necessary Components"
+                    FontAttributes = "Bold"
+                    FontSize="Title" 
+                    Margin="0, 10"
+                    IsVisible="False"/>
+
+                <Label
+                    x:Name="Recipes"
+                    Text="Used in Recipes"
+                    FontAttributes = "Bold"
+                    FontSize="Title" 
+                    Margin="0, 10"
+                    IsVisible="False"/>
+
+                <Grid x:Name="RecipesComponentsPlace">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <!-- Zeilen werden dynamisch hinzugefügt -->
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <VerticalStackLayout 
+            Grid.Row="3"
+            Spacing="25">
+            <HorizontalStackLayout 
+                    Padding="10" 
+                    Spacing="20"
+                    VerticalOptions="EndAndExpand" 
+                    HorizontalOptions="Center"
+                    x:Name="AdminArea">
+                <Button
+                    x:Name="EditBtn"
+                    Text="Edit" 
+                    Clicked="OnEdit"
+                    HorizontalOptions="Center">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf303;"
+                                 FontFamily="FontAwesomeSolid"
+                                 Size="20"
+                                 Color="Black" />
+                    </Button.ImageSource>
+                </Button>
+                <Button
+                    x:Name="DelBtn"
+                    Text="Delete" 
+                    Clicked="OnDelete"
+                    HorizontalOptions="Center">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf1f8;"
+                             FontFamily="FontAwesomeSolid"
+                             Size="20"
+                             Color="Black" />
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="4" Padding="50"></ScrollView>
+    </Grid>
+</ContentPage>
