@@ -7,7 +7,12 @@ public partial class UserOverviewPage : ContentPage
 		InitializeComponent();
 		DisplayUsers();
 	}
-	public void DisplayUsers()
+
+    /// <summary>
+    /// Displays a list of users in a grid layout, organizing them into columns and rows.
+    /// Each user is represented by a frame containing their username and associated campaign name, if any.
+    /// </summary>
+    public void DisplayUsers()
 	{
         var users = MauiProgram._context.Users.ToList();
 
@@ -63,11 +68,20 @@ public partial class UserOverviewPage : ContentPage
         }
     }
 
-    private void OnFrameTapped(Guid id)
+    /// <summary>
+    /// Handles the tap event on a user frame, navigating to the User Rights page for the selected user.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user whose rights are to be viewed.</param>
+    private static void OnFrameTapped(Guid id)
     {
         App.Current!.MainPage = new UserRightPage(MauiProgram._context.Users.Where(u => u.Id == id).Single());
     }
 
+    /// <summary>
+    /// Handles the back navigation event, returning to the previous Search and View page.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnBack(object sender, EventArgs e)
     {
         //TODO: Missing searchdata

@@ -15,6 +15,12 @@ namespace RecipeCatalog
             CheckConnection();
         }
 
+        /// <summary>
+        /// Checks the connection to the database using the provided connection string.
+        /// If no connection string is provided, it retrieves it from the configuration settings.
+        /// Displays the appropriate status messages and UI elements based on the connection status.
+        /// </summary>
+        /// <param name="connectionstring">The connection string to use for the database connection.</param>
         private void CheckConnection(string connectionstring = "")
         {
             var activityIndicator = this.FindByName<ActivityIndicator>("ActSpinner");
@@ -36,6 +42,12 @@ namespace RecipeCatalog
             }
         }
 
+        /// <summary>
+        /// Checks if a user exists based on the provided list of users and the user key from configuration.
+        /// If the user key is not found or is empty, prompts for a username.
+        /// If a valid user key is found, sets the current user and updates the UI accordingly.
+        /// </summary>
+        /// <param name="users">The list of users to check against.</param>
         private void CheckUser(List<User> users)
         {
             var activityIndicator = this.FindByName<ActivityIndicator>("ActSpinner");
@@ -59,16 +71,35 @@ namespace RecipeCatalog
             }
         }
 
+        /// <summary>
+        /// Handles the event when the continue button is clicked.
+        /// Navigates to the <see cref="SearchAndViewPage"/> page.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnContinue(object sender, EventArgs e)
         {
             App.Current!.MainPage = new SearchAndViewPage();
         }
 
+        /// <summary>
+        /// Handles the event when the settings button is clicked.
+        /// Displays the settings popup for user configuration.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private async void OnSettings(object sender, EventArgs e)
         {
             await this.ShowPopupAsync(new SettingsPopup(new MainPage()));
         }
 
+        /// <summary>
+        /// Handles the event when the connection string entry is completed.
+        /// Hides the connection string block and updates the configuration with the new connection string.
+        /// Initiates a connection check with the updated connection string.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnEntryCompleted(object sender, EventArgs e)
         {
             ConnectionStringBlock.IsVisible = false;
@@ -76,6 +107,12 @@ namespace RecipeCatalog
             CheckConnection(MauiProgram.Configuration.GetSection("Connection:DataSource").Value!);
         }
 
+        /// <summary>
+        /// Handles the event when the username entry is completed. Creates a new user with a unique identifier and adds it to the context.
+        /// Updates the configuration with the new user key and starts the check from the beginning, which should be sending the user to the SearchAndViewPage
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnUserEntryCompleted(object sender, EventArgs e)
         {
             UserBlock.IsVisible = false;

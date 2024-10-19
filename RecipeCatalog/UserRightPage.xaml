@@ -19,7 +19,7 @@
 
                 <BoxView x:Name="HRFirst" HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" Margin="0, 40"/>
 
-                <StackLayout >{x:Static resx:AppLanguage.}
+                <StackLayout >
                     <!--<Label Text="{x:Static resx:AppLanguage.User_CustomRights}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
                     <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
                         <CollectionView x:Name="CustomRightsCollectionView">

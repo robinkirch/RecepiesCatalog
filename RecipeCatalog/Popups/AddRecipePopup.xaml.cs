@@ -17,6 +17,10 @@ public partial class AddRecipePopup : Popup
         LoadComponents();
     }
 
+    /// <summary>
+    /// Loads user data for the recipe creation process.
+    /// Retrieves the user's view rights and populates the associated collection views for visibility and description settings.
+    /// </summary>
     private void LoadData()
     {
         var userRights = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.UserId == _user.Id).ToList();
@@ -34,6 +38,10 @@ public partial class AddRecipePopup : Popup
         CompCollectionView.ItemsSource = compSettings;
     }
 
+    /// <summary>
+    /// Loads the components available for the recipe.
+    /// Retrieves all components from the database and populates the component collection view.
+    /// </summary>
     private void LoadComponents()
     {
         var components = new ObservableCollection<ComponentView>();
@@ -43,12 +51,23 @@ public partial class AddRecipePopup : Popup
         });
         ComponentCollectionView.ItemsSource = components;
     }
+
+    /// <summary>
+    /// Loads data for the group picker.
+    /// Populates the group picker with available groups from the database.
+    /// </summary>
     private void LoadPickerData()
     {
         GroupPicker.ItemsSource = MauiProgram._context.Groups.ToList();
         GroupPicker.ItemDisplayBinding = new Binding("GroupName");
     }
 
+    /// <summary>
+    /// Handles the event when the "Send" button is clicked.
+    /// Creates a new recipe, associates selected components, and saves the recipe along with user view rights in the database.
+    /// </summary>
+    /// <param name="sender">The button that triggered the event.</param>
+    /// <param name="e">Event data.</param>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
         var RecipesComponents = new List<RecipeComponents>();
@@ -105,6 +124,12 @@ public partial class AddRecipePopup : Popup
         Close(MauiProgram._context.Recipes.Single(c => c.Name == NameEntry.Text));
     }
 
+    /// <summary>
+    /// Handles the event when the "Cancel" button is clicked.
+    /// Closes the popup without saving any changes.
+    /// </summary>
+    /// <param name="sender">The button that triggered the event.</param>
+    /// <param name="e">Event data.</param>
     private void OnCancelButtonClicked(object sender, EventArgs e)
     {
         Close(null);

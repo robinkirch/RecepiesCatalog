@@ -14,6 +14,11 @@ public partial class DetailPage : ContentPage
     private readonly int ID;
     private byte[]? selectedImage;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DetailPage"/> class.
+    /// Sets up the detail page with data based on the provided <paramref name="data"/> object.
+    /// </summary>
+    /// <param name="data">The data object containing details to display on the page.</param>
     public DetailPage(IData data)
     {
         InitializeComponent();
@@ -32,6 +37,10 @@ public partial class DetailPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Updates the common data fields on the detail page with values from the provided <paramref name="data"/> object.
+    /// </summary>
+    /// <param name="data">The data object containing information to display.</param>
     public void ChangeCommonData(IData data)
     {
         DetailImage.Source = MauiProgram.ByteArrayToImageSource(data.Image);
@@ -47,6 +56,10 @@ public partial class DetailPage : ContentPage
         GroupText.Text = MauiProgram._context.Groups.Single(g => g.Id == data.GroupId).GroupName;
     }
 
+    /// <summary>
+    /// Adds a list of recipes that the specified component is used in to the detail page.
+    /// </summary>
+    /// <param name="componentId">The ID of the component to check for usage in recipes.</param>
     public void AddUsedIn(int componentId)
     {
         //TODO: scheinbar habe ich die Navigationen in den klassen nicht vernünftig gemacht, weswegen die abfragen so ass sind
@@ -106,6 +119,11 @@ public partial class DetailPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Adds a list of components used in the specified recipe to the detail page.
+    /// </summary>
+    /// <param name="data">The list of recipe components to add.</param>
+    /// <param name="isAccessible">Indicates whether the components are accessible to the current user or should be displayed different.</param>
     public void AddComponents(List<RecipeComponents> data, bool isAccessible)
     {
         int row = 0;
@@ -188,19 +206,30 @@ public partial class DetailPage : ContentPage
     }
 
     /// <summary>
-    /// Handles the tap event on a frame and navigates to the now updated detail page.
+    /// Handles the tap event on a frame and navigates to the specified detail page.
     /// </summary>
     /// <param name="page">The detail page to navigate to.</param>
     private static void OnFrameTapped(DetailPage page)
     {
         App.Current!.MainPage = page;
     }
+
+    /// <summary>
+    /// Handles the event when the back button is clicked and navigates to the search and view page.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private void OnBack(object sender, EventArgs e)
     {
         //TODO: Missing searchdata
         App.Current!.MainPage = new SearchAndViewPage();
     }
 
+    /// <summary>
+    /// Handles the event when the edit button is clicked, displaying the editable fields for the data.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private void OnEdit(object sender, EventArgs e)
     {
         IData data = DataType switch
@@ -226,6 +255,9 @@ public partial class DetailPage : ContentPage
         //todo: remove image from componen and recipe popup
     }
 
+    /// <summary>
+    /// Loads the available groups into the group picker and selects the current group if it exists.
+    /// </summary>
     private void LoadPickerData()
     {
         GroupPicker.ItemsSource = MauiProgram._context.Groups.ToList();
@@ -247,6 +279,10 @@ public partial class DetailPage : ContentPage
         else
             GroupPicker.SelectedIndex = -1;
     }
+
+    /// <summary>
+    /// Loads the components used in the current recipe into a collection view for editing.
+    /// </summary>
     private void LoadComponents()
     {
         var componentsForRecipe = MauiProgram._context.RecipeComponents.Where(c => c.RecipeId == ID).ToList();
@@ -263,6 +299,10 @@ public partial class DetailPage : ContentPage
         EditComponentCollectionView.ItemsSource = components;
     }
 
+    /// <summary>
+    /// Loads the user-specific visibility settings for the component or recipe into collection views.
+    /// This includes settings for view and description access for the current user.
+    /// </summary>
     private void LoadUserData()
     {
         //TODO:Optimieren, da components anzeige vollständig in recipes enthalten ist und immer geladen wird
@@ -317,6 +357,12 @@ public partial class DetailPage : ContentPage
             throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Handles the event when an image is selected from the file picker. 
+    /// This method updates the selected image byte array with the image chosen by the user.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnSelectImageClicked(object sender, EventArgs e)
     {
         var result = await FilePicker.PickAsync(new PickOptions
@@ -336,9 +382,15 @@ public partial class DetailPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Handles the event when the delete button is clicked. 
+    /// Displays a confirmation popup and deletes the component or recipe if confirmed.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnDelete(object sender, EventArgs e)
     {
-        //TOD: Unvollständig
+        //TODO: Unvollständig
         var popup = new DeletePopup();
         var result = (bool?)await this.ShowPopupAsync(popup);
         if (result == null || result == false)
@@ -389,6 +441,13 @@ public partial class DetailPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Handles the event when the save button is clicked. 
+    /// Updates the component or recipe data with the values from the entry fields 
+    /// and saves the changes to the database.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private void OnSave(object sender, EventArgs e)
     {
         IData data = DataType == typeof(Component) ? MauiProgram._context.Components.Single(c => c.Id == ID) : MauiProgram._context.Recipes.Single(c => c.Id == ID);

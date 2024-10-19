@@ -8,7 +8,15 @@ namespace RecipeCatalog;
 
 public partial class SearchAndViewPage : ContentPage
 {
-    private bool _isInitialized = false;
+    private readonly bool _isInitialized = false;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SearchAndViewPage"/> class.
+    /// Sets up the search and view page, loading necessary data based on the user's permissions and previous selections.
+    /// </summary>
+    /// <param name="results">Optional. A list of <see cref="IData"/> objects (components and recipes) to be displayed. If null, retrieves viewable data for the current user.</param>
+    /// <param name="search">Optional. The search text to pre-fill the search entry.</param>
+    /// <param name="selectedIndex">Optional. The index of the selected group type in the picker.</param>
     public SearchAndViewPage(List<IData>? results = null, string search = "", int selectedIndex = 0)
 	{
 		InitializeComponent();
@@ -21,6 +29,12 @@ public partial class SearchAndViewPage : ContentPage
         _isInitialized = true;
     }
 
+    /// <summary>
+    /// Loads data into the picker component, including pre-filling the search entry and setting the selected index.
+    /// Retrieves available groups and populates the picker with them.
+    /// </summary>
+    /// <param name="search">The search text to be displayed in the search entry.</param>
+    /// <param name="selectedIndex">The index of the selected group in the picker.</param>
     private void LoadPickerData(string search, int selectedIndex)
     {
         SearchEntry.Text = search;
@@ -38,7 +52,6 @@ public partial class SearchAndViewPage : ContentPage
     /// Filters the content by view rights for components, recipes, and groups, then displays them in a grid with images, names, and descriptions.
     /// </summary>
     /// <param name="results">Optional. A list of <see cref="IData"/> objects (components and recipes) to be displayed. If null, retrieves viewable data for the current user.</param>
-
     private void LoadView(List<IData>? results = null)
     {
         var missingRightsComponent = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
@@ -140,7 +153,6 @@ public partial class SearchAndViewPage : ContentPage
     /// <param name="desc">The description text to be truncated.</param>
     /// <param name="length">Optional. The maximum length of the truncated description. Defaults to 200 characters.</param>
     /// <returns>A truncated description with ellipsis if it exceeds the specified length, or the full description if it's within the limit.</returns>
-
     private string GetTruncatedDescription(string? desc, int length = 200) => desc != null && desc.Length > length ? desc.Substring(0, length) + "..." : desc ?? string.Empty;
 
     /// <summary>
@@ -253,6 +265,11 @@ public partial class SearchAndViewPage : ContentPage
         };
     }
 
+    /// <summary>
+    /// Handles the event to add a new group by showing a popup dialog for input.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnAddGroup(object sender, EventArgs e)
     {
         var popup = new AddGroupPopup();
@@ -260,6 +277,11 @@ public partial class SearchAndViewPage : ContentPage
         App.Current!.MainPage = new SearchAndViewPage();
     }
 
+    /// <summary>
+    /// Handles the event to add a new component by showing a popup dialog for input.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnAddComponent(object sender, EventArgs e)
     {
         var popup = new AddComponentPopup(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single());
@@ -267,6 +289,11 @@ public partial class SearchAndViewPage : ContentPage
         App.Current!.MainPage = new SearchAndViewPage();
     }
 
+    /// <summary>
+    /// Handles the event to add a new recipe by showing a popup dialog for input.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnAddRecipe(object sender, EventArgs e)
     {
         var popup = new AddRecipePopup(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single());
@@ -274,11 +301,21 @@ public partial class SearchAndViewPage : ContentPage
         App.Current!.MainPage = new SearchAndViewPage();
     }
 
+    /// <summary>
+    /// Navigates to the user overview page.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private void OnViewUsers(object sender, EventArgs e)
     {
         App.Current!.MainPage = new UserOverviewPage();
     }
 
+    /// <summary>
+    /// Handles the event to add a new campaign by showing a popup dialog for input.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnAddCampaigns(object sender, EventArgs e)
     {
         var popup = new AddCampaignPopup();
@@ -286,6 +323,11 @@ public partial class SearchAndViewPage : ContentPage
         App.Current!.MainPage = new SearchAndViewPage();
     }
 
+    /// <summary>
+    /// Handles the event to open settings by showing the settings popup dialog.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">Event arguments.</param>
     private async void OnSettings(object sender, EventArgs e)
     {
         await this.ShowPopupAsync(new SettingsPopup(new SearchAndViewPage()));

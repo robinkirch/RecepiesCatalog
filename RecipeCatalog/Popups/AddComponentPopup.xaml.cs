@@ -16,6 +16,10 @@ public partial class AddComponentPopup : Popup
         LoadPickerData();
     }
 
+    /// <summary>
+    /// Loads the data related to the user view and description view rights into the collection views.
+    /// Initializes the data for the rights to view and edit component descriptions.
+    /// </summary>
     private void LoadData()
     {
         var userRights = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == _user.Id).ToList();
@@ -30,12 +34,22 @@ public partial class AddComponentPopup : Popup
         DescCollectionView.ItemsSource = descSettings;
     }
 
+    /// <summary>
+    /// Loads the group data into the picker, allowing users to select the group for the component.
+    /// </summary>
     private void LoadPickerData()
     {
         GroupPicker.ItemsSource = MauiProgram._context.Groups.ToList();
         GroupPicker.ItemDisplayBinding = new Binding("GroupName");
     }
 
+    /// <summary>
+    /// Handles the event when the "Send" button is clicked.
+    /// Adds the new component to the database and sets the view rights for the selected users.
+    /// Updates or adds the rights for users to view or not view the component and its description.
+    /// </summary>
+    /// <param name="sender">The button that triggered the event.</param>
+    /// <param name="e">Event data.</param>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
         var newComponents = MauiProgram._context.Components.Add(new Component {
@@ -75,6 +89,12 @@ public partial class AddComponentPopup : Popup
         Close(MauiProgram._context.Components.Single(c => c.Name == NameEntry.Text));
     }
 
+    /// <summary>
+    /// Handles the event when the "Cancel" button is clicked.
+    /// Closes the popup without adding a new component or making changes.
+    /// </summary>
+    /// <param name="sender">The button that triggered the event.</param>
+    /// <param name="e">Event data.</param>
     private void OnCancelButtonClicked(object sender, EventArgs e)
     {
         Close(null);

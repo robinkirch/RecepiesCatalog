@@ -134,7 +134,7 @@
 	<ItemGroup>
 	  <EmbeddedResource Update="Resources\Language\AppLanguage.de.resx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <Generator>ResXFileCodeGenerator</Generator>
+	    <Generator></Generator>
 	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Language\AppLanguage.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
