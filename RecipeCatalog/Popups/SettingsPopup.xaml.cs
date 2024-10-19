@@ -17,7 +17,8 @@ public partial class SettingsPopup : Popup
 
     private void LoadPickerData()
     {
-        DataSource.Text = MauiProgram.configuration.GetSection("Connection:DataSource").Value;
+        DataSource.Text = MauiProgram.Configuration.GetSection("Connection:DataSource").Value;
+        UsernameInput.Text = MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Select(u => u.Username).Single();
 
         List<CultureInfo> cultures = new List<CultureInfo>
         {
@@ -30,9 +31,15 @@ public partial class SettingsPopup : Popup
     }
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
-        MauiProgram.configuration["Connection:DataSource"] = DataSource.Text;
-        var a = LanguagePicker.SelectedItem.ToString();
+        MauiProgram.Configuration["Connection:DataSource"] = DataSource.Text;
         SetLanguage(LanguagePicker.SelectedItem.ToString());
+
+        var user = MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single();
+        user.Username = UsernameInput.Text;
+        MauiProgram._context.Users.Update(user);
+        MauiProgram._context.SaveChanges();
+
+        Close();
     }
 
     private void OnCancelButtonClicked(object sender, EventArgs e)
@@ -46,7 +53,7 @@ public partial class SettingsPopup : Popup
         Thread.CurrentThread.CurrentCulture = cultureInfo;
         ResourceManager rm = AppLanguage.ResourceManager;
         rm.ReleaseAllResources();
-        MauiProgram.configuration["DefaultLanguage"] = culture;
-        App.Current.MainPage = page; //error, double settings 
+        MauiProgram.Configuration["DefaultLanguage"] = culture;
+        App.Current!.MainPage = page; //error, double settings 
     }
 }

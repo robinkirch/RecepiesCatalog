@@ -1,18 +1,19 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RecipeCatalog.Data;
-using System;
 using System.Globalization;
-using Microsoft.Maui.LifecycleEvents;
 using CommunityToolkit.Maui;
-
+using RecipeCatalog.Models;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace RecipeCatalog
 {
     public static class MauiProgram
     {
-        public static IConfiguration configuration {get; private set;}
+        public static IConfiguration Configuration {get; private set;}
         public static Context _context {get; set;}
+
+        public static User CurrentUser;
 
         public static MauiApp CreateMauiApp()
         {
@@ -21,9 +22,9 @@ namespace RecipeCatalog
                 .AddJsonFile("appsettings.json")
                 .Build();
             builder.Configuration.AddConfiguration(config);
-            configuration = builder.Configuration;
+            Configuration = builder.Configuration;
 
-            var defLanguage = new CultureInfo(configuration.GetSection("DefaultLanguage").Value ?? "en");
+            var defLanguage = new CultureInfo(Configuration.GetSection("DefaultLanguage").Value ?? "en");
             CultureInfo.DefaultThreadCurrentCulture = defLanguage;
             CultureInfo.DefaultThreadCurrentUICulture = defLanguage;
 
@@ -47,7 +48,6 @@ namespace RecipeCatalog
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>
         {
-            // Make sure to add "using Microsoft.Maui.LifecycleEvents;" in the top of the file
             events.AddWindows(windowsLifecycleBuilder =>
             {
                 windowsLifecycleBuilder.OnWindowCreated(window =>
@@ -76,15 +76,59 @@ namespace RecipeCatalog
             return builder.Build();
         }
 
+        /// <summary>
+        /// Converts a byte array representing image data into an <see cref="ImageSource"/>.
+        /// </summary>
+        /// <param name="imageData">An optional byte array containing the image data. 
+        /// If <c>null</c> or empty, a default image will be returned.</param>
+        /// <returns>
+        /// An <see cref="ImageSource"/> representing the image. If the <paramref name="imageData"/> 
+        /// is <c>null</c> or has a length of zero, a default image is returned; otherwise, 
+        /// the image is created from the provided byte array.
+        /// </returns>
         public static ImageSource ByteArrayToImageSource(byte[]? imageData)
         {
             if (imageData == null || imageData.Length == 0)
                 return ImageSource.FromFile("Resources/Images/no_image_by_riskywas.png");
 
-            using (var stream = new MemoryStream(imageData))
-            {
-                return ImageSource.FromStream(() => stream);
-            }
+            var stream = new MemoryStream(imageData);
+            stream.Seek(0, SeekOrigin.Begin);
+            return ImageSource.FromStream(() => stream);
         }
+
+        /// <summary>
+        /// Determines whether the current user has admin privileges.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the user is an admin; otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// This method checks the secret key stored in the configuration section 
+        /// "Connection:SecretKey". If the value matches the expected admin key, the user is considered an admin.
+        /// </remarks>
+        public static bool IsThisUserAdmin() => Configuration.GetSection("Connection:SecretKey").Value == "+KJDS??oO(D=)o8d-ü3=lkdsa3!3";
+    }
+
+    /// <summary>
+    /// Enum representing selection options for filtering.
+    /// <para>'Groups' is always the highest value and represents groups or higher, 
+    /// since the actual number of group values is dynamic and stored in the database.</para>
+    /// <para>The 'OffSet' value corresponds to 'Recipes' and is used for calculating 
+    /// the offset when determining the selected index for groups.</para>
+    /// <br />
+    /// Enum values:
+    /// <br />- <b>All</b>: Represents all options.
+    /// <br />- <b>Components</b>: Represents filtering by components.
+    /// <br />- <b>Recipes</b>: Represents filtering by recipes.
+    /// <br />- <b>Groups</b>: Represents filtering by groups or any value above (dynamically defined).
+    /// <br />- <b>OffSet</b>: Used for calculating offsets in relation to group selections.
+    /// </summary>
+    public enum Selection
+    {
+        All = 0,
+        Components = 1,
+        Recipes = 2,
+        Groups = 3,
+        OffSet = Recipes,
     }
 }

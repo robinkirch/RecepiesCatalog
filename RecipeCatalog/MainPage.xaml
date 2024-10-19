@@ -34,14 +34,26 @@
                     Style="{StaticResource SubHeadline}"
                     SemanticProperties.HeadingLevel="Level2"/>
 
-                <HorizontalStackLayout Padding="10" VerticalOptions="Center" x:Name="ConnectionStringBlock" IsVisible="False">
+                <HorizontalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center" x:Name="ConnectionStringBlock" IsVisible="False">
                     <Entry 
                         x:Name="ConnectionStringInput"
                         Placeholder="{x:Static resx:AppLanguage.Main_ConnectionInputPlaceholder}" 
+                        WidthRequest="200"
                         Completed="OnEntryCompleted" />
                     <Button Text="{x:Static resx:AppLanguage.Save}"
                         Clicked="OnEntryCompleted"
                         Margin="10,0,0,0" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center" x:Name="UserBlock" IsVisible="False">
+                    <Entry 
+                         x:Name="UserStringInput"
+                         WidthRequest="200"
+                         Placeholder="Username" 
+                         Completed="OnUserEntryCompleted"/>
+                    <Button Text="{x:Static resx:AppLanguage.Save}"
+                         Clicked="OnUserEntryCompleted"
+                         Margin="10,0,0,0" />
                 </HorizontalStackLayout>
 
                 <Button

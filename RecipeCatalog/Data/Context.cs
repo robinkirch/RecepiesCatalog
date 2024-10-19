@@ -15,6 +15,12 @@ namespace RecipeCatalog.Data
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeComponents> RecipeComponents { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<MissingViewRightComponent> MissingViewRightsComponents { get; set; }
+        public DbSet<MissingViewRightRecipe> MissingViewRightsRecipes { get; set; }
+        public DbSet<MissingViewRightGroup> MissingViewRightsGroups { get; set; }
+        public DbSet<Bookmark> Bookmarks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -90,6 +96,91 @@ namespace RecipeCatalog.Data
                 entity.HasOne(rc => rc.ComponentNavigation)
                     .WithMany(c => c.RecipeComponents)
                     .HasForeignKey(rc => rc.ComponentId);
+            });
+
+            modelBuilder.Entity<MissingViewRightGroup>(entity =>
+            {
+                entity.HasKey(mvr => mvr.Id);
+
+                entity.HasOne(mvr => mvr.User)
+                    .WithMany(u => u.MissingViewRightsGroup)
+                    .HasForeignKey(mvr => mvr.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(mvr => mvr.Group)
+                    .WithMany(g => g.MissingViewRightsGroup)
+                    .HasForeignKey(mvr => mvr.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<MissingViewRightComponent>(entity =>
+            {
+                entity.HasKey(mvr => mvr.Id);
+
+                entity.HasOne(mvr => mvr.User)
+                    .WithMany(u => u.MissingViewRightsComponent)
+                    .HasForeignKey(mvr => mvr.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(mvr => mvr.Component)
+                    .WithMany(g => g.MissingViewRightsComponent)
+                    .HasForeignKey(mvr => mvr.ComponentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<MissingViewRightRecipe>(entity =>
+            {
+                entity.HasKey(mvr => mvr.Id);
+
+                entity.HasOne(mvr => mvr.User)
+                    .WithMany(u => u.MissingViewRightsRecipe)
+                    .HasForeignKey(mvr => mvr.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(mvr => mvr.Recipe)
+                    .WithMany(g => g.MissingViewRightsRecipes)
+                    .HasForeignKey(mvr => mvr.RecipeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Bookmark>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+
+                entity.HasOne(b => b.User)
+                    .WithMany(u => u.Bookmarks)
+                    .HasForeignKey(b => b.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(b => b.Group)
+                    .WithMany(g => g.Bookmarks)
+                    .HasForeignKey(b => b.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(b => b.Component)
+                    .WithMany()
+                    .HasForeignKey(b => b.ComponentId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(b => b.Recipe)
+                    .WithMany()
+                    .HasForeignKey(b => b.RecipeId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+
+                entity.Property(u => u.Username)
+                      .IsRequired()
+                      .HasMaxLength(255)
+                      .IsUnicode(false);
+
+                entity.HasOne(u => u.CampaignNavigation)
+                      .WithMany(c => c.Users)
+                      .HasForeignKey(u => u.CampaignId)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
         }
     }

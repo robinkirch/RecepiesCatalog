@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
+               x:Class="RecipeCatalog.Popups.DeleteErrorPopup">
+
+    <VerticalStackLayout Padding="20" BackgroundColor="#40D3D3D3">
+        <Label Text="There are following Recipes using this Component. Do you want to remove them all?" FontSize="Medium"/>
+        <Grid x:Name="RecipesComponentsPlace">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <!-- Zeilen werden dynamisch hinzugefügt -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <HorizontalStackLayout Spacing="10" Padding="0,10">
+            <Button Text="OK" Clicked="OnOkButtonClicked" HorizontalOptions="StartAndExpand"/>
+            <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="End"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</toolkit:Popup>

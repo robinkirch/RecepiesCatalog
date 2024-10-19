@@ -8,6 +8,7 @@ namespace RecipeCatalog.Models
         public Component()
         {
             RecipeComponents = new HashSet<RecipeComponents>();
+            MissingViewRightsComponent = new HashSet<MissingViewRightComponent>();
         }
 
         [Key]
@@ -20,6 +21,7 @@ namespace RecipeCatalog.Models
 
         public virtual Group? GroupNavigation { get; set; }
         public virtual ICollection<RecipeComponents> RecipeComponents { get; set; }
+        public virtual ICollection<MissingViewRightComponent> MissingViewRightsComponent { get; set; }
     }
 
     public class ComponentView()

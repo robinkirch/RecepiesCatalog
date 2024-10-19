@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Views;
-using Microsoft.Identity.Client;
 using RecipeCatalog.Data;
 using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
@@ -14,8 +13,8 @@ public partial class SearchAndViewPage : ContentPage
 	{
 		InitializeComponent();
         _isInitialized = false;
-        if (MauiProgram.configuration.GetSection("Connection:SecretKey").Value != "+KJDS??oO(D=)o8d-ü3=lkdsa3!3")
-            AdminArea.IsVisible = false;
+        if(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Select(u => u.IsAdmin).Single())
+            AdminArea.IsVisible = true;
 
         LoadPickerData(search, selectedIndex);
         LoadView(results);
@@ -33,14 +32,20 @@ public partial class SearchAndViewPage : ContentPage
         TypeGroupPicker.SelectedIndex = selectedIndex;
     }
 
+    /// <summary>
+    /// Loads viewable components and recipes into a grid layout based on the user's view rights.
+    /// If no results are provided, it retrieves all of the viewable data for the current user.
+    /// Filters the content by view rights for components, recipes, and groups, then displays them in a grid with images, names, and descriptions.
+    /// </summary>
+    /// <param name="results">Optional. A list of <see cref="IData"/> objects (components and recipes) to be displayed. If null, retrieves viewable data for the current user.</param>
+
     private void LoadView(List<IData>? results = null)
     {
-        if (results == null)
-        {
-            results = MauiProgram._context.Components.Select(component => (IData)component).ToList();
-            results.AddRange(MauiProgram._context.Recipes.Select(component => (IData)component).ToList());
-            results = results.OrderBy(r => r.Name).ToList();
-        }
+        var missingRightsComponent = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
+        var missingRightsRecipe = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
+        var missingRightsGroup = MauiProgram._context.MissingViewRightsGroups.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
+
+        results ??= RetrieveViewableDataForUser();
 
         int numberOfColumns = 2;
         for (int i = 0; i < numberOfColumns; i++)
@@ -55,10 +60,12 @@ public partial class SearchAndViewPage : ContentPage
 
         for (int i = 0; i < results.Count; i++)
         {
-            var c = results[i];
+            var currentObject = results[i];
+            bool canAccessGroup = !missingRightsGroup.Any(g => g.GroupId == results[i].GroupId);
+            string denied = "-";
             var frame = new Frame
             {
-                BorderColor = Color.Parse("Gray"),
+                BorderColor = canAccessGroup ? Color.Parse("Gray") : Color.Parse("DarkRed"),
                 CornerRadius = 5,
                 Padding = 10,
                 HasShadow = true,
@@ -68,37 +75,58 @@ public partial class SearchAndViewPage : ContentPage
                     Orientation = StackOrientation.Vertical,
                     Children =
                     {
-                        new Image
+                        new Frame
                         {
-                            Source = MauiProgram.ByteArrayToImageSource(c.Image),
-                            Aspect = Aspect.AspectFit,
-                            HeightRequest = 100
+                            CornerRadius = 10,
+                            BackgroundColor = Color.FromHsla(0, 0, 0, 0) ,
+                            HeightRequest = 100,
+                            WidthRequest = 100,
+                            BorderColor = Color.FromHsla(0, 0, 0, 0) ,
+                            Content = new Image
+                            {
+                                Source = MauiProgram.ByteArrayToImageSource(currentObject.Image),
+                                Aspect = Aspect.AspectFill,
+                                WidthRequest = 100,
+                                HeightRequest = 100
+                            }
                         },
                         new Label
                         {
-                            Text = c.Name,
+                            Text = currentObject.Name,
                             FontAttributes = FontAttributes.Bold,
                             FontSize = 16
                         },
                         new Label
                         {
-                            Text = (c.Description != null && c.Description.Length > 200) ? c.Description.Substring(0,200) + "..." : c.Description,
+                            Text = (canAccessGroup) ? currentObject switch
+                            {
+                                Component component => !missingRightsComponent.Any(c => c.ComponentId == component.Id && c.CannotSeeDescription)
+                                    ? GetTruncatedDescription(currentObject.Description)
+                                    : denied,
+
+                                Recipe recipe => !missingRightsRecipe.Any(r => r.RecipeId == recipe.Id && r.CannotSeeDescription)
+                                    ? GetTruncatedDescription(currentObject.Description)
+                                    : denied,
+
+                                _ => denied
+                            } : denied,
                             FontSize = 14
                         },
                         new Label
                         {
-                            Text = MauiProgram._context.Groups.Where(g => g.Id == c.GroupId).Select(g => g.GroupName).Single(),
+                            Text = currentObject.GroupId != null ? MauiProgram._context.Groups.Where(g => g.Id == currentObject.GroupId).Select(g => g.GroupName).Single() : string.Empty,
                             FontSize = 9,
-                            TextColor = Color.Parse("DarkGray"),
-                            VerticalOptions = LayoutOptions.EndAndExpand,
+                            TextColor = canAccessGroup ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
                         }
                     }
                 }
             };
-
-            var tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.Tapped += (s, e) => OnFrameTapped(c.Id, c.GetType());
-            frame.GestureRecognizers.Add(tapGestureRecognizer);
+            if (canAccessGroup)
+            {
+                var tapGestureRecognizer = new TapGestureRecognizer();
+                tapGestureRecognizer.Tapped += (s, e) => OnFrameTapped(currentObject.Id, currentObject.GetType());
+                frame.GestureRecognizers.Add(tapGestureRecognizer);
+            }
 
             ResultView.Children.Add(frame);
             Grid.SetRow(frame, i / numberOfColumns);
@@ -106,114 +134,156 @@ public partial class SearchAndViewPage : ContentPage
         }
     }
 
+    /// <summary>
+    /// Truncates the description text to the specified length and adds ellipsis if the text exceeds the limit.
+    /// </summary>
+    /// <param name="desc">The description text to be truncated.</param>
+    /// <param name="length">Optional. The maximum length of the truncated description. Defaults to 200 characters.</param>
+    /// <returns>A truncated description with ellipsis if it exceeds the specified length, or the full description if it's within the limit.</returns>
+
+    private string GetTruncatedDescription(string? desc, int length = 200) => desc != null && desc.Length > length ? desc.Substring(0, length) + "..." : desc ?? string.Empty;
+
+    /// <summary>
+    /// Retrieves a list of viewable data (components and recipes) for a specific user, based on their view rights.
+    /// If no user is provided, the current user is used. Filters out any components or recipes the user is restricted from viewing.
+    /// </summary>
+    /// <param name="user">Optional. The user for whom the viewable data is retrieved. If null, retrieves for the current user.</param>
+    /// <param name="displayAllGroups">Optional. If true, retrieves data for all groups, even those the user might not have access to. Defaults to true.</param>
+    /// <returns>A list of <see cref="IData"/> objects (components and recipes) the user is allowed to view, ordered by name.</returns>
+    private List<IData> RetrieveViewableDataForUser(User? user = default, bool displayAllGroups = true)
+    {
+        user ??= MauiProgram.CurrentUser;
+        return GetViewableComponents(user, displayAllGroups).Concat(GetViewableRecipes(user, displayAllGroups)).OrderBy(r => r.Name).ToList();
+    }
+
+    /// <summary>
+    /// Retrieves the list of components the user is allowed to view, based on their view rights.
+    /// Filters out any components the user does not have access to view.
+    /// </summary>
+    /// <param name="user">The user for whom the viewable components are retrieved.</param>
+    /// <param name="displayAllGroups">Optional. If true, includes components from all groups, even those the user might not have access to. Defaults to true.</param>
+    /// <returns>A list of viewable components as <see cref="IData"/>.</returns>
+    private List<IData> GetViewableComponents(User user, bool displayAllGroups = true)
+    {
+        return (displayAllGroups) ? MauiProgram._context.Components
+            .Where(c => !MauiProgram._context.MissingViewRightsComponents
+                .Any(m => m.UserId == user.Id && m.ComponentId == c.Id && m.CannotSee))
+            .Select(component => (IData)component)
+            .ToList()
+            : MauiProgram._context.Components
+            .Where(c => !MauiProgram._context.MissingViewRightsComponents
+                .Any(m => m.UserId == user.Id && m.ComponentId == c.Id && m.CannotSee)
+                && !MauiProgram._context.MissingViewRightsGroups
+                .Any(m => m.UserId == user.Id && m.GroupId == c.GroupId))
+            .Select(component => (IData)component)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Retrieves the list of recipes the user is allowed to view, based on their view rights.
+    /// Filters out any recipes the user does not have access to view.
+    /// </summary>
+    /// <param name="user">The user for whom the viewable recipes are retrieved.</param>
+    /// <param name="displayAllGroups">Optional. If true, includes recipes from all groups, even those the user might not have access to. Defaults to true.</param>
+    /// <returns>A list of viewable recipes as <see cref="IData"/>.</returns>
+    private List<IData> GetViewableRecipes(User user, bool displayAllGroups = true)
+    {
+        return (displayAllGroups) ? MauiProgram._context.Recipes
+            .Where(r => !MauiProgram._context.MissingViewRightsRecipes
+                .Any(m => m.UserId == user.Id && m.RecipeId == r.Id && m.CannotSee))
+            .Select(recipe => (IData)recipe)
+            .ToList()
+            : MauiProgram._context.Recipes
+            .Where(r => !MauiProgram._context.MissingViewRightsRecipes
+                .Any(m => m.UserId == user.Id && m.RecipeId == r.Id && m.CannotSee)
+                && !MauiProgram._context.MissingViewRightsGroups
+                .Any(m => m.UserId == user.Id && m.GroupId == r.GroupId))
+            .Select(recipe => (IData)recipe)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Handles the completion of an entry in the search box or an change in the comboBox.
+    /// Depending on the selected group type and search input, navigates to the appropriate search and view page.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnEntryCompleted(object sender, EventArgs e)
     {
         if (!_isInitialized)
             return;
 
-        //offset for filter groups
-        int offset = 2;
-
-        if (TypeGroupPicker.SelectedIndex == 0)
+        List<IData> results;
+        IEnumerable<IData> baseQuery = TypeGroupPicker.SelectedIndex switch
         {
-            //all
-            if (SearchEntry.Text.Length == 0)
-            {
-                App.Current.MainPage = new SearchAndViewPage();
-            }
-            else
-            {
-                List<IData> results = MauiProgram._context.Components.Where(c => c.Name.Contains(SearchEntry.Text) || c.Description.Contains(SearchEntry.Text)).Select(component => (IData)component).ToList();
-                results.AddRange(MauiProgram._context.Recipes.Where(c => c.Name.Contains(SearchEntry.Text) || c.Description.Contains(SearchEntry.Text)).Select(component => (IData)component).ToList());
-                results = results.OrderBy(r => r.Name).ToList();
-                App.Current.MainPage = new SearchAndViewPage(results, SearchEntry.Text);
-            }
+            (int)Selection.Components => GetViewableComponents(MauiProgram.CurrentUser),
+            (int)Selection.Recipes => GetViewableRecipes(MauiProgram.CurrentUser),
+            _ => RetrieveViewableDataForUser().Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - (int)Selection.OffSet)
+        };
+
+        if (TypeGroupPicker.SelectedIndex == (int)Selection.All)
+        {
+            results = string.IsNullOrEmpty(SearchEntry.Text)
+                ? RetrieveViewableDataForUser()
+                : RetrieveViewableDataForUser().Where(c => c.Name.Contains(SearchEntry.Text) || (c.Description != null && c.Description.Contains(SearchEntry.Text))).ToList();
         }
         else
         {
-            if (SearchEntry.Text.Length == 0)
-            {
-                //Components
-                if(TypeGroupPicker.SelectedIndex == 1)
-                {
-                    List<IData> results = MauiProgram._context.Components.Select(c => (IData)c).OrderBy(r => r.Name).ToList();
-                    App.Current.MainPage = new SearchAndViewPage(results, selectedIndex: TypeGroupPicker.SelectedIndex);
-                }
-                //Recipes
-                else if(TypeGroupPicker.SelectedIndex == 2)
-                {
-                    List<IData> results = MauiProgram._context.Recipes.Select(r => (IData)r).OrderBy(r => r.Name).ToList();
-                    App.Current.MainPage = new SearchAndViewPage(results, selectedIndex: TypeGroupPicker.SelectedIndex);
-                }
-                //groups
-                else
-                {
-                    List<IData> results = MauiProgram._context.Components.Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - offset).Select(component => (IData)component).ToList();
-                    results.AddRange(MauiProgram._context.Recipes.Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - offset).Select(component => (IData)component).ToList());
-                    results = results.OrderBy(r => r.Name).ToList();
-                    App.Current.MainPage = new SearchAndViewPage(results, selectedIndex: TypeGroupPicker.SelectedIndex);
-                }
-            }
-            else
-            {
-                //Components
-                if (TypeGroupPicker.SelectedIndex == 1)
-                {
-                    List<IData> results = MauiProgram._context.Components.Where(c => c.Name.Contains(SearchEntry.Text) || c.Description.Contains(SearchEntry.Text)).Select(c => (IData)c).OrderBy(r => r.Name).ToList();
-                    App.Current.MainPage = new SearchAndViewPage(results, SearchEntry.Text, TypeGroupPicker.SelectedIndex);
-                }
-                //Recipes
-                else if (TypeGroupPicker.SelectedIndex == 2)
-                {
-                    List<IData> results = MauiProgram._context.Recipes.Where(c => c.Name.Contains(SearchEntry.Text) || c.Description.Contains(SearchEntry.Text)).Select(r => (IData)r).OrderBy(r => r.Name).ToList();
-                    App.Current.MainPage = new SearchAndViewPage(results, SearchEntry.Text, TypeGroupPicker.SelectedIndex);
-                }
-                //groups
-                else
-                {
-                    List<IData> results = MauiProgram._context.Components.Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - offset && (c.Name.Contains(SearchEntry.Text) || c.Description.Contains(SearchEntry.Text))).Select(component => (IData)component).ToList();
-                    results.AddRange(MauiProgram._context.Recipes.Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - offset && (c.Name.Contains(SearchEntry.Text) || c.Description.Contains(SearchEntry.Text))).Select(component => (IData)component).ToList());
-                    results = results.OrderBy(r => r.Name).ToList();
-                    App.Current.MainPage = new SearchAndViewPage(results, SearchEntry.Text, TypeGroupPicker.SelectedIndex);
-                }
-            }
+            results = string.IsNullOrEmpty(SearchEntry.Text)
+                ? baseQuery.ToList()
+                : baseQuery.Where(c => c.Name.Contains(SearchEntry.Text) || (c.Description != null && c.Description.Contains(SearchEntry.Text))).ToList();
         }
+
+        App.Current!.MainPage = new NavigationPage(new SearchAndViewPage(results.OrderBy(r => r.Name).ToList(), SearchEntry.Text, TypeGroupPicker.SelectedIndex));
     }
 
-    private void OnFrameTapped(int id, Type type)
+    /// <summary>
+    /// Handles the tap event on a frame, navigates to the corresponding detail page based on the object's type.
+    /// </summary>
+    /// <param name="id">The unique identifier of the tapped object (either a Component or Recipe).</param>
+    /// <param name="type">The type of the tapped object (Component or Recipe).</param>
+    /// <exception cref="NotImplementedException">Thrown if the tapped object's type is not implemented.</exception>
+    private static void OnFrameTapped(int id, Type type)
     {
-        switch (type)
+        App.Current!.MainPage = type switch
         {
-            case Type t when t == typeof(Component):
-                App.Current.MainPage = new DetailPage(MauiProgram._context.Components.Single(c => c.Id == id));
-                break;
-            case Type t when t == typeof(Recipe):
-                App.Current.MainPage = new DetailPage(MauiProgram._context.Recipes.Single(c => c.Id == id));
-                break;
-            default:
-                throw new NotImplementedException("type not implemented");
-        }
+            Type t when t == typeof(Component) => new DetailPage(MauiProgram._context.Components.Single(c => c.Id == id)),
+            Type t when t == typeof(Recipe) => new DetailPage(MauiProgram._context.Recipes.Single(c => c.Id == id)),
+            _ => throw new NotImplementedException("type not implemented"),
+        };
     }
 
     private async void OnAddGroup(object sender, EventArgs e)
     {
         var popup = new AddGroupPopup();
         var result = (Group?)await this.ShowPopupAsync(popup);
-        App.Current.MainPage = new SearchAndViewPage();
+        App.Current!.MainPage = new SearchAndViewPage();
     }
 
     private async void OnAddComponent(object sender, EventArgs e)
     {
-        var popup = new AddComponentPopup();
+        var popup = new AddComponentPopup(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single());
         var result = (Component?)await this.ShowPopupAsync(popup);
-        App.Current.MainPage = new SearchAndViewPage();
+        App.Current!.MainPage = new SearchAndViewPage();
     }
 
     private async void OnAddRecipe(object sender, EventArgs e)
     {
-        var popup = new AddRecipePopup();
+        var popup = new AddRecipePopup(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single());
         var result = (Recipe?)await this.ShowPopupAsync(popup);
-        App.Current.MainPage = new SearchAndViewPage();
+        App.Current!.MainPage = new SearchAndViewPage();
+    }
+
+    private void OnViewUsers(object sender, EventArgs e)
+    {
+        App.Current!.MainPage = new UserOverviewPage();
+    }
+
+    private async void OnAddCampaigns(object sender, EventArgs e)
+    {
+        var popup = new AddCampaignPopup();
+        var result = (Campaign?)await this.ShowPopupAsync(popup);
+        App.Current!.MainPage = new SearchAndViewPage();
     }
 
     private async void OnSettings(object sender, EventArgs e)

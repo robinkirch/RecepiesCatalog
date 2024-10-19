@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Views;
 using RecipeCatalog.Data;
+using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
 
@@ -21,7 +22,7 @@ namespace RecipeCatalog
             StatusText.Text = AppLanguage.Main_CheckingConnection;
 
 
-            connectionstring = connectionstring == string.Empty ? MauiProgram.configuration.GetSection("Connection:DataSource").Value ?? string.Empty : connectionstring;
+            connectionstring = connectionstring == string.Empty ? MauiProgram.Configuration.GetSection("Connection:DataSource").Value ?? string.Empty : connectionstring;
             if(connectionstring == string.Empty)
             {
                 ConnectionStringBlock.IsVisible = true;
@@ -29,8 +30,28 @@ namespace RecipeCatalog
             }
             else
             {
-                //TODO: Test
+                //TODO: Test mit catch
                 MauiProgram._context = new Context(connectionstring);
+                CheckUser(MauiProgram._context.Users.ToList());
+            }
+        }
+
+        private void CheckUser(List<User> users)
+        {
+            var activityIndicator = this.FindByName<ActivityIndicator>("ActSpinner");
+            activityIndicator.IsRunning = true;
+
+            var userkey = MauiProgram.Configuration.GetSection("Connection:UserKey").Value;
+            if (userkey == string.Empty || userkey == null)
+            {
+                UserBlock.IsVisible = true;
+                StatusText.Text = "Username eingeben";
+            }
+            else
+            {
+                //Test
+                MauiProgram.CurrentUser = users.Where(u => u.Id == Guid.Parse(userkey!)).Single();
+
                 activityIndicator.IsRunning = false;
                 ContinueBtn.IsVisible = true;
                 StatusText.IsVisible = false;
@@ -40,7 +61,7 @@ namespace RecipeCatalog
 
         private void OnContinue(object sender, EventArgs e)
         {
-            App.Current.MainPage = new SearchAndViewPage();
+            App.Current!.MainPage = new SearchAndViewPage();
         }
 
         private async void OnSettings(object sender, EventArgs e)
@@ -51,8 +72,31 @@ namespace RecipeCatalog
         private void OnEntryCompleted(object sender, EventArgs e)
         {
             ConnectionStringBlock.IsVisible = false;
-            MauiProgram.configuration["Connection:DataSource"] = ConnectionStringInput.Text;
-            CheckConnection(MauiProgram.configuration.GetSection("Connection:DataSource").Value!);
+            MauiProgram.Configuration["Connection:DataSource"] = ConnectionStringInput.Text;
+            CheckConnection(MauiProgram.Configuration.GetSection("Connection:DataSource").Value!);
+        }
+
+        private void OnUserEntryCompleted(object sender, EventArgs e)
+        {
+            UserBlock.IsVisible = false;
+            Guid? guid = null;
+            do
+            {
+                guid = Guid.NewGuid();
+            }
+            while (MauiProgram._context.Users.Any(u => u.Id == guid.Value));
+
+            User user = new()
+            {
+                Id = guid.Value,
+                Username = UserStringInput.Text,
+                IsAdmin = MauiProgram._context.Users.Any() ? false : true
+            };
+            MauiProgram._context.Users.Add(user);
+            MauiProgram._context.SaveChanges();
+
+            MauiProgram.Configuration["Connection:UserKey"] = guid.ToString();
+            CheckUser(MauiProgram._context.Users.ToList());
         }
     }
 }

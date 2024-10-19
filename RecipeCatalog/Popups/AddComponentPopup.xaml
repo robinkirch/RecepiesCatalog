@@ -5,16 +5,50 @@
                xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
                x:Class="RecipeCatalog.Popups.AddComponentPopup">
 
-    <VerticalStackLayout Padding="20" BackgroundColor="#50D3D3D3">
-        <Label Text="{x:Static resx:AppLanguage.Component_InformationText}" FontSize="Medium"/>
-        <Button Text="{x:Static resx:AppLanguage.Select_Picture}" Clicked="OnSelectImageClicked"/>
-        <Entry x:Name="NameEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Name}" />
-        <Entry x:Name="DescriptionEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}" />
-        <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
-        <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" />
-        <HorizontalStackLayout Spacing="10" Padding="0,10">
-            <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked" HorizontalOptions="StartAndExpand"/>
-            <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="End"/>
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+    <Grid RowDefinitions="0.2*, 2*, 0.2*">
+        <BoxView Grid.Row="0" Color="Transparent"/>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="10, 0" BackgroundColor="Transparent">
+                <Label Text="{x:Static resx:AppLanguage.Component_InformationText}" FontSize="Medium"/>
+                <Entry x:Name="NameEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Name}" />
+                <Entry x:Name="DescriptionEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}" />
+                <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
+                <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" />
+
+                <Label Text="Deny View for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
+                    <CollectionView x:Name="ViewCollectionView">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout  Orientation="Horizontal" Padding="3" >
+                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
+                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+
+                <Label Text="Deny Description for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
+                    <CollectionView x:Name="DescCollectionView">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout  Orientation="Horizontal" Padding="3" >
+                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
+                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+
+                <HorizontalStackLayout Spacing="10" Padding="0,10">
+                    <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked" HorizontalOptions="StartAndExpand"/>
+                    <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="End"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <BoxView Grid.Row="2" Color="Transparent"/>
+    </Grid>
 </toolkit:Popup>

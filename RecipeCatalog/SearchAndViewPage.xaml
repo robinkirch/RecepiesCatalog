@@ -31,6 +31,7 @@
                     Spacing="20"
                     VerticalOptions="EndAndExpand" 
                     HorizontalOptions="Center"
+                    IsVisible="False"
                     x:Name="AdminArea">
                 <Button
                         x:Name="AddGroupBtn"
@@ -66,6 +67,30 @@
                                  FontFamily="FontAwesomeSolid"
                                  Size="20"
                                  Color="Black" />
+                    </Button.ImageSource>
+                </Button>
+                <Button
+                    x:Name="ViewUsersBtn"
+                    Text="View USers" 
+                    Clicked="OnViewUsers"
+                    HorizontalOptions="Center">     
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf0c0;"
+                             FontFamily="FontAwesomeSolid"
+                             Size="20"
+                             Color="Black" />
+                    </Button.ImageSource>
+                </Button>
+                <Button
+                    x:Name="AddCampaignBtn"
+                    Text="Add Campaigns" 
+                    Clicked="OnAddCampaigns"
+                    HorizontalOptions="Center">     
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xf6bb;"
+                             FontFamily="FontAwesomeSolid"
+                             Size="20"
+                             Color="Black" />
                     </Button.ImageSource>
                 </Button>
             </HorizontalStackLayout>
