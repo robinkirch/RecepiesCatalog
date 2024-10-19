@@ -6,7 +6,7 @@
                x:Class="RecipeCatalog.Popups.DeleteErrorPopup">
 
     <VerticalStackLayout Padding="20" BackgroundColor="#40D3D3D3">
-        <Label Text="There are following Recipes using this Component. Do you want to remove them all?" FontSize="Medium"/>
+        <Label Text="{x:Static resx:AppLanguage.DeleteWarningComponentsInRecipe}" FontSize="Medium"/>
         <Grid x:Name="RecipesComponentsPlace">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"></RowDefinition>
@@ -19,7 +19,7 @@
             </Grid.ColumnDefinitions>
         </Grid>
         <HorizontalStackLayout Spacing="10" Padding="0,10">
-            <Button Text="OK" Clicked="OnOkButtonClicked" HorizontalOptions="StartAndExpand"/>
+            <Button Text="{x:Static resx:AppLanguage.OK}" Clicked="OnOkButtonClicked" HorizontalOptions="StartAndExpand"/>
             <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="End"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>

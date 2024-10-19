@@ -65,7 +65,7 @@
 
                 <Label
                     x:Name="Components"
-                    Text="Necessary Components"
+                    Text="{x:Static resx:AppLanguage.Detail_NeccessaryComponent}"
                     FontAttributes = "Bold"
                     FontSize="Title" 
                     Margin="0, 10"
@@ -73,7 +73,7 @@
 
                 <Label
                     x:Name="Recipes"
-                    Text="Used in Recipes"
+                    Text="{x:Static resx:AppLanguage.Detail_UsedInRecipes}"
                     FontAttributes = "Bold"
                     FontSize="Title" 
                     Margin="0, 10"
@@ -91,7 +91,7 @@
                 </Grid>
 
                 <!--Component-->
-                <Label x:Name="LabelCompView" Text="Deny View for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
+                <Label x:Name="LabelCompView" Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
                 <Frame x:Name="FrameCompView" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="ComponentViewCollectionView">
                         <CollectionView.ItemTemplate>
@@ -105,7 +105,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label x:Name="LabelCompDesc" Text="Deny Description for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
+                <Label x:Name="LabelCompDesc" Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
                 <Frame x:Name="FrameCompDesc" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="ComponentDescCollectionView">
                         <CollectionView.ItemTemplate>
@@ -120,7 +120,7 @@
                 </Frame>
                 
                 <!--Recipe-->
-                <Label x:Name="EditComponentLabel" Text="MultiSelect" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="#565656" IsVisible="False"/>
+                <Label x:Name="EditComponentLabel" Text="{x:Static resx:AppLanguage.Placeholder_MultiSelect}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="#565656" IsVisible="False"/>
                 <Frame x:Name="EditComponentFrame" BorderColor="Gray" CornerRadius="5" Padding="0" HasShadow="False" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="EditComponentCollectionView">
                         <CollectionView.ItemTemplate>
@@ -135,7 +135,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label x:Name="LabelRecView" Text="Deny View for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
+                <Label x:Name="LabelRecView" Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
                 <Frame x:Name="FrameRecView" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="RecipeViewCollectionView">
                         <CollectionView.ItemTemplate>
@@ -149,7 +149,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label x:Name="LabelRecDesc" Text="Deny Description for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
+                <Label x:Name="LabelRecDesc" Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
                 <Frame x:Name="FrameRecDesc" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="RecipeDescCollectionView">
                         <CollectionView.ItemTemplate>
@@ -163,7 +163,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label x:Name="LabelRecComp" Text="Deny Components for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
+                <Label x:Name="LabelRecComp" Text="{x:Static resx:AppLanguage.DenyComponentsUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
                 <Frame x:Name="FrameRecComp" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="RecipeCompCollectionView">
                         <CollectionView.ItemTemplate>
@@ -191,7 +191,7 @@
                     x:Name="AdminArea">
                 <Button
                     x:Name="EditBtn"
-                    Text="Edit" 
+                    Text="{x:Static resx:AppLanguage.Edit}" 
                     Clicked="OnEdit"
                     HorizontalOptions="Center">
                     <Button.ImageSource>
@@ -203,7 +203,7 @@
                 </Button>
                 <Button
                     x:Name="DelBtn"
-                    Text="Delete" 
+                    Text="{x:Static resx:AppLanguage.Delete}" 
                     Clicked="OnDelete"
                     HorizontalOptions="Center">
                     <Button.ImageSource>
@@ -215,7 +215,7 @@
                 </Button>
                 <Button
                     x:Name="SaveBtn"
-                    Text="Save" 
+                    Text="{x:Static resx:AppLanguage.Save}" 
                     Clicked="OnSave"
                     HorizontalOptions="Center"
                     IsVisible="False">

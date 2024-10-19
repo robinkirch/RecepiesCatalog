@@ -6,9 +6,9 @@
                x:Class="RecipeCatalog.Popups.DeletePopup">
 
     <VerticalStackLayout Padding="20" BackgroundColor="#40D3D3D3">
-        <Label Text="Are you sure you want to delete this item?" FontSize="Medium"/>
+        <Label Text="{x:Static resx:AppLanguage.DeleteQuestion}" FontSize="Medium"/>
         <HorizontalStackLayout Spacing="10" Padding="0,10">
-            <Button Text="OK" Clicked="OnOkButtonClicked" HorizontalOptions="StartAndExpand"/>
+            <Button Text="{x:Static resx:AppLanguage.OK}" Clicked="OnOkButtonClicked" HorizontalOptions="StartAndExpand"/>
             <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="End"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>

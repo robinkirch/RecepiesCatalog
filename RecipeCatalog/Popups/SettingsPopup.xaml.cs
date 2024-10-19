@@ -18,7 +18,7 @@ public partial class SettingsPopup : Popup
     private void LoadPickerData()
     {
         DataSource.Text = MauiProgram.Configuration.GetSection("Connection:DataSource").Value;
-        UsernameInput.Text = MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Select(u => u.Username).Single();
+        UsernameInput.Text = MauiProgram.CurrentUser.Username;
 
         List<CultureInfo> cultures = new List<CultureInfo>
         {
@@ -34,10 +34,10 @@ public partial class SettingsPopup : Popup
         MauiProgram.Configuration["Connection:DataSource"] = DataSource.Text;
         SetLanguage(LanguagePicker.SelectedItem.ToString());
 
-        var user = MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single();
-        user.Username = UsernameInput.Text;
-        MauiProgram._context.Users.Update(user);
+        MauiProgram.CurrentUser.Username = UsernameInput.Text;
+        MauiProgram._context.Users.Update(MauiProgram.CurrentUser);
         MauiProgram._context.SaveChanges();
+        MauiProgram.CurrentUser = MauiProgram._context.Users.Single(u => u.Id == MauiProgram.CurrentUser.Id);
 
         Close();
     }

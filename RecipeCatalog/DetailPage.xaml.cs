@@ -117,7 +117,7 @@ public partial class DetailPage : ContentPage
             //head
             var componentLabel = new Label
             {
-                Text = "Components",
+                Text = AppLanguage.TableComponents,
                 FontAttributes = FontAttributes.Bold,
                 FontSize = 15,
                 VerticalOptions = LayoutOptions.Start
@@ -127,7 +127,7 @@ public partial class DetailPage : ContentPage
             Grid.SetColumn(componentLabel, 0);
             var counterLabel = new Label
             {
-                Text = "Count",
+                Text = AppLanguage.TableCount,
                 FontAttributes = FontAttributes.Bold,
                 FontSize = 15,
                 VerticalOptions = LayoutOptions.Start
@@ -211,13 +211,13 @@ public partial class DetailPage : ContentPage
         };
 
         ImagePicker.IsVisible = true;
-        NameText.Text = "Bezeichner";
+        NameText.Text = AppLanguage.Username;
         NameEntry.IsVisible = true;
         NameEntry.Text = data.Name;
-        DescriptionText.Text = "Beschreibung";
+        DescriptionText.Text = AppLanguage.Placeholder_Description;
         DescEntry.IsVisible = true;
         DescEntry.Text = data.Description;
-        AliasText.Text = "Alias";
+        AliasText.Text = AppLanguage.Alias;
         AliasEntry.IsVisible = true;
         AliasEntry.Text = string.Join(",", data.Aliases ?? []);
         SaveBtn.IsVisible = true;
@@ -230,7 +230,7 @@ public partial class DetailPage : ContentPage
     {
         GroupPicker.ItemsSource = MauiProgram._context.Groups.ToList();
         GroupPicker.ItemDisplayBinding = new Binding("GroupName");
-        GroupText.Text = "Gruppen";
+        GroupText.Text = AppLanguage.Placeholder_Groups;
         GroupPicker.IsVisible = true;
 
         int? selectedGroupId = DataType == typeof(Component) ? MauiProgram._context.Components.Single(c => c.Id == ID).GroupId : MauiProgram._context.Recipes.Single(c => c.Id == ID).GroupId;

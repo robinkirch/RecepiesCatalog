@@ -157,7 +157,7 @@
     <value>Beschreibung</value>
   </data>
   <data name="Placeholder_Groups" xml:space="preserve">
-    <value>Groups</value>
+    <value>Gruppen</value>
   </data>
   <data name="Placeholder_Name" xml:space="preserve">
     <value>Name</value>
@@ -185,5 +185,71 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>DnD Rezepte</value>
+  </data>
+  <data name="SV_AddUser" xml:space="preserve">
+    <value>Nutzer</value>
+  </data>
+  <data name="SV_AddCampaign" xml:space="preserve">
+    <value>Kampagne</value>
+  </data>
+  <data name="Detail_NeccessaryComponent" xml:space="preserve">
+    <value>Notwendige Komponenten</value>
+  </data>
+  <data name="Detail_UsedInRecipes" xml:space="preserve">
+    <value>Benutzt in Rezepten</value>
+  </data>
+  <data name="DenyViewUser" xml:space="preserve">
+    <value>Element verbergen</value>
+  </data>
+  <data name="DenyDescriptionUser" xml:space="preserve">
+    <value>Beschreibung verbergen</value>
+  </data>
+  <data name="Placeholder_MultiSelect" xml:space="preserve">
+    <value>Mehrfachauswahl</value>
+  </data>
+  <data name="DenyComponentsUser" xml:space="preserve">
+    <value>Komponenten verbergen</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="DeleteWarningComponentsInRecipe" xml:space="preserve">
+    <value>Es gibt folgende Rezepte, die diese Komponente verwenden. Möchten Sie sie alle entfernen?</value>
+  </data>
+  <data name="DeleteQuestion" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?</value>
+  </data>
+  <data name="DataConnection" xml:space="preserve">
+    <value>Datenverbindung</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nutzername</value>
+  </data>
+  <data name="Placeholder_Campaign" xml:space="preserve">
+    <value>Kampagnen</value>
+  </data>
+  <data name="User_CustomRights" xml:space="preserve">
+    <value>Benutzerdefinierte Rechte</value>
+  </data>
+  <data name="User_GrantedAccessGroups" xml:space="preserve">
+    <value>Berechtigungen für Gruppen</value>
+  </data>
+  <data name="TableComponents" xml:space="preserve">
+    <value>Komponenten</value>
+  </data>
+  <data name="TableCount" xml:space="preserve">
+    <value>Anzahl</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Alias</value>
+  </data>
+  <data name="Main_EnterUsername" xml:space="preserve">
+    <value>Nutzername eingeben</value>
   </data>
 </root>

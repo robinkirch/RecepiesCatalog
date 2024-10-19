@@ -45,7 +45,7 @@ namespace RecipeCatalog
             if (userkey == string.Empty || userkey == null)
             {
                 UserBlock.IsVisible = true;
-                StatusText.Text = "Username eingeben";
+                StatusText.Text = AppLanguage.Main_EnterUsername;
             }
             else
             {

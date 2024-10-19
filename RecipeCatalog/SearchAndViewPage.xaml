@@ -71,7 +71,7 @@
                 </Button>
                 <Button
                     x:Name="ViewUsersBtn"
-                    Text="View USers" 
+                    Text="{x:Static resx:AppLanguage.SV_AddUser}" 
                     Clicked="OnViewUsers"
                     HorizontalOptions="Center">     
                     <Button.ImageSource>
@@ -83,7 +83,7 @@
                 </Button>
                 <Button
                     x:Name="AddCampaignBtn"
-                    Text="Add Campaigns" 
+                    Text="{x:Static resx:AppLanguage.SV_AddCampaign}" 
                     Clicked="OnAddCampaigns"
                     HorizontalOptions="Center">     
                     <Button.ImageSource>

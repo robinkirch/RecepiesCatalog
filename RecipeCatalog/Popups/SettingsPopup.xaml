@@ -6,9 +6,9 @@
                x:Class="RecipeCatalog.Popups.SettingsPopup">
 
     <VerticalStackLayout Padding="20" BackgroundColor="#40D3D3D3" HorizontalOptions="Center"  WidthRequest="400">
-        <Label Text="Data-Connection"/>
+        <Label Text="{x:Static resx:AppLanguage.DataConnection}"/>
         <Entry x:Name="DataSource" WidthRequest="300"/>
-        <Label Text="Username"/>
+        <Label Text="{x:Static resx:AppLanguage.Username}"/>
         <Entry x:Name="UsernameInput" WidthRequest="300" />
         <Picker x:Name="LanguagePicker" Title="{x:Static resx:AppLanguage.LanguageTitle}" WidthRequest="300"/>
         <HorizontalStackLayout Spacing="10" Padding="0,10">

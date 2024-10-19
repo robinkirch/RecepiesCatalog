@@ -26,7 +26,7 @@
 
                     <!-- Scrollable Content -->
                     <StackLayout >
-                        <Label Text="MultiSelect" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="#565656"/>
+                        <Label Text="{x:Static resx:AppLanguage.Placeholder_MultiSelect}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="#565656"/>
                         <Frame BorderColor="Gray" CornerRadius="5" Padding="0" HasShadow="False" BackgroundColor="Transparent">
                             <CollectionView x:Name="ComponentCollectionView">
                                 <CollectionView.ItemTemplate>
@@ -43,7 +43,7 @@
                     </StackLayout>
                 </Grid>
 
-                <Label Text="Deny View for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Label Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
                 <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
                     <CollectionView x:Name="ViewCollectionView">
                         <CollectionView.ItemTemplate>
@@ -57,7 +57,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label Text="Deny Description for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Label Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
                 <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
                     <CollectionView x:Name="DescCollectionView">
                         <CollectionView.ItemTemplate>
@@ -71,7 +71,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label Text="Deny Components for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Label Text="{x:Static resx:AppLanguage.DenyComponentsUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
                 <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
                     <CollectionView x:Name="CompCollectionView">
                         <CollectionView.ItemTemplate>

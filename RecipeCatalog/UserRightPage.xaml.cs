@@ -1,4 +1,5 @@
 using RecipeCatalog.Models;
+using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
 
 namespace RecipeCatalog;
@@ -17,7 +18,7 @@ public partial class UserRightPage : ContentPage
 
     public void LoadData()
     {
-        LabelNameEntry.Text = "Benutzer: " + _user.Username;
+        LabelNameEntry.Text = AppLanguage.Username + ": " + _user.Username;
         NameEntry.Text = _user.Username;
         GuidEntry.Text = _user.Id.ToString();
 

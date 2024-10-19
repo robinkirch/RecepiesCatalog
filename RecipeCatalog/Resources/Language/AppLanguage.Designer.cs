@@ -61,6 +61,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alias.
+        /// </summary>
+        internal static string Alias {
+            get {
+                return ResourceManager.GetString("Alias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
@@ -75,6 +84,96 @@ namespace RecipeCatalog.Resources.Language {
         internal static string Component_InformationText {
             get {
                 return ResourceManager.GetString("Component_InformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data-connection.
+        /// </summary>
+        internal static string DataConnection {
+            get {
+                return ResourceManager.GetString("DataConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this item?.
+        /// </summary>
+        internal static string DeleteQuestion {
+            get {
+                return ResourceManager.GetString("DeleteQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are following Recipes using this Component. Do you want to remove them all?.
+        /// </summary>
+        internal static string DeleteWarningComponentsInRecipe {
+            get {
+                return ResourceManager.GetString("DeleteWarningComponentsInRecipe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide components.
+        /// </summary>
+        internal static string DenyComponentsUser {
+            get {
+                return ResourceManager.GetString("DenyComponentsUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide description.
+        /// </summary>
+        internal static string DenyDescriptionUser {
+            get {
+                return ResourceManager.GetString("DenyDescriptionUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide element.
+        /// </summary>
+        internal static string DenyViewUser {
+            get {
+                return ResourceManager.GetString("DenyViewUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neccessary components.
+        /// </summary>
+        internal static string Detail_NeccessaryComponent {
+            get {
+                return ResourceManager.GetString("Detail_NeccessaryComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Used in recipes.
+        /// </summary>
+        internal static string Detail_UsedInRecipes {
+            get {
+                return ResourceManager.GetString("Detail_UsedInRecipes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
             }
         }
         
@@ -97,7 +196,7 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please insert a Group name.
+        ///   Looks up a localized string similar to Please insert a group name.
         /// </summary>
         internal static string Group_InformationText {
             get {
@@ -142,6 +241,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter username.
+        /// </summary>
+        internal static string Main_EnterUsername {
+            get {
+                return ResourceManager.GetString("Main_EnterUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find your recipes.
         /// </summary>
         internal static string Main_FindYourRecipes {
@@ -160,11 +268,29 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string OK {
+            get {
+                return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alias,Alias.
         /// </summary>
         internal static string Placeholder_Aliases {
             get {
                 return ResourceManager.GetString("Placeholder_Aliases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Campaigns.
+        /// </summary>
+        internal static string Placeholder_Campaign {
+            get {
+                return ResourceManager.GetString("Placeholder_Campaign", resourceCulture);
             }
         }
         
@@ -187,6 +313,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multi selection.
+        /// </summary>
+        internal static string Placeholder_MultiSelect {
+            get {
+                return ResourceManager.GetString("Placeholder_MultiSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string Placeholder_Name {
@@ -196,7 +331,7 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please add all Information. Pictures and aliases are optional. Aliases are with , listed..
+        ///   Looks up a localized string similar to Please add all information. Pictures and aliases are optional. Aliases are with , listed..
         /// </summary>
         internal static string Recipies_InformationText {
             get {
@@ -223,11 +358,20 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Picture....
+        ///   Looks up a localized string similar to Select picture....
         /// </summary>
         internal static string Select_Picture {
             get {
                 return ResourceManager.GetString("Select_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Campaign.
+        /// </summary>
+        internal static string SV_AddCampaign {
+            get {
+                return ResourceManager.GetString("SV_AddCampaign", resourceCulture);
             }
         }
         
@@ -259,11 +403,65 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        internal static string SV_AddUser {
+            get {
+                return ResourceManager.GetString("SV_AddUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Components.
+        /// </summary>
+        internal static string TableComponents {
+            get {
+                return ResourceManager.GetString("TableComponents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string TableCount {
+            get {
+                return ResourceManager.GetString("TableCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DnD Recipes.
         /// </summary>
         internal static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom rights.
+        /// </summary>
+        internal static string User_CustomRights {
+            get {
+                return ResourceManager.GetString("User_CustomRights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Granted access for groups.
+        /// </summary>
+        internal static string User_GrantedAccessGroups {
+            get {
+                return ResourceManager.GetString("User_GrantedAccessGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string Username {
+            get {
+                return ResourceManager.GetString("Username", resourceCulture);
             }
         }
     }

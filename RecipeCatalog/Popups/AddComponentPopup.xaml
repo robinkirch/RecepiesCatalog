@@ -15,7 +15,7 @@
                 <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
                 <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" />
 
-                <Label Text="Deny View for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Label Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
                 <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
                     <CollectionView x:Name="ViewCollectionView">
                         <CollectionView.ItemTemplate>
@@ -29,7 +29,7 @@
                     </CollectionView>
                 </Frame>
 
-                <Label Text="Deny Description for User" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
+                <Label Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
                 <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
                     <CollectionView x:Name="DescCollectionView">
                         <CollectionView.ItemTemplate>
