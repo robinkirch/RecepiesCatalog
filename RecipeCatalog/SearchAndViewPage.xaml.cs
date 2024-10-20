@@ -21,12 +21,15 @@ public partial class SearchAndViewPage : ContentPage
 	{
 		InitializeComponent();
         _isInitialized = false;
-        if(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Select(u => u.IsAdmin).Single())
+        if(MauiProgram.CurrentUser.IsAdmin)
             AdminArea.IsVisible = true;
 
-        LoadPickerData(search, selectedIndex);
-        LoadView(results);
-        _isInitialized = true;
+        if (MauiProgram.CurrentUser.IsAdmin || MauiProgram.CurrentUser.CampaignId != null)
+        {
+            LoadPickerData(search, selectedIndex);
+            LoadView(results);
+            _isInitialized = true;
+        }
     }
 
     /// <summary>

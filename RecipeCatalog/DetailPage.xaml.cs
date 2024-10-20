@@ -97,11 +97,11 @@ public partial class DetailPage : ContentPage
 
                 var nameLabel = new Label
                 {
-                    Text = !rightsToSee.Any(ri => ri.RecipeId == r.Id) ? "???" : r.Name,
+                    Text = !rightsToSee.Any(ri => ri.RecipeId == r.Id) ? r.Name : "???",
                     TextColor = !groups.Any(g => g.GroupId == r.GroupId) ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
                     VerticalOptions = LayoutOptions.Start
                 };
-                if (rightsToSee.Any(ri => ri.RecipeId == r.Id) && !groups.Any(g => g.GroupId == r.GroupId))
+                if (!rightsToSee.Any(ri => ri.RecipeId == r.Id) && !groups.Any(g => g.GroupId == r.GroupId))
                 {
                     var tapGestureRecognizer = new TapGestureRecognizer();
                     tapGestureRecognizer.Tapped += (s, e) =>
@@ -158,7 +158,7 @@ public partial class DetailPage : ContentPage
             row++;
         }
 
-        foreach (var item in data)
+        foreach (var item in data) //Todo: maybe order by
         {
             RecipesComponentsPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
             var component = MauiProgram._context.Components.Where(c => c.Id == item.ComponentId).Single();
@@ -455,7 +455,6 @@ public partial class DetailPage : ContentPage
     {
         IData data = DataType == typeof(Component) ? MauiProgram._context.Components.Single(c => c.Id == ID) : MauiProgram._context.Recipes.Single(c => c.Id == ID);
         
-        //Saving the changes
         //Maindata
         data.Image = selectedImage;
         data.Name = NameEntry.Text;
