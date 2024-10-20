@@ -44,6 +44,7 @@ public partial class DetailPage : ContentPage
     public void ChangeCommonData(IData data)
     {
         DetailImage.Source = MauiProgram.ByteArrayToImageSource(data.Image);
+        selectedImage = data.Image;
         AliasText.Text = (data.Aliases != null && data.Aliases.Length > 0) ? "(" + string.Join(",", data.Aliases) + ")" : string.Empty;
         NameText.Text = data.Name;
         if (!(DataType == typeof(Recipe) && MauiProgram._context.MissingViewRightsRecipes.Any(m => m.RecipeId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeDescription)) &&
@@ -239,6 +240,7 @@ public partial class DetailPage : ContentPage
             _ => throw new NotImplementedException("type not implemented"),
         };
 
+        EditBtn.IsVisible = false;
         ImagePicker.IsVisible = true;
         NameText.Text = AppLanguage.Username;
         NameEntry.IsVisible = true;
@@ -287,7 +289,7 @@ public partial class DetailPage : ContentPage
     {
         var componentsForRecipe = MauiProgram._context.RecipeComponents.Where(c => c.RecipeId == ID).ToList();
         var components = new ObservableCollection<ComponentView>();
-        MauiProgram._context.Components.ToList().ForEach(c =>
+        MauiProgram._context.Components.OrderBy(c => c.Name).ToList().ForEach(c =>
         {
             components.Add(new() { 
                 Name = c.Name, 
@@ -380,6 +382,7 @@ public partial class DetailPage : ContentPage
                 selectedImage = memoryStream.ToArray();
             }
         }
+        DetailImage.Source = MauiProgram.ByteArrayToImageSource(selectedImage);
     }
 
     /// <summary>
@@ -467,7 +470,7 @@ public partial class DetailPage : ContentPage
             foreach (ComponentView item in EditComponentCollectionView.ItemsSource)
             {
                 if (item.IsSelected)
-                    RecipesComponents.Add(new() { Count = item.Count, ComponentId = item.Id });
+                    RecipesComponents.Add(new() { Count = item.Count, ComponentId = item.Id, RecipeId = data.Id });
             }
             MauiProgram._context.RecipeComponents.RemoveRange(MauiProgram._context.RecipeComponents.Where(c => c.RecipeId == ID).ToList());
             MauiProgram._context.RecipeComponents.AddRange(RecipesComponents);

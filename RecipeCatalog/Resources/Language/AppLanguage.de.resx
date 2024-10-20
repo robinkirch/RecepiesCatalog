@@ -163,7 +163,7 @@
     <value>Name</value>
   </data>
   <data name="Recipies_InformationText" xml:space="preserve">
-    <value>Bitte gib alle Informationen an. Bilder und Aliase sind optional. Aliase mit , auflisten.</value>
+    <value>Bitte gib alle Informationen an. Aliase sind optionalund werden mit ',' auflisten.</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>

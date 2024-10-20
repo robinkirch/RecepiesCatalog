@@ -225,6 +225,7 @@ public partial class SearchAndViewPage : ContentPage
         if (!_isInitialized)
             return;
 
+        string search = SearchEntry.Text.Trim().ToLower();
         List<IData> results;
         IEnumerable<IData> baseQuery = TypeGroupPicker.SelectedIndex switch
         {
@@ -235,18 +236,18 @@ public partial class SearchAndViewPage : ContentPage
 
         if (TypeGroupPicker.SelectedIndex == (int)Selection.All)
         {
-            results = string.IsNullOrEmpty(SearchEntry.Text)
+            results = string.IsNullOrEmpty(search)
                 ? RetrieveViewableDataForUser()
-                : RetrieveViewableDataForUser().Where(c => c.Name.Contains(SearchEntry.Text) || (c.Description != null && c.Description.Contains(SearchEntry.Text))).ToList();
+                : RetrieveViewableDataForUser().Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
         }
         else
         {
-            results = string.IsNullOrEmpty(SearchEntry.Text)
+            results = string.IsNullOrEmpty(search)
                 ? baseQuery.ToList()
-                : baseQuery.Where(c => c.Name.Contains(SearchEntry.Text) || (c.Description != null && c.Description.Contains(SearchEntry.Text))).ToList();
+                : baseQuery.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
         }
 
-        App.Current!.MainPage = new NavigationPage(new SearchAndViewPage(results.OrderBy(r => r.Name).ToList(), SearchEntry.Text, TypeGroupPicker.SelectedIndex));
+        App.Current!.MainPage = new NavigationPage(new SearchAndViewPage(results.OrderBy(r => r.Name).ToList(), SearchEntry.Text.Trim(), TypeGroupPicker.SelectedIndex));
     }
 
     /// <summary>

@@ -163,7 +163,7 @@
     <value>Name</value>
   </data>
   <data name="Recipies_InformationText" xml:space="preserve">
-    <value>Please add all information. Pictures and aliases are optional. Aliases are with , listed.</value>
+    <value>Please add all information. Aliases are optional and are listed with ','.</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
