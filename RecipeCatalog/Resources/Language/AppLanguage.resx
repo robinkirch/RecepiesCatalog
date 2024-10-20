@@ -252,4 +252,13 @@
   <data name="Main_EnterUsername" xml:space="preserve">
     <value>Enter username</value>
   </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="StatisticCountComponentsText" xml:space="preserve">
+    <value>Components : </value>
+  </data>
+  <data name="StatisticCountRecipesText" xml:space="preserve">
+    <value>Recipes : </value>
+  </data>
 </root>

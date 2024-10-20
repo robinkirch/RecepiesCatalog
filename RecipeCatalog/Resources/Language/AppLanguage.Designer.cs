@@ -331,7 +331,7 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please add all information. Pictures and aliases are optional. Aliases are with , listed..
+        ///   Looks up a localized string similar to Please add all information. Aliases are optional and are listed with &apos;,&apos;..
         /// </summary>
         internal static string Recipies_InformationText {
             get {
@@ -363,6 +363,33 @@ namespace RecipeCatalog.Resources.Language {
         internal static string Select_Picture {
             get {
                 return ResourceManager.GetString("Select_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Components : .
+        /// </summary>
+        internal static string StatisticCountComponentsText {
+            get {
+                return ResourceManager.GetString("StatisticCountComponentsText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipes : .
+        /// </summary>
+        internal static string StatisticCountRecipesText {
+            get {
+                return ResourceManager.GetString("StatisticCountRecipesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Statistics.
+        /// </summary>
+        internal static string Statistics {
+            get {
+                return ResourceManager.GetString("Statistics", resourceCulture);
             }
         }
         

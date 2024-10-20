@@ -11,7 +11,6 @@ namespace RecipeCatalog
         public MainPage()
         {
             InitializeComponent();
-
             CheckConnection();
         }
 
@@ -63,6 +62,9 @@ namespace RecipeCatalog
             {
                 //Test
                 MauiProgram.CurrentUser = users.Where(u => u.Id == Guid.Parse(userkey!)).Single();
+
+                if (MauiProgram.CurrentUser != null && MauiProgram.CurrentUser.IsAdmin)
+                    ShowStatistics();
 
                 activityIndicator.IsRunning = false;
                 ContinueBtn.IsVisible = true;
@@ -134,6 +136,13 @@ namespace RecipeCatalog
 
             MauiProgram.Configuration["Connection:UserKey"] = guid.ToString();
             CheckUser(MauiProgram._context.Users.ToList());
+        }
+
+        private void ShowStatistics()
+        {
+            StatisticsBlock.IsVisible = true;
+            StatisticCountComponentsText.Text += MauiProgram._context.Components.Count();
+            StatisticCountRecipesText.Text += MauiProgram._context.Recipes.Count();
         }
     }
 }

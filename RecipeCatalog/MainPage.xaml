@@ -62,6 +62,25 @@
                     Text="{x:Static resx:AppLanguage.Main_FindYourRecipes}" 
                     Clicked="OnContinue"
                     HorizontalOptions="Center" />
+
+                <Frame x:Name="StatisticsBlock" IsVisible="True" BackgroundColor="Transparent" BorderColor="#50007A" CornerRadius="20" Margin="80,10">
+                    <StackLayout>
+                        <Label
+                            x:Name="StatisticText"
+                            Text="{x:Static resx:AppLanguage.Statistics}"
+                            Style="{StaticResource SubHeadline}"
+                            SemanticProperties.HeadingLevel="Level2"/>
+                        <Label
+                            x:Name="StatisticCountComponentsText"
+                            HorizontalOptions="Center"
+                            Text="{x:Static resx:AppLanguage.StatisticCountComponentsText}"/>
+                        <Label
+                            x:Name="StatisticCountRecipesText"
+                            HorizontalOptions="Center"
+                            Text="{x:Static resx:AppLanguage.StatisticCountRecipesText}"/>
+                    </StackLayout>
+                </Frame>
+
             </VerticalStackLayout>
         </ScrollView>
 
