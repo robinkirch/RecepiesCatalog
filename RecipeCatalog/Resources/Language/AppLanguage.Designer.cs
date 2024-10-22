@@ -178,6 +178,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This platform is currently not supported..
+        /// </summary>
+        internal static string Exception_PlatformNotSupported {
+            get {
+                return ResourceManager.GetString("Exception_PlatformNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Components.
         /// </summary>
         internal static string Filter_Components {

@@ -288,7 +288,7 @@ public partial class SearchAndViewPage : ContentPage
     /// <param name="e">Event arguments.</param>
     private async void OnAddComponent(object sender, EventArgs e)
     {
-        var popup = new AddComponentPopup(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single());
+        var popup = new AddComponentPopup(MauiProgram._context.Users.Where(u => u.Id == MauiProgram.CurrentUser.Id).Single());
         var result = (Component?)await this.ShowPopupAsync(popup);
         App.Current!.MainPage = new SearchAndViewPage();
     }
@@ -300,7 +300,7 @@ public partial class SearchAndViewPage : ContentPage
     /// <param name="e">Event arguments.</param>
     private async void OnAddRecipe(object sender, EventArgs e)
     {
-        var popup = new AddRecipePopup(MauiProgram._context.Users.Where(u => u.Id == Guid.Parse(MauiProgram.Configuration.GetSection("Connection:UserKey").Value!)).Single());
+        var popup = new AddRecipePopup(MauiProgram._context.Users.Where(u => u.Id == MauiProgram.CurrentUser.Id).Single());
         var result = (Recipe?)await this.ShowPopupAsync(popup);
         App.Current!.MainPage = new SearchAndViewPage();
     }

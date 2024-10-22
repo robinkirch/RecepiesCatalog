@@ -5,6 +5,7 @@ using System.Globalization;
 using CommunityToolkit.Maui;
 using RecipeCatalog.Models;
 using Microsoft.Maui.LifecycleEvents;
+using System;
 
 namespace RecipeCatalog
 {
@@ -24,7 +25,7 @@ namespace RecipeCatalog
             builder.Configuration.AddConfiguration(config);
             Configuration = builder.Configuration;
 
-            var defLanguage = new CultureInfo(Configuration.GetSection("DefaultLanguage").Value ?? "en");
+            var defLanguage = new CultureInfo(RecipeCatalog.Manager.ConfigurationManager.ReadValue("DefaultLanguage") ?? "en");
             CultureInfo.DefaultThreadCurrentCulture = defLanguage;
             CultureInfo.DefaultThreadCurrentUICulture = defLanguage;
 
@@ -95,18 +96,6 @@ namespace RecipeCatalog
             stream.Seek(0, SeekOrigin.Begin);
             return ImageSource.FromStream(() => stream);
         }
-
-        /// <summary>
-        /// Determines whether the current user has admin privileges.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if the user is an admin; otherwise, <c>false</c>.
-        /// </returns>
-        /// <remarks>
-        /// This method checks the secret key stored in the configuration section 
-        /// "Connection:SecretKey". If the value matches the expected admin key, the user is considered an admin.
-        /// </remarks>
-        public static bool IsThisUserAdmin() => Configuration.GetSection("Connection:SecretKey").Value == "+KJDS??oO(D=)o8d-ü3=lkdsa3!3";
     }
 
     /// <summary>

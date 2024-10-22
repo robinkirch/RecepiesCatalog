@@ -24,7 +24,7 @@ public partial class DetailPage : ContentPage
         InitializeComponent();
         DataType = data.GetType();
         ID = data.Id;
-        AdminArea.IsVisible = !MauiProgram.IsThisUserAdmin();
+        AdminArea.IsVisible = MauiProgram.CurrentUser.IsAdmin;
         ChangeCommonData(data);
 
         if (DataType == typeof(Recipe))

@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using RecipeCatalog.Resources.Language;
+using System;
 using System.Globalization;
 using System.Resources;
 
@@ -21,7 +22,7 @@ public partial class SettingsPopup : Popup
     /// </summary>
     private void LoadPickerData()
     {
-        DataSource.Text = MauiProgram.Configuration.GetSection("Connection:DataSource").Value;
+        DataSource.Text = RecipeCatalog.Manager.ConfigurationManager.ReadValue("Connection:DataSource");
         UsernameInput.Text = MauiProgram.CurrentUser.Username;
 
         List<CultureInfo> cultures = new List<CultureInfo>
@@ -32,6 +33,7 @@ public partial class SettingsPopup : Popup
         LanguagePicker.ItemsSource = cultures;
         LanguagePicker.ItemDisplayBinding = new Binding("EnglishName");
         LanguagePicker.SelectedIndex = 0;
+        //TODO: Selected Index change
     }
 
     /// <summary>
@@ -43,7 +45,7 @@ public partial class SettingsPopup : Popup
     /// <param name="e">Event data.</param>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
-        MauiProgram.Configuration["Connection:DataSource"] = DataSource.Text;
+        RecipeCatalog.Manager.ConfigurationManager.UpdateValue("Connection:DataSource", DataSource.Text);
         SetLanguage(LanguagePicker.SelectedItem.ToString());
 
         MauiProgram.CurrentUser.Username = UsernameInput.Text;
@@ -77,7 +79,7 @@ public partial class SettingsPopup : Popup
         Thread.CurrentThread.CurrentCulture = cultureInfo;
         ResourceManager rm = AppLanguage.ResourceManager;
         rm.ReleaseAllResources();
-        MauiProgram.Configuration["DefaultLanguage"] = culture;
+        RecipeCatalog.Manager.ConfigurationManager.UpdateValue("DefaultLanguage", culture);
         App.Current!.MainPage = page; //error, double settings 
     }
 }

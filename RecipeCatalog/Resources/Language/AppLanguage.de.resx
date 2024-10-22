@@ -261,4 +261,7 @@
   <data name="StatisticCountRecipesText" xml:space="preserve">
     <value>Rezepte : </value>
   </data>
+  <data name="Exception_PlatformNotSupported" xml:space="preserve">
+    <value>Diese Plattform wird derzeit nicht unterstützt.</value>
+  </data>
 </root>

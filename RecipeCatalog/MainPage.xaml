@@ -63,7 +63,7 @@
                     Clicked="OnContinue"
                     HorizontalOptions="Center" />
 
-                <Frame x:Name="StatisticsBlock" IsVisible="True" BackgroundColor="Transparent" BorderColor="#50007A" CornerRadius="20" Margin="80,10">
+                <Frame x:Name="StatisticsBlock" IsVisible="False" BackgroundColor="Transparent" BorderColor="#50007A" CornerRadius="20" Margin="80,10">
                     <StackLayout>
                         <Label
                             x:Name="StatisticText"

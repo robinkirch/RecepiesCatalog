@@ -1,8 +1,14 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Core.Primitives;
+using CommunityToolkit.Maui.Views;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RecipeCatalog.Data;
 using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
+using System.Security.AccessControl;
+using System.Security.Principal;
+using System.Text.Json;
 
 namespace RecipeCatalog
 {
@@ -11,7 +17,28 @@ namespace RecipeCatalog
         public MainPage()
         {
             InitializeComponent();
+            CheckAppData();
             CheckConnection();
+        }
+
+        private void CheckAppData()
+        {
+            var configDirectoryPath = RecipeCatalog.Manager.ConfigurationManager.GetDirectoryPath();
+            if (!Directory.Exists(configDirectoryPath))
+            {
+                Directory.CreateDirectory(configDirectoryPath);
+            }
+            var configFilePath = RecipeCatalog.Manager.ConfigurationManager.GetFilePath();
+            if (!File.Exists(configFilePath))
+            {
+                File.Create(configFilePath).Dispose();
+                var configurationData = new Dictionary<string, string>();
+                foreach (var kvp in MauiProgram.Configuration.AsEnumerable())
+                {
+                    configurationData[kvp.Key] = kvp.Value;
+                }
+                File.WriteAllText(configFilePath, System.Text.Json.JsonSerializer.Serialize(configurationData, new JsonSerializerOptions { WriteIndented = true }));
+            }
         }
 
         /// <summary>
@@ -27,7 +54,7 @@ namespace RecipeCatalog
             StatusText.Text = AppLanguage.Main_CheckingConnection;
 
 
-            connectionstring = connectionstring == string.Empty ? MauiProgram.Configuration.GetSection("Connection:DataSource").Value ?? string.Empty : connectionstring;
+            connectionstring = connectionstring == string.Empty ? RecipeCatalog.Manager.ConfigurationManager.ReadValue("Connection:DataSource") : connectionstring;
             if(connectionstring == string.Empty)
             {
                 ConnectionStringBlock.IsVisible = true;
@@ -52,7 +79,7 @@ namespace RecipeCatalog
             var activityIndicator = this.FindByName<ActivityIndicator>("ActSpinner");
             activityIndicator.IsRunning = true;
 
-            var userkey = MauiProgram.Configuration.GetSection("Connection:UserKey").Value;
+            var userkey = RecipeCatalog.Manager.ConfigurationManager.ReadValue("Connection:UserKey");
             if (userkey == string.Empty || userkey == null)
             {
                 UserBlock.IsVisible = true;
@@ -105,8 +132,8 @@ namespace RecipeCatalog
         private void OnEntryCompleted(object sender, EventArgs e)
         {
             ConnectionStringBlock.IsVisible = false;
-            MauiProgram.Configuration["Connection:DataSource"] = ConnectionStringInput.Text;
-            CheckConnection(MauiProgram.Configuration.GetSection("Connection:DataSource").Value!);
+            RecipeCatalog.Manager.ConfigurationManager.UpdateValue("Connection:DataSource", ConnectionStringInput.Text);
+            CheckConnection(RecipeCatalog.Manager.ConfigurationManager.ReadValue("Connection:DataSource"));
         }
 
         /// <summary>
@@ -134,7 +161,7 @@ namespace RecipeCatalog
             MauiProgram._context.Users.Add(user);
             MauiProgram._context.SaveChanges();
 
-            MauiProgram.Configuration["Connection:UserKey"] = guid.ToString();
+            RecipeCatalog.Manager.ConfigurationManager.UpdateValue("Connection:UserKey", guid.ToString());
             CheckUser(MauiProgram._context.Users.ToList());
         }
 
