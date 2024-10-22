@@ -6,6 +6,8 @@ using CommunityToolkit.Maui;
 using RecipeCatalog.Models;
 using Microsoft.Maui.LifecycleEvents;
 using System;
+using NLog.Extensions.Logging;
+using NLog;
 
 namespace RecipeCatalog
 {
@@ -28,6 +30,12 @@ namespace RecipeCatalog
             var defLanguage = new CultureInfo(RecipeCatalog.Manager.ConfigurationManager.ReadValue("DefaultLanguage") ?? "en");
             CultureInfo.DefaultThreadCurrentCulture = defLanguage;
             CultureInfo.DefaultThreadCurrentUICulture = defLanguage;
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddNLog();
+            NLog.LogManager.Setup().RegisterMauiLog().LoadConfigurationFromAssemblyResource(typeof(App).Assembly);
+            var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
+            logger.Info("NLog MAUI init.");
 
             builder
                 .UseMauiApp<App>()
