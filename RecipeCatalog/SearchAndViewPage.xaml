@@ -10,13 +10,14 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <HorizontalStackLayout Grid.Row="0" Padding="20" HorizontalOptions="Center">
             <Entry x:Name="SearchEntry" Placeholder="{x:Static resx:AppLanguage.Search}" WidthRequest="400" HeightRequest="50" Margin="20,0" Completed="OnEntryCompleted" />
             <Picker x:Name="TypeGroupPicker" SelectedIndexChanged="OnEntryCompleted"/>
         </HorizontalStackLayout>
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" x:Name="ResultScrollView" Scrolled="OnResultScrollViewScrolled">
             <Grid x:Name="ResultView" Padding="30,0" ColumnSpacing="10" RowSpacing="10">
                 <Grid.RowDefinitions>
                     <!-- Zeilen werden dynamisch hinzugefügt -->
@@ -25,6 +26,20 @@
         </ScrollView>
         <VerticalStackLayout 
             Grid.Row="2"
+            Spacing="25">
+            <HorizontalStackLayout 
+                Padding="10" 
+                Spacing="20"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center"
+                x:Name="LoadingArea">
+                <ActivityIndicator
+                    x:Name="LoadingSpinner"
+                    IsRunning="false" IsVisible="False" Color="BlueViolet"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+        <VerticalStackLayout 
+            Grid.Row="3"
             Spacing="25">
             <HorizontalStackLayout 
                     Padding="10" 
@@ -97,7 +112,7 @@
         </VerticalStackLayout>
 
         <!-- Button for settings at the bottom -->
-        <Button Grid.Row="3"
+        <Button Grid.Row="4"
             x:Name="SettingsBtn"
             Clicked="OnSettings"
             BackgroundColor="#50D3D3D3"
@@ -110,6 +125,6 @@
                              Color="Black" />
             </Button.ImageSource>
         </Button>
-        <ScrollView Grid.Row="4" Padding="50"></ScrollView>
+        <ScrollView Grid.Row="5" Padding="50"></ScrollView>
     </Grid>
 </ContentPage>
