@@ -15,6 +15,7 @@ public partial class SearchAndViewPage : ContentPage
     private int currentlyLoaded = 0;
     private int numberOfColumns = 2;
     private bool _isLoading = false;
+    private bool _hasFilter = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SearchAndViewPage"/> class.
@@ -33,12 +34,12 @@ public partial class SearchAndViewPage : ContentPage
         if (MauiProgram.CurrentUser.IsAdmin || MauiProgram.CurrentUser.CampaignId != null)
         {
             LoadPickerData(search, selectedIndex);
-            //LoadView();
             for (int i = 0; i < numberOfColumns; i++)
             {
                 ResultView.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
             }
-            InitializeAsync(search, selectedIndex);
+            InitializeAsync(results);
+            _hasFilter = results != null;
             _isInitialized = true;
         }
     }
@@ -48,12 +49,10 @@ public partial class SearchAndViewPage : ContentPage
     /// Retrieves a list of viewable items (components and recipes) from the database, processes them, and displays them in a grid layout with images, names, and descriptions.
     /// Handles filtering based on view rights for components, recipes, and groups.
     /// </summary>
-    /// <param name="search">Optional. A search string used for filtering the displayed results (currently not used).</param>
-    /// <param name="selectedIndex">Optional. The index of the selected item in a picker (currently not used).</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    private async Task InitializeAsync(string search, int selectedIndex)
+    private async Task InitializeAsync(List<IData>? results = null)
     {
-        var viewableItems = await GetViewableItemsAsync(MauiProgram.CurrentUser);
+        var viewableItems = results ?? await GetViewableItemsAsync(MauiProgram.CurrentUser);
         if (viewableItems.Count == 0)
             return;
 
@@ -156,7 +155,7 @@ public partial class SearchAndViewPage : ContentPage
             });
             realCounter++;
         }
-        //started in <see cref="GetViewableItemsAsync"/>
+        //started in GetViewableItemsAsync
         LoadingSpinner.IsRunning = false;
         LoadingSpinner.IsVisible = false;
         _isLoading = false;
@@ -170,33 +169,54 @@ public partial class SearchAndViewPage : ContentPage
     /// </summary>
     /// <param name="user">Optional. The user for whom the viewable items are retrieved. If null, the current user is used.</param>
     /// <param name="displayAllGroups">Optional. If true, includes items from all groups, even those the user might not have access to. Defaults to true.</param>
+    /// <param name="overrideTake">Optional. If -1 no override will take place. If 0 all entrys are taken and all other positive numbers will override the itemsToLoad attribute and start from 0</param>
     /// <returns>A task that represents the asynchronous operation, with a list of <see cref="IData"/> as the result, containing viewable components and recipes.</returns>
-    private async Task<List<IData>> GetViewableItemsAsync(User? user = default, bool displayAllGroups = true)
+    private async Task<List<IData>> GetViewableItemsAsync(User? user = default, bool displayAllGroups = true, int overrideTake = -1)
     {
-        //stopped in <see cref="InitializeAsync"/> or here when no results
-        _isLoading = true;
-        LoadingSpinner.IsRunning = true;
-        LoadingSpinner.IsVisible = true;
-        user ??= MauiProgram.CurrentUser;
-        var res = await GetViewableComponentsQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "R" }))
-           .OrderBy(x => x.Name)
-           .Skip(currentlyLoaded)
-           .Take(itemsToLoad)
-           .ToListAsync();
-
         List<IData> result = new();
-        foreach (var item in res)
+        try
         {
-            if (item.Type == "C")
-                result.Add(await MauiProgram._context.Components.Where(c => c.Id == item.Id).SingleAsync());
-            else
-                result.Add(await MauiProgram._context.Recipes.Where(c => c.Id == item.Id).SingleAsync());
+            //stopped in InitializeAsync or OnEntryCompleted or here when no results
+            _isLoading = true;
+            LoadingSpinner.IsRunning = true;
+            LoadingSpinner.IsVisible = true;
+            user ??= MauiProgram.CurrentUser;
+            var res = (overrideTake == -1) 
+                ?
+                    await GetViewableComponentsQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "R" }))
+                    .OrderBy(x => x.Name)
+                    .Skip(currentlyLoaded)
+                    .Take(itemsToLoad)
+                    .ToListAsync()
+                : (overrideTake == 0)
+                    ?
+                    await GetViewableComponentsQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "R" }))
+                    .OrderBy(x => x.Name)
+                    .ToListAsync()
+                    :
+                    await GetViewableComponentsQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllGroups).Select(c => new { c.Name, c.Id, Type = "R" }))
+                    .OrderBy(x => x.Name)
+                    .Take(overrideTake)
+                    .ToListAsync()
+            ;
+
+            foreach (var item in res)
+            {
+                if (item.Type == "C")
+                    result.Add(await MauiProgram._context.Components.Where(c => c.Id == item.Id).SingleAsync());
+                else
+                    result.Add(await MauiProgram._context.Recipes.Where(c => c.Id == item.Id).SingleAsync());
+            }
+            if(result.Count == 0)
+            {
+                LoadingSpinner.IsRunning = false;
+                LoadingSpinner.IsVisible = false;
+                _isLoading = false;
+            }
         }
-        if(result.Count == 0)
+        catch(Exception ex)
         {
-            LoadingSpinner.IsRunning = false;
-            LoadingSpinner.IsVisible = false;
-            _isLoading = false;
+            throw new Exception(ex.Message);
         }
         return result;
     }
@@ -272,34 +292,53 @@ public partial class SearchAndViewPage : ContentPage
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The event data.</param>
-    private void OnEntryCompleted(object sender, EventArgs e)
-    {
+    private async void OnEntryCompleted(object sender, EventArgs e)
+    { 
         if (!_isInitialized)
             return;
 
         string search = SearchEntry.Text.Trim().ToLower();
+        int overrideTake = ((search == null || search == string.Empty) && TypeGroupPicker.SelectedIndex == (int)Selection.All) ? -1 : 0;
         List<IData> results;
-        IEnumerable<IData> baseQuery = TypeGroupPicker.SelectedIndex switch
+        IEnumerable<IData> baseQuery = null;
+        if (TypeGroupPicker.SelectedIndex == (int)Selection.All && overrideTake == -1)
         {
-            (int)Selection.Components => GetViewableComponentsQuery(MauiProgram.CurrentUser),
-            (int)Selection.Recipes => GetViewableRecipesQuery(MauiProgram.CurrentUser),
-            _ => GetViewableItemsAsync().GetAwaiter().GetResult().Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - (int)Selection.OffSet)
-        };
+            App.Current!.MainPage = new SearchAndViewPage();
+            return;//savety
+        }
 
         if (TypeGroupPicker.SelectedIndex == (int)Selection.All)
         {
+            var items = await GetViewableItemsAsync(overrideTake: overrideTake);
             results = string.IsNullOrEmpty(search)
-                ? GetViewableItemsAsync().GetAwaiter().GetResult()
-                : GetViewableItemsAsync().GetAwaiter().GetResult().Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
+                ? items
+                : items.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
         }
         else
         {
+            if (TypeGroupPicker.SelectedIndex == (int)Selection.Components)
+            {
+                baseQuery = GetViewableComponentsQuery(MauiProgram.CurrentUser);
+            }
+            else if (TypeGroupPicker.SelectedIndex == (int)Selection.Recipes)
+            {
+                baseQuery = GetViewableRecipesQuery(MauiProgram.CurrentUser);
+            }
+            else
+            {
+                var items = await GetViewableItemsAsync(overrideTake: overrideTake);
+                baseQuery = items.Where(c => c.GroupId == TypeGroupPicker.SelectedIndex - (int)Selection.OffSet);
+            }
             results = string.IsNullOrEmpty(search)
                 ? baseQuery.ToList()
                 : baseQuery.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
         }
 
-        App.Current!.MainPage = new NavigationPage(new SearchAndViewPage(results.OrderBy(r => r.Name).ToList(), SearchEntry.Text.Trim(), TypeGroupPicker.SelectedIndex));
+        //started in GetViewableItemsAsync
+        _isLoading = true;
+        LoadingSpinner.IsRunning = true;
+        LoadingSpinner.IsVisible = true;
+        App.Current!.MainPage = new SearchAndViewPage(results.OrderBy(r => r.Name).ToList(), SearchEntry.Text.Trim(), TypeGroupPicker.SelectedIndex);
     }
 
     /// <summary>
@@ -395,9 +434,9 @@ public partial class SearchAndViewPage : ContentPage
     /// <param name="e">An event argument containing data about the scroll event, including the scroll position.</param>
     private async void OnResultScrollViewScrolled(object sender, ScrolledEventArgs e)
     {
-        if (!_isLoading && (e.ScrollY >= ResultScrollView.ContentSize.Height - ResultScrollView.Height - 100))
+        if (!_isLoading && !_hasFilter && (e.ScrollY >= ResultScrollView.ContentSize.Height - ResultScrollView.Height - 100))
         {
-            InitializeAsync("",0); //TODO: change parameter
+            InitializeAsync();
         }
     }
 }
