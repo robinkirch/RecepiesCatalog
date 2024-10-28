@@ -26,8 +26,8 @@ namespace RecipeCatalog.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer(_connectionString);
-                optionsBuilder.UseMySql(_connectionString, new MySqlServerVersion(new Version(10, 3, 39)));
+                if(_connectionString != null && _connectionString != string.Empty)
+                    optionsBuilder.UseMySql(_connectionString, new MySqlServerVersion(new Version(10, 3, 39)));
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

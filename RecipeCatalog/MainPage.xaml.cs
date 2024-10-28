@@ -6,8 +6,6 @@ using RecipeCatalog.Data;
 using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Text.Json;
 
 namespace RecipeCatalog
@@ -55,7 +53,7 @@ namespace RecipeCatalog
 
 
             connectionstring = connectionstring == string.Empty ? RecipeCatalog.Manager.ConfigurationManager.ReadValue("Connection:DataSource") : connectionstring;
-            if(connectionstring == string.Empty)
+            if(connectionstring == null || connectionstring == string.Empty)
             {
                 ConnectionStringBlock.IsVisible = true;
                 StatusText.Text = AppLanguage.Main_ConnectionInput;

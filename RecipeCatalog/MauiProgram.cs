@@ -8,6 +8,7 @@ using Microsoft.Maui.LifecycleEvents;
 using System;
 using NLog.Extensions.Logging;
 using NLog;
+using RecipeCatalog.Resources.Language;
 
 namespace RecipeCatalog
 {
@@ -21,12 +22,25 @@ namespace RecipeCatalog
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+            string filePath = string.Empty;
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                filePath = Path.Combine(FileSystem.AppDataDirectory, "appsettings.json");
+            }
+            else if (DeviceInfo.Platform == DevicePlatform.WinUI)
+            {
+                filePath = "appsettings.json";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException(AppLanguage.Exception_PlatformNotSupported);
+            }
             var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile(filePath, optional: true, reloadOnChange: true)
                 .Build();
+
             builder.Configuration.AddConfiguration(config);
             Configuration = builder.Configuration;
-
             var defLanguage = new CultureInfo(RecipeCatalog.Manager.ConfigurationManager.ReadValue("DefaultLanguage") ?? "en");
             CultureInfo.DefaultThreadCurrentCulture = defLanguage;
             CultureInfo.DefaultThreadCurrentUICulture = defLanguage;
