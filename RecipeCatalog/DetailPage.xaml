@@ -47,7 +47,13 @@
                 <Label
                     x:Name="DescriptionText"
                     FontSize="Small"/>
-                <Entry x:Name="DescEntry" IsVisible="False" />
+                <Editor
+                    x:Name="DescEntry"
+                    Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="60"
+                    IsVisible="False"
+                />
                 <Label
                     x:Name="AliasText"
                     FontSize="Micro"

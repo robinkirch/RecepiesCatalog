@@ -52,7 +52,7 @@ public partial class AddComponentPopup : Popup
     /// <param name="e">Event data.</param>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
-        if (MauiProgram._context.Components.Any(c => c.Name == NameEntry.Text))
+        if (!MauiProgram._context.Components.Any(c => c.Name == NameEntry.Text))
         {
             var newComponents = MauiProgram._context.Components.Add(new Component
             {

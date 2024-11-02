@@ -11,7 +11,12 @@
             <VerticalStackLayout Padding="10, 0" BackgroundColor="Transparent">
                 <Label Text="{x:Static resx:AppLanguage.Component_InformationText}" FontSize="Medium"/>
                 <Entry x:Name="NameEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Name}" />
-                <Entry x:Name="DescriptionEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}" />
+                <Editor
+                    x:Name="DescriptionEntry"
+                    Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="60"
+                />
                 <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
                 <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" />
 

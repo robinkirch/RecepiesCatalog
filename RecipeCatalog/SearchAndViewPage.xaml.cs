@@ -294,7 +294,7 @@ public partial class SearchAndViewPage : ContentPage
     /// <param name="e">The event data.</param>
     private async void OnEntryCompleted(object sender, EventArgs e)
     { 
-        if (!_isInitialized)
+        if (!_isInitialized || _isLoading)
             return;
 
         string search = SearchEntry.Text.Trim().ToLower();

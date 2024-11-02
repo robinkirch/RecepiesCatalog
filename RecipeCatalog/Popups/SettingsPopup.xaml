@@ -7,7 +7,13 @@
 
     <VerticalStackLayout Padding="20" BackgroundColor="#40D3D3D3" HorizontalOptions="Center"  WidthRequest="400">
         <Label Text="{x:Static resx:AppLanguage.DataConnection}"/>
-        <Entry x:Name="DataSource" WidthRequest="300"/>
+        <Editor
+            x:Name="DataSource"
+            Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}"
+            AutoSize="TextChanges"
+            MinimumHeightRequest="40"
+            WidthRequest="300"
+        />
         <Label Text="{x:Static resx:AppLanguage.Username}"/>
         <Entry x:Name="UsernameInput" WidthRequest="300" />
         <Picker x:Name="LanguagePicker" Title="{x:Static resx:AppLanguage.LanguageTitle}" WidthRequest="300"/>
