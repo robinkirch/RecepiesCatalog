@@ -86,6 +86,7 @@ public partial class AddRecipePopup : Popup
             Image = null, // set in detailpage
             Name = NameEntry.Text,
             Description = DescriptionEntry.Text,
+            SecretDescription = SecretDescriptionEntry.Text,
             Aliases = (AliasesEntry.Text != null) ? AliasesEntry.Text.Split(',') : [],
             GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null,
             Components = RecipesComponents

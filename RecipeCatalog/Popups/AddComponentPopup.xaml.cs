@@ -59,6 +59,7 @@ public partial class AddComponentPopup : Popup
                 Image = null, // set in DetailPage
                 Name = NameEntry.Text,
                 Description = DescriptionEntry.Text,
+                SecretDescription = SecretDescriptionEntry.Text,
                 Aliases = (AliasesEntry.Text != null) ? AliasesEntry.Text.Split(',') : [],
                 GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null,
 

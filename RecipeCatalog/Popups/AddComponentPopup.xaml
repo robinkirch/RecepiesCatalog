@@ -17,6 +17,12 @@
                     AutoSize="TextChanges"
                     MinimumHeightRequest="60"
                 />
+                <Editor
+                    x:Name="SecretDescriptionEntry"
+                    Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="60"
+                />
                 <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
                 <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" />
 

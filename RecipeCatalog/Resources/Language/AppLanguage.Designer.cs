@@ -349,6 +349,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Secret Description.
+        /// </summary>
+        internal static string Placeholder_SecretDescription {
+            get {
+                return ResourceManager.GetString("Placeholder_SecretDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please add all information. Aliases are optional and are listed with &apos;,&apos;..
         /// </summary>
         internal static string Recipies_InformationText {

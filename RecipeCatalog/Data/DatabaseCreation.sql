@@ -21,6 +21,7 @@ CREATE TABLE Components (
     [Image] VARBINARY(MAX) NULL,
     [Name] NVARCHAR(255) NOT NULL,
     [Description] NVARCHAR(MAX) NULL,
+    [SecretDescription] NVARCHAR(MAX) NULL,
     [Aliases] NVARCHAR(MAX) NULL,
     GroupId INT NOT NULL,
     CONSTRAINT FK_Component_Group FOREIGN KEY (GroupId) REFERENCES [Groups](Id) ON DELETE NO ACTION
@@ -31,6 +32,7 @@ CREATE TABLE Recipes (
     [Image] VARBINARY(MAX) NULL,
     [Name] NVARCHAR(255) NOT NULL,
     [Description] NVARCHAR(MAX) NULL,
+    [SecretDescription] NVARCHAR(MAX) NULL,
     [Aliases] NVARCHAR(MAX) NULL,
     GroupId INT NOT NULL,
     CONSTRAINT FK_Recipe_Group FOREIGN KEY (GroupId) REFERENCES [Groups](Id) ON DELETE NO ACTION

@@ -55,6 +55,22 @@
                     IsVisible="False"
                 />
                 <Label
+                    x:Name="SecretDescriptionText"
+                    FontSize="Small"
+                    IsVisible="False"
+                    Margin="0, 10"
+                    FontAttributes="Italic"
+                    TextColor="Gray"
+                />
+                <Editor
+                    x:Name="SecretDescEntry"
+                    Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="60"
+                    IsVisible="False"
+                     Margin="0, 10"
+                />
+                <Label
                     x:Name="AliasText"
                     FontSize="Micro"
                     TextColor="DarkGray"

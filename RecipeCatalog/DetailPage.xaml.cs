@@ -45,7 +45,7 @@ public partial class DetailPage : ContentPage
     {
         DetailImage.Source = MauiProgram.ByteArrayToImageSource(data.Image);
         selectedImage = data.Image;
-        AliasText.Text = (data.Aliases != null && data.Aliases.Length > 0) ? "(" + string.Join(",", data.Aliases) + ")" : string.Empty;
+        AliasText.Text = (data.Aliases != null && data.Aliases[0].Length > 0) ? "(" + string.Join(",", data.Aliases) + ")" : string.Empty;
         NameText.Text = data.Name;
         if (!(DataType == typeof(Recipe) && MauiProgram._context.MissingViewRightsRecipes.Any(m => m.RecipeId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeDescription)) &&
             !(DataType == typeof(Component) && MauiProgram._context.MissingViewRightsComponents.Any(m => m.ComponentId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeDescription)))
@@ -55,6 +55,12 @@ public partial class DetailPage : ContentPage
         else
             DescriptionText.Text = "???";
         GroupText.Text = MauiProgram._context.Groups.Single(g => g.Id == data.GroupId).GroupName;
+        if (MauiProgram.CurrentUser.IsAdmin)
+        {
+            SecretDescriptionText.Text = data.SecretDescription != null && data.SecretDescription != string.Empty ? $"\'{data.SecretDescription}\'" : string.Empty;
+            SecretDescriptionText.IsVisible = true;
+        }
+            
     }
 
     /// <summary>
@@ -248,6 +254,9 @@ public partial class DetailPage : ContentPage
         DescriptionText.Text = AppLanguage.Placeholder_Description;
         DescEntry.IsVisible = true;
         DescEntry.Text = data.Description;
+        SecretDescriptionText.Text = AppLanguage.Placeholder_SecretDescription;
+        SecretDescEntry.IsVisible = true;
+        SecretDescEntry.Text = data.SecretDescription;
         AliasText.Text = AppLanguage.Alias;
         AliasEntry.IsVisible = true;
         AliasEntry.Text = string.Join(",", data.Aliases ?? []);
@@ -459,6 +468,7 @@ public partial class DetailPage : ContentPage
         data.Image = selectedImage;
         data.Name = NameEntry.Text;
         data.Description = DescEntry.Text;
+        data.SecretDescription = SecretDescEntry.Text;
         data.Aliases = (AliasEntry.Text != null) ? AliasEntry.Text.Split(',') : [];
         data.GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null;
 

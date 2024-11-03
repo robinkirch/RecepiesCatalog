@@ -67,7 +67,7 @@ public partial class UserRightPage : ContentPage
         var groupItems = new ObservableCollection<MissingViewRightGroupItem>();
         MauiProgram._context.Groups.ToList().ForEach(g =>
         {
-            groupItems.Add(new MissingViewRightGroupItem { ID = g.Id, GroupName = g.GroupName, IsSelected = rejectedGroups.Contains(g.Id) });
+            groupItems.Add(new MissingViewRightGroupItem { ID = g.Id, GroupName = g.GroupName, CantAccess = rejectedGroups.Contains(g.Id) });
         });
         DynamicTableControlGroup.ItemsSource = new ObservableCollection<object>(groupItems.Cast<object>());
         DynamicTableControlGroup.BuildTable(AppLanguage.User_GrantedAccessGroups);
@@ -115,7 +115,7 @@ public partial class UserRightPage : ContentPage
             var groups = MauiProgram._context.MissingViewRightsGroups.Where(g => g.UserId == _user.Id).ToList();
             if (item is MissingViewRightGroupItem g) // Pattern Matching is neccessary
             {
-                if (g.IsSelected)
+                if (g.CantAccess)
                 {
                     if (!groups.Any(gr => gr.GroupId == g.ID))
                         MauiProgram._context.MissingViewRightsGroups.Add(new() { GroupId = g.ID, UserId = _user.Id });

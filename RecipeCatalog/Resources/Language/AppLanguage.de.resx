@@ -267,4 +267,7 @@
   <data name="NoEntry" xml:space="preserve">
     <value>Keine Einträge</value>
   </data>
+  <data name="Placeholder_SecretDescription" xml:space="preserve">
+    <value>Geheime Beschreibung</value>
+  </data>
 </root>
