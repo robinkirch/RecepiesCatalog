@@ -49,8 +49,14 @@ public partial class UserRightPage : ContentPage
         LoadData();
         LoadPickerData();
 
-        if (_user == MauiProgram.CurrentUser)
-            DeleteButton.IsVisible = false;
+        if (_user != MauiProgram.CurrentUser && MauiProgram.CurrentUser.IsAdmin && _user != MauiProgram.CurrentUser)
+        {
+            DeleteButton.IsVisible = true;
+            PromoteButton.IsVisible = true;
+        }
+
+        if (_user.IsAdmin)
+            PromoteButton.Text = AppLanguage.DemoteAdmin;
     }
 
     public void LoadData()
@@ -197,6 +203,13 @@ public partial class UserRightPage : ContentPage
 
     private void OnCancelButtonClicked(object sender, EventArgs e)
     {
+        App.Current!.MainPage = new UserOverviewPage();
+    }
+
+    private void OnPromoteButtonClicked(object sender, EventArgs e)
+    {
+        _user.IsAdmin = !_user.IsAdmin;
+        MauiProgram._context.SaveChanges();
         App.Current!.MainPage = new UserOverviewPage();
     }
 }

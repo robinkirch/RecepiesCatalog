@@ -291,4 +291,10 @@
   <data name="Attribute_CannotSeeComponents" xml:space="preserve">
     <value>Can't see components</value>
   </data>
+  <data name="PromoteAdmin" xml:space="preserve">
+    <value>Promote to Admin</value>
+  </data>
+  <data name="DemoteAdmin" xml:space="preserve">
+    <value>Demote to User</value>
+  </data>
 </root>

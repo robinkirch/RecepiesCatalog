@@ -187,6 +187,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Demote to User.
+        /// </summary>
+        internal static string DemoteAdmin {
+            get {
+                return ResourceManager.GetString("DemoteAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide components.
         /// </summary>
         internal static string DenyComponentsUser {
@@ -417,6 +426,15 @@ namespace RecipeCatalog.Resources.Language {
         internal static string Placeholder_SecretDescription {
             get {
                 return ResourceManager.GetString("Placeholder_SecretDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Promote to Admin.
+        /// </summary>
+        internal static string PromoteAdmin {
+            get {
+                return ResourceManager.GetString("PromoteAdmin", resourceCulture);
             }
         }
         

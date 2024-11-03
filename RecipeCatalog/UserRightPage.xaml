@@ -28,7 +28,8 @@
                 <HorizontalStackLayout Spacing="10" Padding="0,30" HorizontalOptions="Center">
                     <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked" HorizontalOptions="StartAndExpand"/>
                     <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="EndAndExpand"/>
-                    <Button x:Name="DeleteButton" Text="{x:Static resx:AppLanguage.Delete}" Clicked="OnDeleteButtonClicked" HorizontalOptions="EndAndExpand"/>
+                    <Button x:Name="DeleteButton" Text="{x:Static resx:AppLanguage.Delete}" Clicked="OnDeleteButtonClicked" HorizontalOptions="EndAndExpand" IsVisible="False"/>
+                    <Button x:Name="PromoteButton" Text="{x:Static resx:AppLanguage.PromoteAdmin}" Clicked="OnPromoteButtonClicked" HorizontalOptions="EndAndExpand" IsVisible="False"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
