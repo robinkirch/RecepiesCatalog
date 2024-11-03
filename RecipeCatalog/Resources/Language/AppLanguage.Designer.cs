@@ -133,6 +133,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string Attribute_UserName {
+            get {
+                return ResourceManager.GetString("Attribute_UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
@@ -192,33 +201,6 @@ namespace RecipeCatalog.Resources.Language {
         internal static string DemoteAdmin {
             get {
                 return ResourceManager.GetString("DemoteAdmin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hide components.
-        /// </summary>
-        internal static string DenyComponentsUser {
-            get {
-                return ResourceManager.GetString("DenyComponentsUser", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hide description.
-        /// </summary>
-        internal static string DenyDescriptionUser {
-            get {
-                return ResourceManager.GetString("DenyDescriptionUser", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hide element.
-        /// </summary>
-        internal static string DenyViewUser {
-            get {
-                return ResourceManager.GetString("DenyViewUser", resourceCulture);
             }
         }
         

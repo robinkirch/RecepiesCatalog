@@ -3,6 +3,7 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
+               xmlns:local="clr-namespace:RecipeCatalog.CustomMAUIComponents"
                x:Class="RecipeCatalog.Popups.AddRecipePopup">
 
     <Grid Padding="0,0">
@@ -23,7 +24,7 @@
                 />
                 <Editor
                     x:Name="SecretDescriptionEntry"
-                    Placeholder="{x:Static resx:AppLanguage.Placeholder_Description}"
+                    Placeholder="{x:Static resx:AppLanguage.Placeholder_SecretDescription}"
                     AutoSize="TextChanges"
                     MinimumHeightRequest="60"
                 />
@@ -54,48 +55,10 @@
                     </StackLayout>
                 </Grid>
 
-                <Label Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
-                <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
-                    <CollectionView x:Name="ViewCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
+                <StackLayout>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlRights" Margin="0, 40"/>
+                </StackLayout>
 
-                <Label Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
-                <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
-                    <CollectionView x:Name="DescCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
-
-                <Label Text="{x:Static resx:AppLanguage.DenyComponentsUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
-                <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
-                    <CollectionView x:Name="CompCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
-                
                 <HorizontalStackLayout Spacing="10" Padding="0,10">
                     <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked" HorizontalOptions="StartAndExpand"/>
                     <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="EndAndExpand"/>

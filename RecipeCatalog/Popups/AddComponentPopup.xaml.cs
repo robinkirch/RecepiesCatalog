@@ -1,5 +1,7 @@
 using CommunityToolkit.Maui.Views;
+using RecipeCatalog.Helper;
 using RecipeCatalog.Models;
+using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
 
 namespace RecipeCatalog.Popups;
@@ -22,16 +24,13 @@ public partial class AddComponentPopup : Popup
     /// </summary>
     private void LoadData()
     {
-        var userRights = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == _user.Id).ToList();
-        var viewSettings = new ObservableCollection<UserView>();
-        var descSettings = new ObservableCollection<UserView>();
+        var userItems = new ObservableCollection<MissingViewRightComponentUserItem>();
         MauiProgram._context.Users.ToList().ForEach(u =>
         {
-            viewSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = false });
-            descSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = false });
+            userItems.Add(new MissingViewRightComponentUserItem { UserID = u.Id, UserName = u.Username, CannotSee = false, CannotSeeDescription = false });
         });
-        ViewCollectionView.ItemsSource = viewSettings;
-        DescCollectionView.ItemsSource = descSettings;
+        DynamicTableControlRights.ItemsSource = new ObservableCollection<object>(userItems.Cast<object>());
+        DynamicTableControlRights.BuildTable(AppLanguage.User_CustomRights);
     }
 
     /// <summary>
@@ -66,29 +65,12 @@ public partial class AddComponentPopup : Popup
             });
             MauiProgram._context.SaveChanges();
 
-            List<UserView> descs = (DescCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList();
-            (ViewCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList().ForEach(u =>
+            DynamicTableControlRights.ItemsSource.ToList().ForEach(item =>
             {
-                bool descSelected = descs.Where(d => d.Id == u.Id).Single().IsSelected;
-                var entry = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == u.Id && m.ComponentId == newComponents.Entity.Id).SingleOrDefault();
-                if (entry == null && (u.IsSelected || descSelected))
-                {
-                    entry = new()
-                    {
-                        UserId = u.Id,
-                        ComponentId = newComponents.Entity.Id,
-                        CannotSee = u.IsSelected,
-                        CannotSeeDescription = descSelected,
-                    };
-                    MauiProgram._context.MissingViewRightsComponents.Add(entry);
-                }
-                else if (entry != null)
-                {
-                    entry.CannotSee = u.IsSelected;
-                    entry.CannotSeeDescription = descSelected;
-                }
-                MauiProgram._context.SaveChanges();
+                if (item is MissingViewRightComponentUserItem c && (c.CannotSee || c.CannotSeeDescription)) // Pattern Matching is neccessary
+                        MauiProgram._context.MissingViewRightsComponents.Add(new() { ComponentId = newComponents.Entity.Id, UserId = c.UserID, CannotSee = c.CannotSee, CannotSeeDescription = c.CannotSeeDescription });
             });
+            MauiProgram._context.SaveChanges();
         }
         //TODO: error display
         Close(MauiProgram._context.Components.Single(c => c.Name == NameEntry.Text));

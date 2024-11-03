@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeCatalog.DetailPage"
              xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
+             xmlns:local="clr-namespace:RecipeCatalog.CustomMAUIComponents"
              Title="DetailPage">
     <Grid Padding="0,0">
         <Grid.RowDefinitions>
@@ -112,36 +113,6 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
 
-                <!--Component-->
-                <Label x:Name="LabelCompView" Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
-                <Frame x:Name="FrameCompView" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
-                    <CollectionView x:Name="ComponentViewCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
-
-                <Label x:Name="LabelCompDesc" Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
-                <Frame x:Name="FrameCompDesc" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
-                    <CollectionView x:Name="ComponentDescCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
-                
-                <!--Recipe-->
                 <Label x:Name="EditComponentLabel" Text="{x:Static resx:AppLanguage.Placeholder_MultiSelect}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="#565656" IsVisible="False"/>
                 <Frame x:Name="EditComponentFrame" BorderColor="Gray" CornerRadius="5" Padding="0" HasShadow="False" BackgroundColor="Transparent" IsVisible="False">
                     <CollectionView x:Name="EditComponentCollectionView">
@@ -156,49 +127,12 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </Frame>
-
-                <Label x:Name="LabelRecView" Text="{x:Static resx:AppLanguage.DenyViewUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
-                <Frame x:Name="FrameRecView" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
-                    <CollectionView x:Name="RecipeViewCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
-
-                <Label x:Name="LabelRecDesc" Text="{x:Static resx:AppLanguage.DenyDescriptionUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
-                <Frame x:Name="FrameRecDesc" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
-                    <CollectionView x:Name="RecipeDescCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
-
-                <Label x:Name="LabelRecComp" Text="{x:Static resx:AppLanguage.DenyComponentsUser}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White" IsVisible="False"/>
-                <Frame x:Name="FrameRecComp" BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent" IsVisible="False">
-                    <CollectionView x:Name="RecipeCompCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding UserName}" VerticalOptions="Center" TextColor="White"/>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
                 
+                <StackLayout>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlRightsComponent" Margin="0, 40" IsVisible="False"/>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlRightsRecipe" Margin="0, 40" IsVisible="False"/>
+                </StackLayout>
+
             </VerticalStackLayout>
         </ScrollView>
         

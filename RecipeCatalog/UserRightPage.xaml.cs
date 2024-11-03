@@ -5,39 +5,6 @@ using RecipeCatalog.Helper;
 
 namespace RecipeCatalog;
 
-public class MissingViewRightGroupItem
-{
-    public int ID;
-    [Translation("Attribute_GroupName")]
-    public string GroupName {get; set;}
-    [Translation("Attribute_CannotAccess")]
-    public bool CannotAccess { get; set; }
-}
-
-public class MissingViewRightComponentItem
-{
-    public int ID;
-    [Translation("Attribute_ComponentName")]
-    public string ComponentName { get; set; }
-    [Translation("Attribute_CannotSee")]
-    public bool CannotSee { get; set; }
-    [Translation("Attribute_CannotSeeDescription")]
-    public bool CannotSeeDescription { get; set; }
-}
-
-public class MissingViewRightRecipeItem
-{
-    public int ID;
-    [Translation("Attribute_RecipeName")]
-    public string RecipeName { get; set; }
-    [Translation("Attribute_CannotSee")]
-    public bool CannotSee { get; set; }
-    [Translation("Attribute_CannotSeeDescription")]
-    public bool CannotSeeDescription { get; set; }
-    [Translation("Attribute_CannotSeeComponents")]
-    public bool CannotSeeComponents { get; set; }
-}
-
 public partial class UserRightPage : ContentPage
 {
     private readonly User _user;

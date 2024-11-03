@@ -198,17 +198,8 @@
   <data name="Detail_UsedInRecipes" xml:space="preserve">
     <value>Benutzt in Rezepten</value>
   </data>
-  <data name="DenyViewUser" xml:space="preserve">
-    <value>Element verbergen</value>
-  </data>
-  <data name="DenyDescriptionUser" xml:space="preserve">
-    <value>Beschreibung verbergen</value>
-  </data>
   <data name="Placeholder_MultiSelect" xml:space="preserve">
     <value>Mehrfachauswahl</value>
-  </data>
-  <data name="DenyComponentsUser" xml:space="preserve">
-    <value>Komponenten verbergen</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Bearbeiten</value>
@@ -296,5 +287,8 @@
   </data>
   <data name="DemoteAdmin" xml:space="preserve">
     <value>Zum User machen</value>
+  </data>
+  <data name="Attribute_UserName" xml:space="preserve">
+    <value>Benutzername</value>
   </data>
 </root>

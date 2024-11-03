@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using RecipeCatalog.Data;
+using RecipeCatalog.Helper;
 using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
@@ -319,22 +320,15 @@ public partial class DetailPage : ContentPage
         //TODO:Optimieren, da components anzeige vollständig in recipes enthalten ist und immer geladen wird
         if (DataType == typeof(Component))
         {
-            LabelCompView.IsVisible = true;
-            LabelCompDesc.IsVisible = true;
-            FrameCompView.IsVisible = true;
-            FrameCompDesc.IsVisible = true;
             var missingRightsComp = MauiProgram._context.MissingViewRightsComponents.Where(m => m.ComponentId == ID).ToList();
-            var compviewSettings = new ObservableCollection<UserView>();
-            var compdescSettings = new ObservableCollection<UserView>();
-
+            var userItems = new ObservableCollection<MissingViewRightComponentUserItem>();
             MauiProgram._context.Users.ToList().ForEach(u =>
             {
-                compviewSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = missingRightsComp.Any(m => m.UserId == u.Id && m.CannotSee) });
-                compdescSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = missingRightsComp.Any(m => m.UserId == u.Id && m.CannotSeeDescription) });
+                userItems.Add(new MissingViewRightComponentUserItem { UserID = u.Id, UserName = u.Username, CannotSee = missingRightsComp.Any(m => m.UserId == u.Id && m.CannotSee), CannotSeeDescription = missingRightsComp.Any(m => m.UserId == u.Id && m.CannotSeeDescription) });
             });
-
-            ComponentViewCollectionView.ItemsSource = compviewSettings;
-            ComponentDescCollectionView.ItemsSource = compdescSettings;
+            DynamicTableControlRightsComponent.ItemsSource = new ObservableCollection<object>(userItems.Cast<object>());
+            DynamicTableControlRightsComponent.BuildTable(AppLanguage.User_CustomRights);
+            DynamicTableControlRightsComponent.IsVisible = true;
         }
         else if (DataType == typeof(Recipe))
         {
@@ -342,27 +336,16 @@ public partial class DetailPage : ContentPage
             EditComponentLabel.IsVisible = true;
             EditComponentFrame.IsVisible = true;
 
-            LabelRecView.IsVisible = true;
-            LabelRecDesc.IsVisible = true;
-            LabelRecComp.IsVisible = true;
-            FrameRecView.IsVisible = true;
-            FrameRecDesc.IsVisible = true;
-            FrameRecComp.IsVisible = true;
-            var missingRightsRec = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.RecipeId == ID).ToList();
-            var recviewSettings = new ObservableCollection<UserView>();
-            var recdescSettings = new ObservableCollection<UserView>();
-            var reccompSettings = new ObservableCollection<UserView>();
 
+            var missingRightsRec = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.RecipeId == ID).ToList();
+            var userItems = new ObservableCollection<MissingViewRightRecipeUserItem>();
             MauiProgram._context.Users.ToList().ForEach(u =>
             {
-                recviewSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = missingRightsRec.Any(m => m.UserId == u.Id && m.CannotSee) });
-                recdescSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = missingRightsRec.Any(m => m.UserId == u.Id && m.CannotSeeDescription) });
-                reccompSettings.Add(new() { UserName = u.Username, Id = u.Id, IsSelected = missingRightsRec.Any(m => m.UserId == u.Id && m.CannotSeeComponents) });
+                userItems.Add(new MissingViewRightRecipeUserItem { UserID = u.Id, UserName = u.Username, CannotSee = missingRightsRec.Any(m => m.UserId == u.Id && m.CannotSee), CannotSeeDescription = missingRightsRec.Any(m => m.UserId == u.Id && m.CannotSeeDescription), CannotSeeComponents = missingRightsRec.Any(m => m.UserId == u.Id && m.CannotSeeComponents) });
             });
-
-            RecipeViewCollectionView.ItemsSource = recviewSettings;
-            RecipeDescCollectionView.ItemsSource = recdescSettings;
-            RecipeCompCollectionView.ItemsSource = reccompSettings;
+            DynamicTableControlRightsRecipe.ItemsSource = new ObservableCollection<object>(userItems.Cast<object>());
+            DynamicTableControlRightsRecipe.BuildTable(AppLanguage.User_CustomRights);
+            DynamicTableControlRightsRecipe.IsVisible = true;
         }
         else 
             throw new NotImplementedException();
@@ -488,55 +471,55 @@ public partial class DetailPage : ContentPage
         //Rights
         if (DataType == typeof(Component))
         {
-            List<UserView> descs = (ComponentDescCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList();
-            (ComponentViewCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList().ForEach(u =>
+            DynamicTableControlRightsComponent.ItemsSource.ToList().ForEach(item =>
             {
-                bool descSelected = descs.Where(d => d.Id == u.Id).Single().IsSelected;
-                var entry = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == u.Id && m.ComponentId == ID).SingleOrDefault();
-                if (entry == null && (u.IsSelected || descSelected))
+                if (item is MissingViewRightComponentUserItem c) // Pattern Matching is neccessary
                 {
-                    entry = new()
+                    var entry = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == c.UserID && m.ComponentId == ID).SingleOrDefault();
+                    if (entry == null && (c.CannotSee || c.CannotSeeDescription))
                     {
-                        UserId = u.Id,
-                        ComponentId = ID,
-                        CannotSee = u.IsSelected,
-                        CannotSeeDescription = descSelected,
-                    };
-                    MauiProgram._context.MissingViewRightsComponents.Add(entry);
-                }
-                else if (entry != null)
-                {
-                    entry.CannotSee = u.IsSelected;
-                    entry.CannotSeeDescription = descSelected;
+                        entry = new()
+                        {
+                            UserId = c.UserID,
+                            ComponentId = ID,
+                            CannotSee = c.CannotSee,
+                            CannotSeeDescription = c.CannotSeeDescription,
+                        };
+                        MauiProgram._context.MissingViewRightsComponents.Add(entry);
+                    }
+                    else if (entry != null)
+                    {
+                        entry.CannotSee = c.CannotSee;
+                        entry.CannotSeeDescription = c.CannotSeeDescription;
+                    }
                 }
             });
         }
         else if (DataType == typeof(Recipe))
         {
-            List<UserView> descs = (RecipeDescCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList();
-            List<UserView> comps = (RecipeCompCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList();
-            (RecipeViewCollectionView.ItemsSource as ObservableCollection<UserView>)!.ToList().ForEach(u =>
+            DynamicTableControlRightsRecipe.ItemsSource.ToList().ForEach(item =>
             {
-                bool descSelected = descs.Where(d => d.Id == u.Id).Single().IsSelected;
-                bool compSelected = comps.Where(d => d.Id == u.Id).Single().IsSelected;
-                var entry = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.UserId == u.Id && m.RecipeId == ID).SingleOrDefault();
-                if (entry == null && (u.IsSelected || descSelected || compSelected))
+                if (item is MissingViewRightRecipeUserItem c) // Pattern Matching is neccessary
                 {
-                    entry = new()
+                    var entry = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.UserId == c.UserID && m.RecipeId == ID).SingleOrDefault();
+                    if (entry == null && (c.CannotSee || c.CannotSeeDescription || c.CannotSeeComponents))
                     {
-                        UserId = u.Id,
-                        RecipeId = ID,
-                        CannotSee = u.IsSelected,
-                        CannotSeeDescription = descSelected,
-                        CannotSeeComponents = compSelected,
-                    };
-                    MauiProgram._context.MissingViewRightsRecipes.Add(entry);
-                }
-                else if (entry != null)
-                {
-                    entry.CannotSee = u.IsSelected;
-                    entry.CannotSeeDescription = descSelected;
-                    entry.CannotSeeComponents = compSelected;
+                        entry = new()
+                        {
+                            UserId = c.UserID,
+                            RecipeId = ID,
+                            CannotSee = c.CannotSee,
+                            CannotSeeDescription = c.CannotSeeDescription,
+                            CannotSeeComponents = c.CannotSeeComponents,
+                        };
+                        MauiProgram._context.MissingViewRightsRecipes.Add(entry);
+                    }
+                    else if (entry != null)
+                    {
+                        entry.CannotSee = c.CannotSee;
+                        entry.CannotSeeDescription = c.CannotSeeDescription;
+                        entry.CannotSeeComponents = c.CannotSeeComponents;
+                    }
                 }
             });
         }
