@@ -70,6 +70,69 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t access.
+        /// </summary>
+        internal static string Attribute_CannotAccess {
+            get {
+                return ResourceManager.GetString("Attribute_CannotAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t see.
+        /// </summary>
+        internal static string Attribute_CannotSee {
+            get {
+                return ResourceManager.GetString("Attribute_CannotSee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t see components.
+        /// </summary>
+        internal static string Attribute_CannotSeeComponents {
+            get {
+                return ResourceManager.GetString("Attribute_CannotSeeComponents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t see description.
+        /// </summary>
+        internal static string Attribute_CannotSeeDescription {
+            get {
+                return ResourceManager.GetString("Attribute_CannotSeeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Component name.
+        /// </summary>
+        internal static string Attribute_ComponentName {
+            get {
+                return ResourceManager.GetString("Attribute_ComponentName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group name.
+        /// </summary>
+        internal static string Attribute_GroupName {
+            get {
+                return ResourceManager.GetString("Attribute_GroupName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe name.
+        /// </summary>
+        internal static string Attribute_RecipeName {
+            get {
+                return ResourceManager.GetString("Attribute_RecipeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {

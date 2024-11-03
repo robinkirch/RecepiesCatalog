@@ -270,4 +270,25 @@
   <data name="Placeholder_SecretDescription" xml:space="preserve">
     <value>Geheime Beschreibung</value>
   </data>
+  <data name="Attribute_GroupName" xml:space="preserve">
+    <value>Gruppenname</value>
+  </data>
+  <data name="Attribute_CannotAccess" xml:space="preserve">
+    <value>Kein Zugriff</value>
+  </data>
+  <data name="Attribute_ComponentName" xml:space="preserve">
+    <value>Komponentenname</value>
+  </data>
+  <data name="Attribute_CannotSee" xml:space="preserve">
+    <value>Nicht sichtbar</value>
+  </data>
+  <data name="Attribute_CannotSeeDescription" xml:space="preserve">
+    <value>Beschreibung nicht sichtbar</value>
+  </data>
+  <data name="Attribute_RecipeName" xml:space="preserve">
+    <value>Rezeptname</value>
+  </data>
+  <data name="Attribute_CannotSeeComponents" xml:space="preserve">
+    <value>Komponenten nicht sichtbar</value>
+  </data>
 </root>

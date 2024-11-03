@@ -1,5 +1,7 @@
-﻿using RecipeCatalog.Resources.Language;
+﻿using RecipeCatalog.Helper;
+using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace RecipeCatalog.CustomMAUIComponents
@@ -57,9 +59,7 @@ namespace RecipeCatalog.CustomMAUIComponents
             for (int i = 0; i < properties.Length; i++)
             {
                 var property = properties[i];
-                string propertyName = property.Name.ToString();
-                var parts = Regex.Split(propertyName, @"(?=[A-Z])");
-                propertyName = string.Join(" ", parts);
+                string propertyName = GetTranslatedPropertyName(property);
                 string longestText = "";
 
                 for (int rowIndex = 0; rowIndex < _itemsSource.Count; rowIndex++)
@@ -138,6 +138,16 @@ namespace RecipeCatalog.CustomMAUIComponents
 
                 }
             }
+        }
+
+        private string GetTranslatedPropertyName(PropertyInfo property)
+        {
+            var attribute = property.GetCustomAttribute<TranslationAttribute>();
+            if (attribute != null)
+            {
+                return AppLanguage.ResourceManager.GetString(attribute.TranslationKey) ?? string.Join(" ", Regex.Split(property.Name.ToString(), @"(?=[A-Z])")); ;
+            }
+            return string.Join(" ", Regex.Split(property.Name.ToString(), @"(?=[A-Z])"));
         }
     }
 }

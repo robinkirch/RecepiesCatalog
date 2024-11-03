@@ -1,30 +1,40 @@
 using RecipeCatalog.Models;
 using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
+using RecipeCatalog.Helper;
 
 namespace RecipeCatalog;
 
 public class MissingViewRightGroupItem
 {
     public int ID;
+    [Translation("Attribute_GroupName")]
     public string GroupName {get; set;}
-    public bool CantAccess { get; set; }
+    [Translation("Attribute_CannotAccess")]
+    public bool CannotAccess { get; set; }
 }
 
 public class MissingViewRightComponentItem
 {
     public int ID;
+    [Translation("Attribute_ComponentName")]
     public string ComponentName { get; set; }
+    [Translation("Attribute_CannotSee")]
     public bool CannotSee { get; set; }
+    [Translation("Attribute_CannotSeeDescription")]
     public bool CannotSeeDescription { get; set; }
 }
 
 public class MissingViewRightRecipeItem
 {
     public int ID;
+    [Translation("Attribute_RecipeName")]
     public string RecipeName { get; set; }
+    [Translation("Attribute_CannotSee")]
     public bool CannotSee { get; set; }
+    [Translation("Attribute_CannotSeeDescription")]
     public bool CannotSeeDescription { get; set; }
+    [Translation("Attribute_CannotSeeComponents")]
     public bool CannotSeeComponents { get; set; }
 }
 
@@ -49,25 +59,11 @@ public partial class UserRightPage : ContentPage
         NameEntry.Text = _user.Username;
         GuidEntry.Text = _user.Id.ToString();
 
-        //var baseSettings = new ObservableCollection<ComponentView>();
-        //baseSettings.Add(new() { Name = "Can see Component", IsSelected = _user.CanSeeComponents });
-        //baseSettings.Add(new() { Name = "Can see Recipes", IsSelected = _user.CanSeeRecipes });
-        //BaseCollectionView.ItemsSource = baseSettings;
-
-        //--------------change due to group, recipe and component-------------------------
-        //var userRights = MauiProgram._context.MissingViewRights.Where(m => m.UserId == _user.Id).ToList();
-        //var groupSettings = new ObservableCollection<ComponentView>();
-        //MauiProgram._context.Groups.ToList().ForEach(c =>
-        //{
-        //    groupSettings.Add(new() { Name = c.GroupName, Id = c.Id, IsSelected = !userRights.Any(ur => ur.GroupId == c.Id) });
-        //});
-        //GroupCollectionView.ItemsSource = groupSettings;
-
         var rejectedGroups = MauiProgram._context.MissingViewRightsGroups.Where(m => m.UserId == _user.Id).Select(m => m.GroupId).ToList();
         var groupItems = new ObservableCollection<MissingViewRightGroupItem>();
         MauiProgram._context.Groups.ToList().ForEach(g =>
         {
-            groupItems.Add(new MissingViewRightGroupItem { ID = g.Id, GroupName = g.GroupName, CantAccess = rejectedGroups.Contains(g.Id) });
+            groupItems.Add(new MissingViewRightGroupItem { ID = g.Id, GroupName = g.GroupName, CannotAccess = rejectedGroups.Contains(g.Id) });
         });
         DynamicTableControlGroup.ItemsSource = new ObservableCollection<object>(groupItems.Cast<object>());
         DynamicTableControlGroup.BuildTable(AppLanguage.User_GrantedAccessGroups);
@@ -115,7 +111,7 @@ public partial class UserRightPage : ContentPage
             var groups = MauiProgram._context.MissingViewRightsGroups.Where(g => g.UserId == _user.Id).ToList();
             if (item is MissingViewRightGroupItem g) // Pattern Matching is neccessary
             {
-                if (g.CantAccess)
+                if (g.CannotAccess)
                 {
                     if (!groups.Any(gr => gr.GroupId == g.ID))
                         MauiProgram._context.MissingViewRightsGroups.Add(new() { GroupId = g.ID, UserId = _user.Id });
