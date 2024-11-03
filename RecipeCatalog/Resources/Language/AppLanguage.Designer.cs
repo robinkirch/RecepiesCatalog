@@ -277,6 +277,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Entries.
+        /// </summary>
+        internal static string NoEntry {
+            get {
+                return ResourceManager.GetString("NoEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         internal static string OK {

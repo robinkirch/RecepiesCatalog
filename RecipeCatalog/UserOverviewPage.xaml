@@ -25,7 +25,7 @@
         <ScrollView Grid.Row="1">
             <Grid x:Name="UserView" Padding="30,0" ColumnSpacing="10" RowSpacing="10">
                 <Grid.RowDefinitions>
-                    <!-- Zeilen werden dynamisch hinzugefügt -->
+                    <!-- Rows will be added dynamic -->
                 </Grid.RowDefinitions>
             </Grid>
         </ScrollView>

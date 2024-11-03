@@ -264,4 +264,7 @@
   <data name="Exception_PlatformNotSupported" xml:space="preserve">
     <value>Diese Plattform wird derzeit nicht unterstützt.</value>
   </data>
+  <data name="NoEntry" xml:space="preserve">
+    <value>Keine Einträge</value>
+  </data>
 </root>

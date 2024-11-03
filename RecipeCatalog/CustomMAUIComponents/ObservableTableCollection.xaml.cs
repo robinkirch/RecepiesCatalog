@@ -1,34 +1,70 @@
-﻿using System.Collections.ObjectModel;
-using System.Reflection;
+﻿using RecipeCatalog.Resources.Language;
+using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace RecipeCatalog.CustomMAUIComponents
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ObservableTableCollection : ContentView
+    public partial class ObservableTableCollection: ContentView
     {
+        private ObservableCollection<object> _itemsSource;
+
+        public ObservableCollection<object> ItemsSource
+        {
+            get => _itemsSource;
+            set
+            {
+                _itemsSource = value;
+                OnPropertyChanged();
+                BuildTable();
+            }
+        }
+
         public ObservableTableCollection()
         {
             InitializeComponent();
         }
 
-        public void BuildTable<T>(ObservableCollection<T> items, string title = "")
+        public void BuildTable(string title = "")
         {
             TableTitle.Text = title;
 
             TableGrid.Children.Clear();
-            if (items == null || items.Count == 0) return;
 
-            var properties = typeof(T).GetProperties();
+
+            var itemType = _itemsSource.FirstOrDefault()?.GetType();
+            if (_itemsSource == null || _itemsSource.Count == 0)
+            {
+                var nothingLabel = new Label
+                {
+                    Text = "",
+                };
+                var noContentLabel = new Label
+                {
+                    Text = AppLanguage.NoEntry,
+                    VerticalTextAlignment = TextAlignment.Center,
+                    HorizontalTextAlignment = TextAlignment.Center
+                };
+                TableGrid.Add(nothingLabel, 0, 2);
+                TableGrid.Add(noContentLabel, 0, 3);
+                Grid.SetColumnSpan(noContentLabel, TableGrid.ColumnDefinitions.Count);
+                return;
+            }
+            if (itemType == null) return;
+            var properties = itemType.GetProperties();
 
             double totalwidth = 0;
             for (int i = 0; i < properties.Length; i++)
             {
                 var property = properties[i];
+                string propertyName = property.Name.ToString();
+                var parts = Regex.Split(propertyName, @"(?=[A-Z])");
+                propertyName = string.Join(" ", parts);
                 string longestText = "";
 
-                for (int rowIndex = 0; rowIndex < items.Count; rowIndex++)
+                for (int rowIndex = 0; rowIndex < _itemsSource.Count; rowIndex++)
                 {
-                    var item = items[rowIndex];
+                    var item = _itemsSource[rowIndex];
                     var cellValue = property.GetValue(item)?.ToString() ?? string.Empty;
 
                     if (cellValue.Length > longestText.Length)
@@ -36,10 +72,12 @@ namespace RecipeCatalog.CustomMAUIComponents
                         longestText = cellValue;
                     }
                 }
-                if(longestText.Length < properties[i].Name.ToString().Length)
-                    longestText = properties[i].Name.ToString();
+                if (longestText.Length < propertyName.Length)
+                {
+                    longestText = propertyName;
+                }
 
-                double estimatedWidth = longestText.Length * 11; // 10 ca. per character
+                double estimatedWidth = longestText.Length * 9; // 10 ca. per character + spacing
                 totalwidth += estimatedWidth;
                 TableGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(estimatedWidth, GridUnitType.Absolute) });
                 if(i == 0) // for BoxView Border
@@ -47,10 +85,15 @@ namespace RecipeCatalog.CustomMAUIComponents
 
                 TableGrid.Add(new Label
                 {
-                    Text = properties[i].Name,
+                    Text = propertyName,
                     FontAttributes = FontAttributes.Bold,
                     HorizontalTextAlignment = TextAlignment.Start
                 }, i > 0 ? i+1 : 0, 0);// for BoxView Border
+
+                if(i == properties.Length - 1)
+                {
+                    TableGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                }
             }
 
             var bottomBorder = new BoxView { HeightRequest = 1, Color = Colors.Gray };
@@ -58,9 +101,9 @@ namespace RecipeCatalog.CustomMAUIComponents
             Grid.SetColumnSpan(bottomBorder, (int)totalwidth+10);
 
             // data
-            for (int rowIndex = 0; rowIndex < items.Count; rowIndex++)
+            for (int rowIndex = 0; rowIndex < _itemsSource.Count; rowIndex++)
             {
-                var item = items[rowIndex];
+                var item = _itemsSource[rowIndex];
                 for (int colIndex = 0; colIndex < properties.Length; colIndex++)
                 {
                     var property = properties[colIndex];

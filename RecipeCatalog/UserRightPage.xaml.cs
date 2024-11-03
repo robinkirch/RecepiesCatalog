@@ -4,6 +4,30 @@ using System.Collections.ObjectModel;
 
 namespace RecipeCatalog;
 
+public class MissingViewRightGroupItem
+{
+    public int ID;
+    public string GroupName {get; set;}
+    public bool CantAccess { get; set; }
+}
+
+public class MissingViewRightComponentItem
+{
+    public int ID;
+    public string ComponentName { get; set; }
+    public bool CannotSee { get; set; }
+    public bool CannotSeeDescription { get; set; }
+}
+
+public class MissingViewRightRecipeItem
+{
+    public int ID;
+    public string RecipeName { get; set; }
+    public bool CannotSee { get; set; }
+    public bool CannotSeeDescription { get; set; }
+    public bool CannotSeeComponents { get; set; }
+}
+
 public partial class UserRightPage : ContentPage
 {
     private readonly User _user;
@@ -14,6 +38,9 @@ public partial class UserRightPage : ContentPage
         InitializeComponent();
         LoadData();
         LoadPickerData();
+
+        if (_user == MauiProgram.CurrentUser)
+            DeleteButton.IsVisible = false;
     }
 
     public void LoadData()
@@ -35,6 +62,34 @@ public partial class UserRightPage : ContentPage
         //    groupSettings.Add(new() { Name = c.GroupName, Id = c.Id, IsSelected = !userRights.Any(ur => ur.GroupId == c.Id) });
         //});
         //GroupCollectionView.ItemsSource = groupSettings;
+
+        var rejectedGroups = MauiProgram._context.MissingViewRightsGroups.Where(m => m.UserId == _user.Id).Select(m => m.GroupId).ToList();
+        var groupItems = new ObservableCollection<MissingViewRightGroupItem>();
+        MauiProgram._context.Groups.ToList().ForEach(g =>
+        {
+            groupItems.Add(new MissingViewRightGroupItem { ID = g.Id, GroupName = g.GroupName, IsSelected = rejectedGroups.Contains(g.Id) });
+        });
+        DynamicTableControlGroup.ItemsSource = new ObservableCollection<object>(groupItems.Cast<object>());
+        DynamicTableControlGroup.BuildTable(AppLanguage.User_GrantedAccessGroups);
+
+
+        var componentItems = new ObservableCollection<MissingViewRightComponentItem>();
+        MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == _user.Id).ToList().ForEach(c =>
+        {
+            componentItems.Add(new MissingViewRightComponentItem { ID = c.Id, ComponentName = c.Component.Name, CannotSee = c.CannotSee, CannotSeeDescription = c.CannotSeeDescription });
+        });
+        DynamicTableControlComponent.ItemsSource = new ObservableCollection<object>(componentItems.Cast<object>());
+        DynamicTableControlComponent.BuildTable(AppLanguage.User_CustomRights + ": " + AppLanguage.Filter_Components);
+
+
+
+        var recipeItems = new ObservableCollection<MissingViewRightRecipeItem>();
+        MauiProgram._context.MissingViewRightsRecipes.Where(m => m.UserId == _user.Id).ToList().ForEach(c =>
+        {
+            recipeItems.Add(new MissingViewRightRecipeItem { ID = c.Id, RecipeName = c.Recipe.Name, CannotSee = c.CannotSee, CannotSeeDescription = c.CannotSeeDescription, CannotSeeComponents = c.CannotSeeComponents });
+        });
+        DynamicTableControlRecipe.ItemsSource = new ObservableCollection<object>(recipeItems.Cast<object>());
+        DynamicTableControlRecipe.BuildTable(AppLanguage.User_CustomRights + ": " + AppLanguage.Filter_Recipes);
     }
 
     private void LoadPickerData()
@@ -52,41 +107,93 @@ public partial class UserRightPage : ContentPage
         _user.Username = NameEntry.Text;
         if(CampaignPicker.SelectedIndex != -1)
             _user.CampaignId = (CampaignPicker.SelectedItem as Campaign)!.Id;
-        //(BaseCollectionView.ItemsSource as ObservableCollection<ComponentView>)!.ToList().ForEach(c =>
-        //{
-        //    if(c.Name == "Can see Component")
-        //        _user.CanSeeComponents = c.IsSelected;
-
-        //    if(c.Name == "Can see Recipes")
-        //        _user.CanSeeRecipes = c.IsSelected;
-        //});
         MauiProgram._context.Update(_user);
 
-        (GroupCollectionView.ItemsSource as ObservableCollection<ComponentView>)!.ToList().ForEach(c =>
+        //groups
+        DynamicTableControlGroup.ItemsSource.ToList().ForEach(item =>
         {
-            //var entry = MauiProgram._context.MissingViewRights.Where(m => m.UserId == _user.Id && m.GroupId == c.Id).SingleOrDefault();
-            //if(entry != null && c.IsSelected)
-            //{
-            //    MauiProgram._context.MissingViewRights.Remove(entry);
-            //}
-            //else if(entry == null && !c.IsSelected)
-            //{
-            //    entry = new()
-            //    {
-            //        UserId = _user.Id,
-            //        GroupId = c.Id,
-            //    };
-            //    MauiProgram._context.MissingViewRights.Add(entry);
-            //}
+            var groups = MauiProgram._context.MissingViewRightsGroups.Where(g => g.UserId == _user.Id).ToList();
+            if (item is MissingViewRightGroupItem g) // Pattern Matching is neccessary
+            {
+                if (g.IsSelected)
+                {
+                    if (!groups.Any(gr => gr.GroupId == g.ID))
+                        MauiProgram._context.MissingViewRightsGroups.Add(new() { GroupId = g.ID, UserId = _user.Id });
+                }
+                else
+                {
+                    if (groups.Any(gr => gr.Id == g.ID))
+                        MauiProgram._context.MissingViewRightsGroups.Remove(groups.Single(gr => gr.Id == g.ID));
+                }
+            }
         });
-
         MauiProgram._context.SaveChanges();
+
+        //Components
+        DynamicTableControlComponent.ItemsSource.ToList().ForEach(item =>
+        {
+            var components = MauiProgram._context.MissingViewRightsComponents.Where(c => c.UserId == _user.Id).ToList();
+            if (item is MissingViewRightComponentItem c) // Pattern Matching is neccessary
+            {
+                if(c.CannotSee || c.CannotSeeDescription)
+                {
+                    var comp = components.SingleOrDefault(comp => comp.ComponentId == c.ID);
+                    if(comp != null)
+                    {
+                        comp.CannotSeeDescription = c.CannotSeeDescription;
+                        comp.CannotSee = c.CannotSee;
+                    }
+                    else
+                    {
+                        MauiProgram._context.MissingViewRightsComponents.Add(new() { ComponentId = c.ID, UserId = _user.Id, CannotSee = c.CannotSee, CannotSeeDescription = c.CannotSeeDescription });
+                    }
+                }
+                else
+                {
+                    if (components.Any(comp => comp.Id == c.ID))
+                        MauiProgram._context.MissingViewRightsComponents.Remove(components.Single(co => co.Id == c.ID));
+                }
+            }
+        });
+        MauiProgram._context.SaveChanges();
+
+        //recipes
+        DynamicTableControlRecipe.ItemsSource.ToList().ForEach(item =>
+        {
+            var recipes = MauiProgram._context.MissingViewRightsRecipes.Where(r => r.UserId == _user.Id).ToList();
+            if (item is MissingViewRightRecipeItem r) // Pattern Matching is neccessary
+            {
+                if (r.CannotSee || r.CannotSeeDescription || r.CannotSeeComponents)
+                {
+                    var rec = recipes.SingleOrDefault(rec => rec.RecipeId == r.ID);
+                    if (rec != null)
+                    {
+                        rec.CannotSeeDescription = r.CannotSeeDescription;
+                        rec.CannotSee = r.CannotSee;
+                        rec.CannotSeeComponents = r.CannotSeeComponents;
+                    }
+                    else
+                    {
+                        MauiProgram._context.MissingViewRightsRecipes.Add(new() { RecipeId = r.ID, UserId = _user.Id, CannotSee = r.CannotSee, CannotSeeDescription = r.CannotSeeDescription, CannotSeeComponents = r.CannotSeeComponents });
+                    }
+                }
+                else
+                {
+                    if (recipes.Any(rec => rec.Id == r.ID))
+                        MauiProgram._context.MissingViewRightsRecipes.Remove(recipes.Single(rec => rec.Id == r.ID));
+                }
+            }
+        });
+        MauiProgram._context.SaveChanges();
+
         App.Current!.MainPage = new UserRightPage(_user);
     }
 
     private void OnDeleteButtonClicked(object sender, EventArgs e)
     {
         //TODO: Sicherheitsabfrage
+        //TODO: Remove rights in right table first
+        //TODO: Remove groups
         MauiProgram._context.Remove(_user);
         MauiProgram._context.SaveChanges();
         App.Current!.MainPage = new UserOverviewPage();

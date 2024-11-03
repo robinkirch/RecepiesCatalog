@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeCatalog.UserRightPage"
              xmlns:resx="clr-namespace:RecipeCatalog.Resources.Language"
+             xmlns:local="clr-namespace:RecipeCatalog.CustomMAUIComponents"
              Title="UserRightPage">
     <Grid Padding="0,0">
-        <!-- Define the Rows -->
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -19,41 +19,16 @@
 
                 <BoxView x:Name="HRFirst" HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" Margin="0, 40"/>
 
-                <StackLayout >
-                    <!--<Label Text="{x:Static resx:AppLanguage.User_CustomRights}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
-                    <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
-                        <CollectionView x:Name="CustomRightsCollectionView">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackLayout  Orientation="Horizontal" Padding="3" >
-                                        <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                        <Label Text="{Binding Name}" VerticalOptions="Center" TextColor="White"/>
-                                    </StackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </Frame>-->
-
-                    <!--<BoxView x:Name="HRSecond" HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" Margin="0, 40"/>-->
-
-                    <Label Text="{x:Static resx:AppLanguage.User_GrantedAccessGroups}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="White"/>
-                    <Frame BorderColor="Gray" CornerRadius="5" Padding="0" BackgroundColor="Transparent">
-                        <CollectionView x:Name="GroupCollectionView">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackLayout  Orientation="Horizontal" Padding="3" >
-                                        <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                        <Label Text="{Binding Name}" VerticalOptions="Center" TextColor="White"/>
-                                    </StackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </Frame>
+                <StackLayout>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlGroup" Margin="0, 40"/>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlComponent" Margin="0, 40"/>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlRecipe" Margin="0, 40"/>
                 </StackLayout>
+                
                 <HorizontalStackLayout Spacing="10" Padding="0,30" HorizontalOptions="Center">
                     <Button Text="{x:Static resx:AppLanguage.Save}" Clicked="OnSendButtonClicked" HorizontalOptions="StartAndExpand"/>
                     <Button Text="{x:Static resx:AppLanguage.Cancel}" Clicked="OnCancelButtonClicked" HorizontalOptions="EndAndExpand"/>
-                    <Button Text="{x:Static resx:AppLanguage.Delete}" Clicked="OnDeleteButtonClicked" HorizontalOptions="EndAndExpand"/>
+                    <Button x:Name="DeleteButton" Text="{x:Static resx:AppLanguage.Delete}" Clicked="OnDeleteButtonClicked" HorizontalOptions="EndAndExpand"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
