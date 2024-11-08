@@ -8,6 +8,7 @@ namespace RecipeCatalog.Models
         public Recipe()
         {
             Components = new HashSet<RecipeComponents>();
+            Recipes = new HashSet<RecipeComponents>();
             MissingViewRightsRecipes = new HashSet<MissingViewRightRecipe>();
         }
 
@@ -22,6 +23,7 @@ namespace RecipeCatalog.Models
 
         public virtual Group? GroupNavigation { get; set; }
         public virtual ICollection<RecipeComponents> Components { get; set; }
+        public virtual ICollection<RecipeComponents> Recipes { get; set; }
         public virtual ICollection<MissingViewRightRecipe> MissingViewRightsRecipes { get; set; }
     }
 
@@ -29,11 +31,13 @@ namespace RecipeCatalog.Models
     {
         [Key]
         public int Id { get; set; }
-        public int Count { get; set; }
-        public int? ComponentId { get; set; }
         public int? RecipeId { get; set; }
+        public int? ComponentId { get; set; }
+        public int? UsedRecipeId { get; set; }
+        public int Count { get; set; }
 
         public virtual Recipe? RecipeNavigation { get; set; } 
+        public virtual Recipe? UsedRecipeNavigation { get; set; } 
         public virtual Component? ComponentNavigation { get; set; }
     }
 }

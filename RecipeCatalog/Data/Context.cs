@@ -74,6 +74,10 @@ namespace RecipeCatalog.Data
                     .WithOne(rc => rc.RecipeNavigation)
                     .HasForeignKey(rc => rc.RecipeId);
 
+                entity.HasMany(r => r.Recipes)
+                    .WithOne(rc => rc.UsedRecipeNavigation)
+                    .HasForeignKey(rc => rc.UsedRecipeId);
+
                 entity.HasOne(r => r.GroupNavigation)
                     .WithMany(g => g.Recipes)
                     .HasForeignKey(r => r.GroupId);
@@ -86,9 +90,6 @@ namespace RecipeCatalog.Data
                 entity.Property(rc => rc.Count)
                     .IsRequired();
 
-                entity.Property(rc => rc.ComponentId)
-                    .IsRequired();
-
                 entity.HasOne(rc => rc.RecipeNavigation)
                     .WithMany(r => r.Components)
                     .HasForeignKey(rc => rc.RecipeId);
@@ -96,6 +97,10 @@ namespace RecipeCatalog.Data
                 entity.HasOne(rc => rc.ComponentNavigation)
                     .WithMany(c => c.RecipeComponents)
                     .HasForeignKey(rc => rc.ComponentId);
+
+                entity.HasOne(rc => rc.UsedRecipeNavigation)
+                    .WithMany(c => c.Recipes)
+                    .HasForeignKey(rc => rc.UsedRecipeId);
             });
 
             modelBuilder.Entity<MissingViewRightGroup>(entity =>

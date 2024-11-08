@@ -42,9 +42,11 @@ CREATE TABLE RecipeComponents (
     Id INT PRIMARY KEY IDENTITY(1,1),
     RecipeId INT NULL,
     ComponentId INT NULL,
+    UsedRecipeId INT NULL,
     [Count] INT NOT NULL,
     CONSTRAINT FK_RecipeComponents_Recipe FOREIGN KEY (RecipeId) REFERENCES Recipes(Id) ON DELETE SET NULL,
-    CONSTRAINT FK_RecipeComponents_Component FOREIGN KEY (ComponentId) REFERENCES Components(Id) ON DELETE SET NULL
+    CONSTRAINT FK_RecipeComponents_Component FOREIGN KEY (ComponentId) REFERENCES Components(Id) ON DELETE SET NULL,
+    CONSTRAINT FK_RecipeComponents_UsesRecipe FOREIGN KEY (UsedRecipeId) REFERENCES Recipes(Id) ON DELETE SET NULL
 );
 
 CREATE TABLE MissingViewRightsGroups
