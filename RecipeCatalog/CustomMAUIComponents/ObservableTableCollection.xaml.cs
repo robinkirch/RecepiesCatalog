@@ -120,6 +120,19 @@ namespace RecipeCatalog.CustomMAUIComponents
                         };
                         cellContent = checkBox;
                     }
+                    else if (property.PropertyType == typeof(int))
+                    {
+                        var intValue = (int)(property.GetValue(item) ?? 0);
+                        var shortEntry = new Entry { Keyboard = Keyboard.Numeric, Text = intValue.ToString(), WidthRequest = 30 };
+                        shortEntry.TextChanged += (s, e) =>
+                        {
+                            if (int.TryParse(e.NewTextValue, out int newValue))
+                                property.SetValue(item, newValue);
+                            else
+                                shortEntry.Text = intValue.ToString();
+                        };
+                        cellContent = shortEntry;
+                    }
                     else
                     {
                         cellContent = new Label { Text = cellValue, VerticalTextAlignment = TextAlignment.Center };
