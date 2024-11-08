@@ -124,6 +124,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quantity.
+        /// </summary>
+        internal static string Attribute_Quantity {
+            get {
+                return ResourceManager.GetString("Attribute_Quantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recipe name.
         /// </summary>
         internal static string Attribute_RecipeName {

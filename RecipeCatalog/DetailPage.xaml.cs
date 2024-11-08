@@ -5,6 +5,7 @@ using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Group = RecipeCatalog.Models.Group;
 
 namespace RecipeCatalog;
@@ -29,12 +30,15 @@ public partial class DetailPage : ContentPage
         ChangeCommonData(data);
 
         if (DataType == typeof(Recipe))
-            AddComponents(MauiProgram._context.RecipeComponents.Where(rc => rc.RecipeId == data.Id).ToList(), !MauiProgram._context.MissingViewRightsRecipes.Any(m => m.RecipeId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeComponents));
-
+        {
+            AddComponents(MauiProgram._context.RecipeComponents.Where(rc => rc.RecipeId != null && rc.RecipeId == ID).ToList(), !MauiProgram._context.MissingViewRightsRecipes.Any(m => m.RecipeId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeComponents));
+            HR.IsVisible = false;
+            AddUsedInForRecipes();
+        }
         if (DataType == typeof(Component))
         {
             HR.IsVisible = false;
-            AddUsedIn(data.Id);
+            AddUsedInForComponents();
         }
     }
 
@@ -64,17 +68,13 @@ public partial class DetailPage : ContentPage
             
     }
 
-    /// <summary>
-    /// Adds a list of recipes that the specified component is used in to the detail page.
-    /// </summary>
-    /// <param name="componentId">The ID of the component to check for usage in recipes.</param>
-    public void AddUsedIn(int componentId)
+    public void AddUsedInForRecipes()
     {
-        //TODO: scheinbar habe ich die Navigationen in den klassen nicht vernünftig gemacht, weswegen die abfragen so ass sind
+        //TODO: navigation in models are kinda shitty, so here we are
         var recipeIds = MauiProgram._context.RecipeComponents
-            .Where(rc => rc.ComponentId == componentId)
-            .Select(rc => rc.RecipeId)
-            .ToList();
+           .Where(rc => rc.UsedRecipeId == ID)
+           .Select(rc => rc.RecipeId)
+           .ToList();
         var recipes = MauiProgram._context.Recipes
             .Where(r => recipeIds.Contains(r.Id))
             .ToList();
@@ -83,6 +83,29 @@ public partial class DetailPage : ContentPage
                          && m.UserId == MauiProgram.CurrentUser.Id
                          && !(m.CannotSee || m.CannotSeeComponents))
             .ToList();
+        AddUsedIn(recipes, rightsToSee);
+    }
+
+    public void AddUsedInForComponents()
+    {
+        //TODO: navigation in models are kinda shitty, so here we are
+        var recipeIds = MauiProgram._context.RecipeComponents
+           .Where(rc => rc.ComponentId == ID)
+           .Select(rc => rc.RecipeId)
+           .ToList();
+        var recipes = MauiProgram._context.Recipes
+            .Where(r => recipeIds.Contains(r.Id))
+            .ToList();
+        var rightsToSee = MauiProgram._context.MissingViewRightsRecipes
+            .Where(m => recipeIds.Contains(m.RecipeId)
+                         && m.UserId == MauiProgram.CurrentUser.Id
+                         && !(m.CannotSee || m.CannotSeeComponents))
+            .ToList();
+        AddUsedIn(recipes, rightsToSee);
+    }
+
+    public void AddUsedIn(List<Recipe> recipes, List<MissingViewRightRecipe> rightsToSee)
+    {
         var groups = MauiProgram._context.MissingViewRightsGroups.Where(m => m.UserId == MauiProgram.CurrentUser.Id && recipes.Select(r => r.GroupId).Contains(m.GroupId)).ToList();
 
         if (recipes.Count > 0)
@@ -93,7 +116,7 @@ public partial class DetailPage : ContentPage
 
             recipes.ForEach(r =>
             {
-                RecipesComponentsPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
+                RecipesPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
                 var frame = new Frame
                 {
                     Padding = 0,
@@ -119,7 +142,7 @@ public partial class DetailPage : ContentPage
                 }
                 frame.Content = nameLabel;
 
-                RecipesComponentsPlace.Children.Add(nameLabel);
+                RecipesPlace.Children.Add(nameLabel);
                 Grid.SetRow(nameLabel, row);
                 Grid.SetColumn(nameLabel, 0);
                 row++;
@@ -138,7 +161,7 @@ public partial class DetailPage : ContentPage
         if (data.Count != 0)
         {
             Components.IsVisible = true;
-            RecipesComponentsPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
+            ComponentsPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
 
             //head
             var componentLabel = new Label
@@ -148,7 +171,7 @@ public partial class DetailPage : ContentPage
                 FontSize = 15,
                 VerticalOptions = LayoutOptions.Start
             };
-            RecipesComponentsPlace.Children.Add(componentLabel);
+            ComponentsPlace.Children.Add(componentLabel);
             Grid.SetRow(componentLabel, row);
             Grid.SetColumn(componentLabel, 0);
             var counterLabel = new Label
@@ -158,7 +181,7 @@ public partial class DetailPage : ContentPage
                 FontSize = 15,
                 VerticalOptions = LayoutOptions.Start
             };
-            RecipesComponentsPlace.Children.Add(counterLabel);
+            ComponentsPlace.Children.Add(counterLabel);
             Grid.SetRow(counterLabel, row);
             Grid.SetColumn(counterLabel, 2);
 
@@ -167,8 +190,15 @@ public partial class DetailPage : ContentPage
 
         foreach (var item in data) //Todo: maybe order by
         {
-            RecipesComponentsPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
-            var component = MauiProgram._context.Components.Where(c => c.Id == item.ComponentId).Single();
+            ComponentsPlace.RowDefinitions.Add(new RowDefinition { Height = 20 });
+            IData component = null;
+            if(item.ComponentId != null)
+                component = MauiProgram._context.Components.Where(c => c.Id == item.ComponentId).Single();
+            else if(item.UsedRecipeId != null)
+                component = MauiProgram._context.Recipes.Where(c => c.Id == item.UsedRecipeId).Single();
+            else
+                throw new NotImplementedException();
+
             bool groupBlocked = MauiProgram._context.MissingViewRightsGroups.Any(m => m.UserId == MauiProgram.CurrentUser.Id && component.GroupId == m.GroupId);
             var frame = new Frame
             {
@@ -189,13 +219,18 @@ public partial class DetailPage : ContentPage
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += (s, e) =>
                 {
-                    OnFrameTapped(new DetailPage(component));
+                    if (item.ComponentId != null)
+                        OnFrameTapped(new DetailPage((Component)component));
+                    else if (item.UsedRecipeId != null)
+                        OnFrameTapped(new DetailPage((Recipe)component));
+                    else
+                        throw new NotImplementedException();
                 };
                 nameLabel.GestureRecognizers.Add(tapGestureRecognizer);
             }
             frame.Content = nameLabel;
 
-            RecipesComponentsPlace.Children.Add(nameLabel);
+            ComponentsPlace.Children.Add(nameLabel);
             Grid.SetRow(nameLabel, row);
             Grid.SetColumn(nameLabel, 0);
 
@@ -205,7 +240,7 @@ public partial class DetailPage : ContentPage
                 Text = isAccessible ? item.Count.ToString() : "?",
                 VerticalOptions = LayoutOptions.Center
             };
-            RecipesComponentsPlace.Children.Add(countLabel);
+            ComponentsPlace.Children.Add(countLabel);
             Grid.SetRow(countLabel, row);
             Grid.SetColumn(countLabel, 2);
 
@@ -219,7 +254,14 @@ public partial class DetailPage : ContentPage
     /// <param name="page">The detail page to navigate to.</param>
     private static void OnFrameTapped(DetailPage page)
     {
-        App.Current!.MainPage = page;
+        try
+        {
+            App.Current!.MainPage = page;
+        }
+        catch (Exception ex)
+        {
+            //TODO: DoLater
+        }
     }
 
     /// <summary>
@@ -293,31 +335,11 @@ public partial class DetailPage : ContentPage
     }
 
     /// <summary>
-    /// Loads the components used in the current recipe into a collection view for editing.
-    /// </summary>
-    private void LoadComponents()
-    {
-        var componentsForRecipe = MauiProgram._context.RecipeComponents.Where(c => c.RecipeId == ID).ToList();
-        var components = new ObservableCollection<ComponentView>();
-        MauiProgram._context.Components.OrderBy(c => c.Name).ToList().ForEach(c =>
-        {
-            components.Add(new() { 
-                Name = c.Name, 
-                Id = c.Id, 
-                IsSelected = componentsForRecipe.Any(co => co.ComponentId == c.Id), 
-                Count = componentsForRecipe.Any(co => co.ComponentId == c.Id) ? componentsForRecipe.Single(co => co.ComponentId == c.Id).Count : 0,
-            });
-        });
-        EditComponentCollectionView.ItemsSource = components;
-    }
-
-    /// <summary>
     /// Loads the user-specific visibility settings for the component or recipe into collection views.
     /// This includes settings for view and description access for the current user.
     /// </summary>
     private void LoadUserData()
     {
-        //TODO:Optimieren, da components anzeige vollständig in recipes enthalten ist und immer geladen wird
         if (DataType == typeof(Component))
         {
             var missingRightsComp = MauiProgram._context.MissingViewRightsComponents.Where(m => m.ComponentId == ID).ToList();
@@ -332,11 +354,6 @@ public partial class DetailPage : ContentPage
         }
         else if (DataType == typeof(Recipe))
         {
-            LoadComponents();
-            EditComponentLabel.IsVisible = true;
-            EditComponentFrame.IsVisible = true;
-
-
             var missingRightsRec = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.RecipeId == ID).ToList();
             var userItems = new ObservableCollection<MissingViewRightRecipeUserItem>();
             MauiProgram._context.Users.ToList().ForEach(u =>
@@ -346,8 +363,32 @@ public partial class DetailPage : ContentPage
             DynamicTableControlRightsRecipe.ItemsSource = new ObservableCollection<object>(userItems.Cast<object>());
             DynamicTableControlRightsRecipe.BuildTable(AppLanguage.User_CustomRights);
             DynamicTableControlRightsRecipe.IsVisible = true;
+
+
+
+            List<RecipeComponents> componentRecipes = MauiProgram._context.RecipeComponents.Where(rc => rc.RecipeId == ID).ToList();
+            var componentItem = new ObservableCollection<ComponentItem>();
+            MauiProgram._context.Components.OrderBy(c => c.Name).ToList().ForEach(c =>
+            {
+                var d = componentRecipes?.Where(rc => rc.ComponentId == c.Id).SingleOrDefault()?.Count;
+                componentItem.Add(new ComponentItem { ID = c.Id, ComponentName = c.Name, Quantity = d ?? 0 });
+            });
+            DynamicTableControlEditUsedComponent.ItemsSource = new ObservableCollection<object>(componentItem.Cast<object>());
+            DynamicTableControlEditUsedComponent.BuildTable(AppLanguage.Filter_Components);
+            DynamicTableControlEditUsedComponent.IsVisible = true;
+
+
+            var recipeItem = new ObservableCollection<RecipeItem>();
+            MauiProgram._context.Recipes.OrderBy(c => c.Name).ToList().ForEach(c =>
+            {
+                var d = componentRecipes?.Where(rc => rc.UsedRecipeId == c.Id).SingleOrDefault()?.Count;
+                recipeItem.Add(new RecipeItem { ID = c.Id, RecipeName = c.Name, Quantity = d ?? 0 });
+            });
+            DynamicTableControlEditUsedRecipe.ItemsSource = new ObservableCollection<object>(recipeItem.Cast<object>());
+            DynamicTableControlEditUsedRecipe.BuildTable(AppLanguage.Filter_Recipes);
+            DynamicTableControlEditUsedRecipe.IsVisible = true;
         }
-        else 
+        else
             throw new NotImplementedException();
     }
 
@@ -446,8 +487,7 @@ public partial class DetailPage : ContentPage
     private void OnSave(object sender, EventArgs e)
     {
         IData data = DataType == typeof(Component) ? MauiProgram._context.Components.Single(c => c.Id == ID) : MauiProgram._context.Recipes.Single(c => c.Id == ID);
-        
-        //Maindata
+
         data.Image = selectedImage;
         data.Name = NameEntry.Text;
         data.Description = DescEntry.Text;
@@ -455,20 +495,6 @@ public partial class DetailPage : ContentPage
         data.Aliases = (AliasEntry.Text != null) ? AliasEntry.Text.Split(',') : [];
         data.GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null;
 
-        //ComponentsUsed
-        if (DataType == typeof(Recipe))
-        {
-            var RecipesComponents = new List<RecipeComponents>();
-            foreach (ComponentView item in EditComponentCollectionView.ItemsSource)
-            {
-                if (item.IsSelected)
-                    RecipesComponents.Add(new() { Count = item.Count, ComponentId = item.Id, RecipeId = data.Id });
-            }
-            MauiProgram._context.RecipeComponents.RemoveRange(MauiProgram._context.RecipeComponents.Where(c => c.RecipeId == ID).ToList());
-            MauiProgram._context.RecipeComponents.AddRange(RecipesComponents);
-        }
-
-        //Rights
         if (DataType == typeof(Component))
         {
             DynamicTableControlRightsComponent.ItemsSource.ToList().ForEach(item =>
@@ -519,6 +545,66 @@ public partial class DetailPage : ContentPage
                         entry.CannotSee = c.CannotSee;
                         entry.CannotSeeDescription = c.CannotSeeDescription;
                         entry.CannotSeeComponents = c.CannotSeeComponents;
+                    }
+                }
+            });
+
+
+
+            DynamicTableControlEditUsedComponent.ItemsSource.ToList().ForEach(item =>
+            {
+                if (item is ComponentItem c) // Pattern Matching is neccessary
+                {
+                    var entry = MauiProgram._context.RecipeComponents.Where(m => m.RecipeId == ID && m.ComponentId == c.ID).SingleOrDefault();
+                    if (entry == null && c.Quantity > 0)
+                    {
+                        entry = new()
+                        {
+                            RecipeId = ID,
+                            ComponentId = c.ID,
+                            Count = c.Quantity
+                        };
+                        MauiProgram._context.RecipeComponents.Add(entry);
+                    }
+                    else if (entry != null)
+                    {
+                        if (c.Quantity == 0)
+                        {
+                            MauiProgram._context.RecipeComponents.Remove(entry);
+                        }
+                        else
+                        {
+                            entry.Count = c.Quantity;
+                        }
+                    }
+                }
+            });
+
+            DynamicTableControlEditUsedRecipe.ItemsSource.ToList().ForEach(item =>
+            {
+                if (item is RecipeItem c) // Pattern Matching is neccessary
+                {
+                    var entry = MauiProgram._context.RecipeComponents.Where(m => m.RecipeId == ID && m.UsedRecipeId == c.ID).SingleOrDefault();
+                    if (entry == null && c.Quantity > 0)
+                    {
+                        entry = new()
+                        {
+                            RecipeId = ID,
+                            UsedRecipeId = c.ID,
+                            Count = c.Quantity
+                        };
+                        MauiProgram._context.RecipeComponents.Add(entry);
+                    }
+                    else if (entry != null)
+                    {
+                        if (c.Quantity == 0)
+                        {
+                            MauiProgram._context.RecipeComponents.Remove(entry);
+                        }
+                        else
+                        {
+                            entry.Count = c.Quantity;
+                        }
                     }
                 }
             });

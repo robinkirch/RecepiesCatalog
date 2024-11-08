@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RecipeCatalog.Helper
+﻿namespace RecipeCatalog.Helper
 {
     public class MissingViewRightGroupItem
     {
@@ -61,5 +55,23 @@ namespace RecipeCatalog.Helper
         public bool CannotSeeDescription { get; set; }
         [Translation("Attribute_CannotSeeComponents")]
         public bool CannotSeeComponents { get; set; }
+    }
+
+    public class ComponentItem
+    {
+        public int ID;
+        [Translation("Attribute_ComponentName")]
+        public string ComponentName { get; set; }
+        [Translation("Attribute_Quantity")]
+        public int Quantity { get; set; }
+    }
+
+    public class RecipeItem
+    {
+        public int ID;
+        [Translation("Attribute_RecipeName")]
+        public string RecipeName { get; set; }
+        [Translation("Attribute_Quantity")]
+        public int Quantity { get; set; }
     }
 }

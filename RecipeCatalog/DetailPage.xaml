@@ -94,6 +94,17 @@
                     Margin="0, 10"
                     IsVisible="False"/>
 
+                <Grid x:Name="ComponentsPlace">
+                    <Grid.RowDefinitions>
+                        <!-- Zeilen werden dynamisch hinzugefügt -->
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                
                 <Label
                     x:Name="Recipes"
                     Text="{x:Static resx:AppLanguage.Detail_UsedInRecipes}"
@@ -102,7 +113,7 @@
                     Margin="0, 10"
                     IsVisible="False"/>
 
-                <Grid x:Name="RecipesComponentsPlace">
+                <Grid x:Name="RecipesPlace">
                     <Grid.RowDefinitions>
                         <!-- Zeilen werden dynamisch hinzugefügt -->
                     </Grid.RowDefinitions>
@@ -113,20 +124,10 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
 
-                <Label x:Name="EditComponentLabel" Text="{x:Static resx:AppLanguage.Placeholder_MultiSelect}" FontSize="Micro" HorizontalOptions="Start" Margin="0,0,0,10" TextColor="#565656" IsVisible="False"/>
-                <Frame x:Name="EditComponentFrame" BorderColor="Gray" CornerRadius="5" Padding="0" HasShadow="False" BackgroundColor="Transparent" IsVisible="False">
-                    <CollectionView x:Name="EditComponentCollectionView">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout  Orientation="Horizontal" Padding="3" >
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                                    <Label Text="{Binding Name}" VerticalOptions="Center" TextColor="#565656"/>
-                                    <Entry Text="{Binding Count}" VerticalOptions="Center" />
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
+                <StackLayout>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlEditUsedComponent" Margin="0, 40" IsVisible="False"/>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlEditUsedRecipe" Margin="0, 40" IsVisible="False"/>
+                </StackLayout>
                 
                 <StackLayout>
                     <local:ObservableTableCollection x:Name="DynamicTableControlRightsComponent" Margin="0, 40" IsVisible="False"/>

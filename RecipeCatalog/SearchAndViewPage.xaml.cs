@@ -349,12 +349,19 @@ public partial class SearchAndViewPage : ContentPage
     /// <exception cref="NotImplementedException">Thrown if the tapped object's type is not implemented.</exception>
     private static void OnFrameTapped(int id, Type type)
     {
-        App.Current!.MainPage = type switch
+        try
         {
-            Type t when t == typeof(Component) => new DetailPage(MauiProgram._context.Components.Single(c => c.Id == id)),
-            Type t when t == typeof(Recipe) => new DetailPage(MauiProgram._context.Recipes.Single(c => c.Id == id)),
-            _ => throw new NotImplementedException("type not implemented"),
-        };
+            App.Current!.MainPage = type switch
+            {
+                Type t when t == typeof(Component) => new DetailPage(MauiProgram._context.Components.Single(c => c.Id == id)),
+                Type t when t == typeof(Recipe) => new DetailPage(MauiProgram._context.Recipes.Single(c => c.Id == id)),
+                _ => throw new NotImplementedException("type not implemented"),
+            };
+        }
+        catch (Exception ex)
+        {
+            //TODO: DoLater
+        }
     }
 
     /// <summary>

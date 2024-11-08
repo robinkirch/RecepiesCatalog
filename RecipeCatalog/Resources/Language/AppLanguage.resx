@@ -291,4 +291,7 @@
   <data name="Attribute_UserName" xml:space="preserve">
     <value>Username</value>
   </data>
+  <data name="Attribute_Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
 </root>

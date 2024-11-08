@@ -74,7 +74,14 @@ public partial class UserOverviewPage : ContentPage
     /// <param name="id">The unique identifier of the user whose rights are to be viewed.</param>
     private static void OnFrameTapped(Guid id)
     {
-        App.Current!.MainPage = new UserRightPage(MauiProgram._context.Users.Where(u => u.Id == id).Single());
+        try 
+        { 
+            App.Current!.MainPage = new UserRightPage(MauiProgram._context.Users.Where(u => u.Id == id).Single());
+        }
+        catch (Exception ex)
+        {
+            //TODO: DoLater
+        }
     }
 
     /// <summary>

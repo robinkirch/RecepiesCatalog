@@ -16,7 +16,7 @@ public partial class AddRecipePopup : Popup
         InitializeComponent();
         LoadPickerData();
         LoadData();
-        LoadComponents();
+        LoadCollectionViews();
     }
 
     /// <summary>
@@ -38,14 +38,23 @@ public partial class AddRecipePopup : Popup
     /// Loads the components available for the recipe.
     /// Retrieves all components from the database and populates the component collection view.
     /// </summary>
-    private void LoadComponents()
+    private void LoadCollectionViews()
     {
-        var components = new ObservableCollection<ComponentView>();
-        MauiProgram._context.Components.ToList().ForEach(c =>
+        var componentItem = new ObservableCollection<ComponentItem>();
+        MauiProgram._context.Components.OrderBy(c => c.Name).ToList().ForEach(c =>
         {
-            components.Add(new() { Name = c.Name, Id = c.Id, IsSelected = false, Count = 0 });
+            componentItem.Add(new ComponentItem { ID = c.Id, ComponentName = c.Name, Quantity = 0  });
         });
-        ComponentCollectionView.ItemsSource = components;
+        DynamicTableControlQuantityComponents.ItemsSource = new ObservableCollection<object>(componentItem.Cast<object>());
+        DynamicTableControlQuantityComponents.BuildTable(AppLanguage.Filter_Components);
+
+        var recipeItem = new ObservableCollection<RecipeItem>();
+        MauiProgram._context.Recipes.OrderBy(c => c.Name).ToList().ForEach(c =>
+        {
+            recipeItem.Add(new RecipeItem { ID = c.Id, RecipeName = c.Name, Quantity = 0 });
+        });
+        DynamicTableControlQuantityRecipes.ItemsSource = new ObservableCollection<object>(recipeItem.Cast<object>());
+        DynamicTableControlQuantityRecipes.BuildTable(AppLanguage.Filter_Recipes);
     }
 
     /// <summary>
@@ -66,17 +75,6 @@ public partial class AddRecipePopup : Popup
     /// <param name="e">Event data.</param>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
-        var RecipesComponents = new List<RecipeComponents>();
-        foreach (ComponentView item in ComponentCollectionView.ItemsSource)
-        {
-            if (item.IsSelected)
-            {
-                RecipesComponents.Add(new() { Count = item.Count, ComponentId = item.Id});
-            }
-        }
-        MauiProgram._context.RecipeComponents.AddRange(RecipesComponents);
-        MauiProgram._context.SaveChanges();
-
         var newRecipe = MauiProgram._context.Recipes.Add(new Recipe
         {
             Image = null, // set in detailpage
@@ -85,10 +83,24 @@ public partial class AddRecipePopup : Popup
             SecretDescription = SecretDescriptionEntry.Text,
             Aliases = (AliasesEntry.Text != null) ? AliasesEntry.Text.Split(',') : [],
             GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null,
-            Components = RecipesComponents
-
         });
         MauiProgram._context.SaveChanges();
+
+
+        DynamicTableControlQuantityComponents.ItemsSource.ToList().ForEach(item =>
+        {
+            if (item is ComponentItem c && c.Quantity != 0) // Pattern Matching is neccessary
+                MauiProgram._context.RecipeComponents.Add(new() { RecipeId = newRecipe.Entity.Id, Count = c.Quantity, ComponentId = c.ID });
+        });
+        MauiProgram._context.SaveChanges();
+
+        DynamicTableControlQuantityRecipes.ItemsSource.ToList().ForEach(item =>
+        {
+            if (item is RecipeItem c && c.Quantity != 0) // Pattern Matching is neccessary
+                MauiProgram._context.RecipeComponents.Add(new() { RecipeId = newRecipe.Entity.Id, Count = c.Quantity, UsedRecipeId = c.ID });
+        });
+        MauiProgram._context.SaveChanges();
+
 
         DynamicTableControlRights.ItemsSource.ToList().ForEach(item =>
         {
