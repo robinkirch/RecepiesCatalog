@@ -63,8 +63,8 @@ public partial class AddRecipePopup : Popup
     /// </summary>
     private void LoadPickerData()
     {
-        GroupPicker.ItemsSource = MauiProgram._context.Groups.ToList();
-        GroupPicker.ItemDisplayBinding = new Binding("GroupName");
+        CategoryPicker.ItemsSource = MauiProgram._context.Categories.ToList();
+        CategoryPicker.ItemDisplayBinding = new Binding(nameof(Category.CategoryName));
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public partial class AddRecipePopup : Popup
             Description = DescriptionEntry.Text,
             SecretDescription = SecretDescriptionEntry.Text,
             Aliases = (AliasesEntry.Text != null) ? AliasesEntry.Text.Split(',') : [],
-            GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null,
+            CategoryId = (CategoryPicker.SelectedIndex != -1) ? ((Category)CategoryPicker.SelectedItem).Id : null,
         });
         MauiProgram._context.SaveChanges();
 

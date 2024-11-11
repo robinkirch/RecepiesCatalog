@@ -19,7 +19,7 @@ namespace RecipeCatalog.Popups
         /// <param name="e">Event data.</param>
         private void OnSendButtonClicked(object sender, EventArgs e)
         {
-            var newGroup = MauiProgram._context.Campaigns.Add(new Campaign { Name = NameEntry.Text });
+            var newCategorie = MauiProgram._context.Campaigns.Add(new Campaign { Name = NameEntry.Text });
             MauiProgram._context.SaveChanges();
             Close(MauiProgram._context.Campaigns.Single(g => g.Name == NameEntry.Text));
         }

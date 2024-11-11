@@ -29,7 +29,7 @@
                     MinimumHeightRequest="60"
                 />
                 <Entry x:Name="AliasesEntry" Placeholder="{x:Static resx:AppLanguage.Placeholder_Aliases}" />
-                <Picker x:Name="GroupPicker" Title="{x:Static resx:AppLanguage.Placeholder_Groups}" TitleColor="Black" />
+                <Picker x:Name="CategoryPicker" Title="{x:Static resx:AppLanguage.Placeholder_Category}" TitleColor="Black" />
                 
                 <StackLayout>
                     <local:ObservableTableCollection x:Name="DynamicTableControlQuantityComponents" Margin="0, 40"/>

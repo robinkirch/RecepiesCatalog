@@ -18,9 +18,9 @@ namespace RecipeCatalog.Models
         public string? Description { get; set; }
         public string? SecretDescription { get; set; }
         public string[]? Aliases { get; set; }
-        public int? GroupId { get; set; }
+        public int? CategoryId { get; set; }
 
-        public virtual Group? GroupNavigation { get; set; }
+        public virtual Category? CategorieNavigation { get; set; }
         public virtual ICollection<RecipeComponents> RecipeComponents { get; set; }
         public virtual ICollection<MissingViewRightComponent> MissingViewRightsComponent { get; set; }
     }

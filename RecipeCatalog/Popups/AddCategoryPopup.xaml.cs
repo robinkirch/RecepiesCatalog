@@ -3,9 +3,9 @@ using RecipeCatalog.Models;
 
 namespace RecipeCatalog.Popups;
 
-public partial class AddGroupPopup : Popup
+public partial class AddCategoryPopup : Popup
 {
-	public AddGroupPopup()
+	public AddCategoryPopup()
 	{
 		InitializeComponent();
 	}
@@ -19,9 +19,9 @@ public partial class AddGroupPopup : Popup
     /// <exception cref="NullReferenceException">Thrown when the new group could not be created.</exception>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
-        var newGroup = MauiProgram._context.Groups.Add(new Group { GroupName = NameEntry.Text }) ?? throw new NullReferenceException();
+        var newCategory = MauiProgram._context.Categories.Add(new Category { CategoryName = NameEntry.Text }) ?? throw new NullReferenceException();
         MauiProgram._context.SaveChanges();
-        Close(MauiProgram._context.Groups.Single(g => g.GroupName == NameEntry.Text));
+        Close(MauiProgram._context.Categories.Single(g => g.CategoryName == NameEntry.Text));
     }
 
     /// <summary>

@@ -131,7 +131,7 @@ namespace RecipeCatalog
     /// <br />- <b>All</b>: Represents all options.
     /// <br />- <b>Components</b>: Represents filtering by components.
     /// <br />- <b>Recipes</b>: Represents filtering by recipes.
-    /// <br />- <b>Groups</b>: Represents filtering by groups or any value above (dynamically defined).
+    /// <br />- <b>Categories</b>: Represents filtering by categories or any value above (dynamically defined).
     /// <br />- <b>OffSet</b>: Used for calculating offsets in relation to group selections.
     /// </summary>
     public enum Selection
@@ -139,7 +139,7 @@ namespace RecipeCatalog
         All = 0,
         Components = 1,
         Recipes = 2,
-        Groups = 3,
+        Categories = 3,
         OffSet = Recipes,
     }
 }

@@ -14,12 +14,12 @@ namespace RecipeCatalog.Data
         public DbSet<Component> Components { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeComponents> RecipeComponents { get; set; }
-        public DbSet<Group> Groups { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<MissingViewRightComponent> MissingViewRightsComponents { get; set; }
         public DbSet<MissingViewRightRecipe> MissingViewRightsRecipes { get; set; }
-        public DbSet<MissingViewRightGroup> MissingViewRightsGroups { get; set; }
+        public DbSet<MissingViewRightCategory> MissingViewRightsCategories { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,21 +32,21 @@ namespace RecipeCatalog.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Group>(entity =>
+            modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(g => g.Id);
 
-                entity.Property(g => g.GroupName)
+                entity.Property(g => g.CategoryName)
                     .IsRequired()
                     .IsUnicode(false);
 
                 entity.HasMany(g => g.Components)
-                    .WithOne(c => c.GroupNavigation)
-                    .HasForeignKey(c => c.GroupId);
+                    .WithOne(c => c.CategorieNavigation)
+                    .HasForeignKey(c => c.CategoryId);
 
                 entity.HasMany(g => g.Recipes)
-                    .WithOne(r => r.GroupNavigation)
-                    .HasForeignKey(r => r.GroupId);
+                    .WithOne(r => r.CategoryNavigation)
+                    .HasForeignKey(r => r.CategoryId);
             });
 
             modelBuilder.Entity<Component>(entity =>
@@ -78,9 +78,9 @@ namespace RecipeCatalog.Data
                     .WithOne(rc => rc.UsedRecipeNavigation)
                     .HasForeignKey(rc => rc.UsedRecipeId);
 
-                entity.HasOne(r => r.GroupNavigation)
+                entity.HasOne(r => r.CategoryNavigation)
                     .WithMany(g => g.Recipes)
-                    .HasForeignKey(r => r.GroupId);
+                    .HasForeignKey(r => r.CategoryId);
             });
 
             modelBuilder.Entity<RecipeComponents>(entity =>
@@ -103,18 +103,18 @@ namespace RecipeCatalog.Data
                     .HasForeignKey(rc => rc.UsedRecipeId);
             });
 
-            modelBuilder.Entity<MissingViewRightGroup>(entity =>
+            modelBuilder.Entity<MissingViewRightCategory>(entity =>
             {
                 entity.HasKey(mvr => mvr.Id);
 
                 entity.HasOne(mvr => mvr.User)
-                    .WithMany(u => u.MissingViewRightsGroup)
+                    .WithMany(u => u.MissingViewRightsCategory)
                     .HasForeignKey(mvr => mvr.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(mvr => mvr.Group)
-                    .WithMany(g => g.MissingViewRightsGroup)
-                    .HasForeignKey(mvr => mvr.GroupId)
+                entity.HasOne(mvr => mvr.Category)
+                    .WithMany(g => g.MissingViewRightsCategories)
+                    .HasForeignKey(mvr => mvr.CategoryId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -157,9 +157,9 @@ namespace RecipeCatalog.Data
                     .HasForeignKey(b => b.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(b => b.Group)
+                entity.HasOne(b => b.Category)
                     .WithMany(g => g.Bookmarks)
-                    .HasForeignKey(b => b.GroupId)
+                    .HasForeignKey(b => b.CategoryId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(b => b.Component)

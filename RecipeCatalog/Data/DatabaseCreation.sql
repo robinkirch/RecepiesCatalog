@@ -11,9 +11,9 @@ CREATE TABLE [Users] (
     CONSTRAINT FK_User_Campaign FOREIGN KEY (CampaignId) REFERENCES Campaigns(Id) ON DELETE SET NULL
 );
 
-CREATE TABLE [Groups] (
+CREATE TABLE Categories (
     Id INT PRIMARY KEY IDENTITY(1,1),
-    GroupName NVARCHAR(255) NOT NULL
+    CategoryName NVARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Components (
@@ -23,8 +23,8 @@ CREATE TABLE Components (
     [Description] NVARCHAR(MAX) NULL,
     [SecretDescription] NVARCHAR(MAX) NULL,
     [Aliases] NVARCHAR(MAX) NULL,
-    GroupId INT NOT NULL,
-    CONSTRAINT FK_Component_Group FOREIGN KEY (GroupId) REFERENCES [Groups](Id) ON DELETE NO ACTION
+    CategoryId INT NOT NULL,
+    CONSTRAINT FK_Component_Category FOREIGN KEY (CategoryId) REFERENCES [Categories](Id) ON DELETE NO ACTION
 );
 
 CREATE TABLE Recipes (
@@ -34,8 +34,8 @@ CREATE TABLE Recipes (
     [Description] NVARCHAR(MAX) NULL,
     [SecretDescription] NVARCHAR(MAX) NULL,
     [Aliases] NVARCHAR(MAX) NULL,
-    GroupId INT NOT NULL,
-    CONSTRAINT FK_Recipe_Group FOREIGN KEY (GroupId) REFERENCES [Groups](Id) ON DELETE NO ACTION
+    CategoryId INT NOT NULL,
+    CONSTRAINT FK_Recipe_Category FOREIGN KEY (CategoryId) REFERENCES [Categories](Id) ON DELETE NO ACTION
 );
 
 CREATE TABLE RecipeComponents (
@@ -49,13 +49,13 @@ CREATE TABLE RecipeComponents (
     CONSTRAINT FK_RecipeComponents_UsesRecipe FOREIGN KEY (UsedRecipeId) REFERENCES Recipes(Id) ON DELETE SET NULL
 );
 
-CREATE TABLE MissingViewRightsGroups
+CREATE TABLE MissingViewRightsCategories
 (
     Id INT PRIMARY KEY IDENTITY(1,1),
     UserId UNIQUEIDENTIFIER,
-    GroupId INT NOT NULL,
-    CONSTRAINT FK_MissingViewRightsGroups_User FOREIGN KEY (UserId) REFERENCES [Users](Id) ON DELETE CASCADE,
-    CONSTRAINT FK_MissingViewRightsGroups_Group FOREIGN KEY (GroupId) REFERENCES [Groups](Id) ON DELETE CASCADE
+    CategoryId INT NOT NULL,
+    CONSTRAINT FK_MissingViewRightsCategories_User FOREIGN KEY (UserId) REFERENCES [Users](Id) ON DELETE CASCADE,
+    CONSTRAINT FK_MissingViewRightsCategories_Category FOREIGN KEY (CategoryId) REFERENCES [Categories](Id) ON DELETE CASCADE
 );
 
 CREATE TABLE MissingViewRightsComponents
@@ -85,11 +85,11 @@ CREATE TABLE Bookmarks
 (
     Id INT PRIMARY KEY IDENTITY(1,1),
     UserId UNIQUEIDENTIFIER NOT NULL,
-    GroupId INT NOT NULL,
+    CategoryId INT NOT NULL,
     ComponentId INT NULL,
     RecipeId INT NULL,
     CONSTRAINT FK_Bookmark_User FOREIGN KEY (UserId) REFERENCES [Users](Id) ON DELETE CASCADE,
-    CONSTRAINT FK_Bookmark_Group FOREIGN KEY (GroupId) REFERENCES [Groups](Id) ON DELETE CASCADE,
+    CONSTRAINT FK_Bookmark_Category FOREIGN KEY (CategoryId) REFERENCES [Categories](Id) ON DELETE CASCADE,
     CONSTRAINT FK_Bookmark_Component FOREIGN KEY (ComponentId) REFERENCES [Components](Id) ON DELETE SET NULL, 
     CONSTRAINT FK_Bookmark_Recipe FOREIGN KEY (RecipeId) REFERENCES [Recipes](Id) ON DELETE SET NULL
 );

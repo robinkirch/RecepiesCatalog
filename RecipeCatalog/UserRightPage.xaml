@@ -20,7 +20,7 @@
                 <BoxView x:Name="HRFirst" HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" Margin="0, 40"/>
 
                 <StackLayout>
-                    <local:ObservableTableCollection x:Name="DynamicTableControlGroup" Margin="0, 40"/>
+                    <local:ObservableTableCollection x:Name="DynamicTableControlCategory" Margin="0, 40"/>
                     <local:ObservableTableCollection x:Name="DynamicTableControlComponent" Margin="0, 40"/>
                     <local:ObservableTableCollection x:Name="DynamicTableControlRecipe" Margin="0, 40"/>
                 </StackLayout>

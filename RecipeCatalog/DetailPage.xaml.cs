@@ -6,7 +6,7 @@ using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Group = RecipeCatalog.Models.Group;
+using Category = RecipeCatalog.Models.Category;
 
 namespace RecipeCatalog;
 
@@ -59,7 +59,7 @@ public partial class DetailPage : ContentPage
         }
         else
             DescriptionText.Text = "???";
-        GroupText.Text = MauiProgram._context.Groups.Single(g => g.Id == data.GroupId).GroupName;
+        CategoryText.Text = MauiProgram._context.Categories.Single(g => g.Id == data.CategoryId).CategoryName;
         if (MauiProgram.CurrentUser.IsAdmin)
         {
             SecretDescriptionText.Text = data.SecretDescription != null && data.SecretDescription != string.Empty ? $"\'{data.SecretDescription}\'" : string.Empty;
@@ -106,7 +106,7 @@ public partial class DetailPage : ContentPage
 
     public void AddUsedIn(List<Recipe> recipes, List<MissingViewRightRecipe> rightsToSee)
     {
-        var groups = MauiProgram._context.MissingViewRightsGroups.Where(m => m.UserId == MauiProgram.CurrentUser.Id && recipes.Select(r => r.GroupId).Contains(m.GroupId)).ToList();
+        var categories = MauiProgram._context.MissingViewRightsCategories.Where(m => m.UserId == MauiProgram.CurrentUser.Id && recipes.Select(r => r.CategoryId).Contains(m.CategoryId)).ToList();
 
         if (recipes.Count > 0)
         {
@@ -128,10 +128,10 @@ public partial class DetailPage : ContentPage
                 var nameLabel = new Label
                 {
                     Text = !rightsToSee.Any(ri => ri.RecipeId == r.Id) ? r.Name : "???",
-                    TextColor = !groups.Any(g => g.GroupId == r.GroupId) ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
+                    TextColor = !categories.Any(g => g.CategoryId == r.CategoryId) ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
                     VerticalOptions = LayoutOptions.Start
                 };
-                if (!rightsToSee.Any(ri => ri.RecipeId == r.Id) && !groups.Any(g => g.GroupId == r.GroupId))
+                if (!rightsToSee.Any(ri => ri.RecipeId == r.Id) && !categories.Any(g => g.CategoryId == r.CategoryId))
                 {
                     var tapGestureRecognizer = new TapGestureRecognizer();
                     tapGestureRecognizer.Tapped += (s, e) =>
@@ -199,7 +199,7 @@ public partial class DetailPage : ContentPage
             else
                 throw new NotImplementedException();
 
-            bool groupBlocked = MauiProgram._context.MissingViewRightsGroups.Any(m => m.UserId == MauiProgram.CurrentUser.Id && component.GroupId == m.GroupId);
+            bool categorieBlocked = MauiProgram._context.MissingViewRightsCategories.Any(m => m.UserId == MauiProgram.CurrentUser.Id && component.CategoryId == m.CategoryId);
             var frame = new Frame
             {
                 Padding = 0,
@@ -210,11 +210,11 @@ public partial class DetailPage : ContentPage
             var nameLabel = new Label
             {
                 Text = isAccessible ? component.Name : "???",
-                TextColor = !groupBlocked ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
+                TextColor = !categorieBlocked ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
                 VerticalOptions = LayoutOptions.Start
             };
 
-            if (isAccessible && !groupBlocked)
+            if (isAccessible && !categorieBlocked)
             {
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += (s, e) =>
@@ -306,32 +306,31 @@ public partial class DetailPage : ContentPage
         SaveBtn.IsVisible = true;
         LoadPickerData();
         LoadUserData();
-        //todo: remove image from componen and recipe popup
     }
 
     /// <summary>
-    /// Loads the available groups into the group picker and selects the current group if it exists.
+    /// Loads the available categories into the category picker and selects the current category if it exists.
     /// </summary>
     private void LoadPickerData()
     {
-        GroupPicker.ItemsSource = MauiProgram._context.Groups.ToList();
-        GroupPicker.ItemDisplayBinding = new Binding("GroupName");
-        GroupText.Text = AppLanguage.Placeholder_Groups;
-        GroupPicker.IsVisible = true;
+        CategoryPicker.ItemsSource = MauiProgram._context.Categories.ToList();
+        CategoryPicker.ItemDisplayBinding = new Binding(nameof(Category.CategoryName));
+        CategoryText.Text = AppLanguage.Placeholder_Category;
+        CategoryPicker.IsVisible = true;
 
-        int? selectedGroupId = DataType == typeof(Component) ? MauiProgram._context.Components.Single(c => c.Id == ID).GroupId : MauiProgram._context.Recipes.Single(c => c.Id == ID).GroupId;
+        int? selectedCategorieId = DataType == typeof(Component) ? MauiProgram._context.Components.Single(c => c.Id == ID).CategoryId : MauiProgram._context.Recipes.Single(c => c.Id == ID).CategoryId;
 
-        if (selectedGroupId != null)
+        if (selectedCategorieId != null)
         {
-            var selectedGroup = MauiProgram._context.Groups.FirstOrDefault(g => g.Id == selectedGroupId);
+            var selectedCategorie = MauiProgram._context.Categories.FirstOrDefault(g => g.Id == selectedCategorieId);
 
-            if(selectedGroup != null)
-                GroupPicker.SelectedItem = selectedGroup;
+            if(selectedCategorie != null)
+                CategoryPicker.SelectedItem = selectedCategorie;
             else
-                GroupPicker.SelectedIndex = -1;
+                CategoryPicker.SelectedIndex = -1;
         }
         else
-            GroupPicker.SelectedIndex = -1;
+            CategoryPicker.SelectedIndex = -1;
     }
 
     /// <summary>
@@ -493,7 +492,7 @@ public partial class DetailPage : ContentPage
         data.Description = DescEntry.Text;
         data.SecretDescription = SecretDescEntry.Text;
         data.Aliases = (AliasEntry.Text != null) ? AliasEntry.Text.Split(',') : [];
-        data.GroupId = (GroupPicker.SelectedIndex != -1) ? ((Group)GroupPicker.SelectedItem).Id : null;
+        data.CategoryId = (CategoryPicker.SelectedIndex != -1) ? ((Category)CategoryPicker.SelectedItem).Id : null;
 
         if (DataType == typeof(Component))
         {

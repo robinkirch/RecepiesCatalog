@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <HorizontalStackLayout Grid.Row="0" Padding="20" HorizontalOptions="Center">
             <Entry x:Name="SearchEntry" Placeholder="{x:Static resx:AppLanguage.Search}" WidthRequest="400" HeightRequest="50" Margin="20,0" Completed="OnEntryCompleted" />
-            <Picker x:Name="TypeGroupPicker" SelectedIndexChanged="OnEntryCompleted"/>
+            <Picker x:Name="TypeCategoryPicker" SelectedIndexChanged="OnEntryCompleted"/>
         </HorizontalStackLayout>
         <ScrollView Grid.Row="1" x:Name="ResultScrollView" Scrolled="OnResultScrollViewScrolled">
             <Grid x:Name="ResultView" Padding="30,0" ColumnSpacing="10" RowSpacing="10">
@@ -50,8 +50,8 @@
                     x:Name="AdminArea">
                 <Button
                         x:Name="AddGroupBtn"
-                        Text="{x:Static resx:AppLanguage.SV_AddGroup}" 
-                        Clicked="OnAddGroup"
+                        Text="{x:Static resx:AppLanguage.SV_AddCategory}" 
+                        Clicked="OnAddCategory"
                         HorizontalOptions="Center">
                     <Button.ImageSource>
                         <FontImageSource Glyph="&#xf067;"

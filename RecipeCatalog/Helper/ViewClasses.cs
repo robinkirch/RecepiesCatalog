@@ -1,10 +1,10 @@
 ﻿namespace RecipeCatalog.Helper
 {
-    public class MissingViewRightGroupItem
+    public class MissingViewRightCategorieItem
     {
         public int ID;
-        [Translation("Attribute_GroupName")]
-        public string GroupName { get; set; }
+        [Translation("Attribute_CategoryName")]
+        public string CategoryName { get; set; }
         [Translation("Attribute_CannotAccess")]
         public bool CannotAccess { get; set; }
     }

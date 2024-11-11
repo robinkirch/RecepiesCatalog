@@ -129,8 +129,8 @@
   <data name="Filter_Recipes" xml:space="preserve">
     <value>Recipes</value>
   </data>
-  <data name="Group_InformationText" xml:space="preserve">
-    <value>Please insert a group name</value>
+  <data name="Category_InformationText" xml:space="preserve">
+    <value>Please insert a category name</value>
   </data>
   <data name="LanguageTitle" xml:space="preserve">
     <value>Language:</value>
@@ -156,8 +156,8 @@
   <data name="Placeholder_Description" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="Placeholder_Groups" xml:space="preserve">
-    <value>Groups</value>
+  <data name="Placeholder_Category" xml:space="preserve">
+    <value>Categories</value>
   </data>
   <data name="Placeholder_Name" xml:space="preserve">
     <value>Name</value>
@@ -177,8 +177,8 @@
   <data name="SV_AddComponent" xml:space="preserve">
     <value>Component</value>
   </data>
-  <data name="SV_AddGroup" xml:space="preserve">
-    <value>Group</value>
+  <data name="SV_AddCategory" xml:space="preserve">
+    <value>Category</value>
   </data>
   <data name="SV_AddRecipe" xml:space="preserve">
     <value>Recipe</value>
@@ -228,8 +228,8 @@
   <data name="User_CustomRights" xml:space="preserve">
     <value>Custom rights</value>
   </data>
-  <data name="User_GrantedAccessGroups" xml:space="preserve">
-    <value>Granted access for groups</value>
+  <data name="User_GrantedAccessCategories" xml:space="preserve">
+    <value>Granted access for categories</value>
   </data>
   <data name="TableComponents" xml:space="preserve">
     <value>Components</value>
@@ -261,14 +261,14 @@
   <data name="Placeholder_SecretDescription" xml:space="preserve">
     <value>Secret Description</value>
   </data>
-  <data name="Attribute_GroupName" xml:space="preserve">
-    <value>Group name</value>
+  <data name="Attribute_CategoryName" xml:space="preserve">
+    <value>Categoryname</value>
   </data>
   <data name="Attribute_CannotAccess" xml:space="preserve">
     <value>Can't access</value>
   </data>
   <data name="Attribute_ComponentName" xml:space="preserve">
-    <value>Component name</value>
+    <value>Componentname</value>
   </data>
   <data name="Attribute_CannotSee" xml:space="preserve">
     <value>Can't see</value>

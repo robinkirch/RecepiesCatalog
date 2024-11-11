@@ -50,16 +50,8 @@
 		<PackageProjectUrl>https://github.com/robinkirch/RecepiesCatalog</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/robinkirch/RecepiesCatalog</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
+		<Configurations>Debug;Release;Release Android</Configurations>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
-	  <AndroidKeyStore>False</AndroidKeyStore>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
-	  <AndroidKeyStore>False</AndroidKeyStore>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.png" />
@@ -127,6 +119,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Popups\AddCategoryPopup.xaml.cs">
+	    <DependentUpon>AddCategoryPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Resources\Language\AppLanguage.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
@@ -147,6 +142,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="App.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="CustomMAUIComponents\ObservableTableCollection.xaml">
+	    <Generator></Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="DetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -156,7 +157,7 @@
 	  <MauiXaml Update="Popups\AddComponentPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Popups\AddGroupPopup.xaml">
+	  <MauiXaml Update="Popups\AddCategoryPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Popups\AddRecipePopup.xaml">
@@ -188,7 +189,4 @@
 	  </None>
 	</ItemGroup>
 
-	<PropertyGroup>
-		<NoWarn>$(NoWarn);CA1416</NoWarn>
-	</PropertyGroup>
 </Project>

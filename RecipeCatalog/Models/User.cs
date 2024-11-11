@@ -8,7 +8,7 @@ namespace RecipeCatalog.Models
         {
             MissingViewRightsComponent = new HashSet<MissingViewRightComponent>();
             MissingViewRightsRecipe = new HashSet<MissingViewRightRecipe>();
-            MissingViewRightsGroup = new HashSet<MissingViewRightGroup>();
+            MissingViewRightsCategory = new HashSet<MissingViewRightCategory>();
             Bookmarks = new HashSet<Bookmark>();
         }
 
@@ -21,7 +21,7 @@ namespace RecipeCatalog.Models
         public virtual Campaign? CampaignNavigation { get; set; }
         public virtual ICollection<MissingViewRightComponent> MissingViewRightsComponent { get; set; }
         public virtual ICollection<MissingViewRightRecipe> MissingViewRightsRecipe { get; set; }
-        public virtual ICollection<MissingViewRightGroup> MissingViewRightsGroup { get; set; }
+        public virtual ICollection<MissingViewRightCategory> MissingViewRightsCategory { get; set; }
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
     }
 

@@ -32,14 +32,14 @@ public partial class UserRightPage : ContentPage
         NameEntry.Text = _user.Username;
         GuidEntry.Text = _user.Id.ToString();
 
-        var rejectedGroups = MauiProgram._context.MissingViewRightsGroups.Where(m => m.UserId == _user.Id).Select(m => m.GroupId).ToList();
-        var groupItems = new ObservableCollection<MissingViewRightGroupItem>();
-        MauiProgram._context.Groups.ToList().ForEach(g =>
+        var rejectedCategories = MauiProgram._context.MissingViewRightsCategories.Where(m => m.UserId == _user.Id).Select(m => m.CategoryId).ToList();
+        var categoryItems = new ObservableCollection<MissingViewRightCategorieItem>();
+        MauiProgram._context.Categories.ToList().ForEach(g =>
         {
-            groupItems.Add(new MissingViewRightGroupItem { ID = g.Id, GroupName = g.GroupName, CannotAccess = rejectedGroups.Contains(g.Id) });
+            categoryItems.Add(new MissingViewRightCategorieItem { ID = g.Id, CategoryName = g.CategoryName, CannotAccess = rejectedCategories.Contains(g.Id) });
         });
-        DynamicTableControlGroup.ItemsSource = new ObservableCollection<object>(groupItems.Cast<object>());
-        DynamicTableControlGroup.BuildTable(AppLanguage.User_GrantedAccessGroups);
+        DynamicTableControlCategory.ItemsSource = new ObservableCollection<object>(categoryItems.Cast<object>());
+        DynamicTableControlCategory.BuildTable(AppLanguage.User_GrantedAccessCategories);
 
 
         var componentItems = new ObservableCollection<MissingViewRightComponentItem>();
@@ -65,7 +65,7 @@ public partial class UserRightPage : ContentPage
     {
         var campaigns = MauiProgram._context.Campaigns.ToList();
         CampaignPicker.ItemsSource = campaigns;
-        CampaignPicker.ItemDisplayBinding = new Binding("Name");
+        CampaignPicker.ItemDisplayBinding = new Binding(nameof(Campaign.Name));
         if(_user.CampaignId != null)
             CampaignPicker.SelectedItem = campaigns.Where(c => c.Id == _user.CampaignId).Single();
     }
@@ -78,21 +78,21 @@ public partial class UserRightPage : ContentPage
             _user.CampaignId = (CampaignPicker.SelectedItem as Campaign)!.Id;
         MauiProgram._context.Update(_user);
 
-        //groups
-        DynamicTableControlGroup.ItemsSource.ToList().ForEach(item =>
+        //categories
+        DynamicTableControlCategory.ItemsSource.ToList().ForEach(item =>
         {
-            var groups = MauiProgram._context.MissingViewRightsGroups.Where(g => g.UserId == _user.Id).ToList();
-            if (item is MissingViewRightGroupItem g) // Pattern Matching is neccessary
+            var categories = MauiProgram._context.MissingViewRightsCategories.Where(g => g.UserId == _user.Id).ToList();
+            if (item is MissingViewRightCategorieItem g) // Pattern Matching is neccessary
             {
                 if (g.CannotAccess)
                 {
-                    if (!groups.Any(gr => gr.GroupId == g.ID))
-                        MauiProgram._context.MissingViewRightsGroups.Add(new() { GroupId = g.ID, UserId = _user.Id });
+                    if (!categories.Any(gr => gr.CategoryId == g.ID))
+                        MauiProgram._context.MissingViewRightsCategories.Add(new() { CategoryId = g.ID, UserId = _user.Id });
                 }
                 else
                 {
-                    if (groups.Any(gr => gr.Id == g.ID))
-                        MauiProgram._context.MissingViewRightsGroups.Remove(groups.Single(gr => gr.Id == g.ID));
+                    if (categories.Any(gr => gr.Id == g.ID))
+                        MauiProgram._context.MissingViewRightsCategories.Remove(categories.Single(gr => gr.Id == g.ID));
                 }
             }
         });

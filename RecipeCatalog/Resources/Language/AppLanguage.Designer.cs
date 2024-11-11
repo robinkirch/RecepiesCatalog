@@ -106,20 +106,20 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Component name.
+        ///   Looks up a localized string similar to Categoryname.
         /// </summary>
-        internal static string Attribute_ComponentName {
+        internal static string Attribute_CategoryName {
             get {
-                return ResourceManager.GetString("Attribute_ComponentName", resourceCulture);
+                return ResourceManager.GetString("Attribute_CategoryName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Group name.
+        ///   Looks up a localized string similar to Componentname.
         /// </summary>
-        internal static string Attribute_GroupName {
+        internal static string Attribute_ComponentName {
             get {
-                return ResourceManager.GetString("Attribute_GroupName", resourceCulture);
+                return ResourceManager.GetString("Attribute_ComponentName", resourceCulture);
             }
         }
         
@@ -156,6 +156,15 @@ namespace RecipeCatalog.Resources.Language {
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please insert a category name.
+        /// </summary>
+        internal static string Category_InformationText {
+            get {
+                return ResourceManager.GetString("Category_InformationText", resourceCulture);
             }
         }
         
@@ -268,15 +277,6 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please insert a group name.
-        /// </summary>
-        internal static string Group_InformationText {
-            get {
-                return ResourceManager.GetString("Group_InformationText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Language:.
         /// </summary>
         internal static string LanguageTitle {
@@ -376,20 +376,20 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Categories.
+        /// </summary>
+        internal static string Placeholder_Category {
+            get {
+                return ResourceManager.GetString("Placeholder_Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         internal static string Placeholder_Description {
             get {
                 return ResourceManager.GetString("Placeholder_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Groups.
-        /// </summary>
-        internal static string Placeholder_Groups {
-            get {
-                return ResourceManager.GetString("Placeholder_Groups", resourceCulture);
             }
         }
         
@@ -502,20 +502,20 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        internal static string SV_AddCategory {
+            get {
+                return ResourceManager.GetString("SV_AddCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Component.
         /// </summary>
         internal static string SV_AddComponent {
             get {
                 return ResourceManager.GetString("SV_AddComponent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Group.
-        /// </summary>
-        internal static string SV_AddGroup {
-            get {
-                return ResourceManager.GetString("SV_AddGroup", resourceCulture);
             }
         }
         
@@ -574,11 +574,11 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Granted access for groups.
+        ///   Looks up a localized string similar to Granted access for categories.
         /// </summary>
-        internal static string User_GrantedAccessGroups {
+        internal static string User_GrantedAccessCategories {
             get {
-                return ResourceManager.GetString("User_GrantedAccessGroups", resourceCulture);
+                return ResourceManager.GetString("User_GrantedAccessCategories", resourceCulture);
             }
         }
         
