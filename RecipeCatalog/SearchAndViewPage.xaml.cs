@@ -1,6 +1,7 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.EntityFrameworkCore;
 using RecipeCatalog.Data;
+using RecipeCatalog.Helper;
 using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
@@ -37,7 +38,7 @@ public partial class SearchAndViewPage : ContentPage
             {
                 ResultView.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
             }
-            InitializeAsync(results);
+            InitializeAsync(results, 10);
             _hasFilter = results != null;
             _isInitialized = true;
         }
@@ -50,9 +51,9 @@ public partial class SearchAndViewPage : ContentPage
     /// </summary>
     /// <param name="results">Optional. A list of <see cref="IData"/> objects (<see cref="Component"/> and <see cref="Recipe"/>) to be displayed. If null, retrieves the viewable items for the current user.</param>
     /// <returns>A task that represents the asynchronous operation of loading and displaying the items.</returns>
-    private async Task InitializeAsync(List<IData>? results = null)
+    private async Task InitializeAsync(List<IData>? results = null, int overrideTake = -1)
     {
-        var viewableItems = results ?? await GetViewableItemsAsync(MauiProgram.CurrentUser);
+        var viewableItems = results ?? await GetViewableItemsAsync(MauiProgram.CurrentUser, overrideTake: overrideTake);
         if (viewableItems.Count == 0)
             return;
 
@@ -403,14 +404,14 @@ public partial class SearchAndViewPage : ContentPage
             var items = await GetViewableItemsAsync(overrideTake: overrideTake);
             results = string.IsNullOrEmpty(search)
                 ? items
-                : items.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
+                : items.SearchFilter(search);
         }
         else if (TypeCategoryPicker.SelectedIndex == (int)Selection.Bookmarks)
         {
             var items = await GetBookmarkedItemsQuery(MauiProgram.CurrentUser, overrideTake: overrideTake);
             results = string.IsNullOrEmpty(search)
                 ? items
-                : items.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
+                : items.SearchFilter(search);
         }
         else 
         {
@@ -429,7 +430,7 @@ public partial class SearchAndViewPage : ContentPage
             }
             results = string.IsNullOrEmpty(search)
                 ? baseQuery.ToList()
-                : baseQuery.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
+                : baseQuery.SearchFilter(search);
         }
 
         //started in GetViewableItemsAsync
@@ -631,7 +632,7 @@ public partial class SearchAndViewPage : ContentPage
     {
         if (!_isLoading && !_hasFilter && (e.ScrollY >= ResultScrollView.ContentSize.Height - ResultScrollView.Height - 100))
         {
-            InitializeAsync();
+            InitializeAsync(overrideTake: 4);
         }
     }
 }

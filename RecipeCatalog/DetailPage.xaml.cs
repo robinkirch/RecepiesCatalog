@@ -51,7 +51,7 @@ public partial class DetailPage : ContentPage
     {
         DetailImage.Source = MauiProgram.ByteArrayToImageSource(data.Image);
         selectedImage = data.Image;
-        AliasText.Text = (data.Aliases != null && data.Aliases[0].Length > 0) ? "(" + string.Join(",", data.Aliases) + ")" : string.Empty;
+        AliasText.Text = (data.Aliases != null && data.Aliases.Length > 0 && data.Aliases[0].Length > 0) ? "(" + string.Join(",", data.Aliases) + ")" : string.Empty;
         NameText.Text = data.Name;
         if (!(DataType == typeof(Recipe) && MauiProgram._context.MissingViewRightsRecipes.Any(m => m.RecipeId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeDescription)) &&
             !(DataType == typeof(Component) && MauiProgram._context.MissingViewRightsComponents.Any(m => m.ComponentId == ID && m.UserId == MauiProgram.CurrentUser.Id && m.CannotSeeDescription)))
