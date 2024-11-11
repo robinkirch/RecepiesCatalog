@@ -2,6 +2,9 @@ namespace RecipeCatalog;
 
 public partial class UserOverviewPage : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserOverviewPage"/> class.
+    /// </summary>
 	public UserOverviewPage()
 	{
 		InitializeComponent();
@@ -9,8 +12,8 @@ public partial class UserOverviewPage : ContentPage
 	}
 
     /// <summary>
-    /// Displays a list of users in a grid layout, organizing them into columns and rows.
-    /// Each user is represented by a frame containing their username and associated campaign name, if any.
+    /// Displays a list of users in a grid layout. Each user is represented by a frame that contains their username and associated campaign name, if available.
+    /// The grid is organized into multiple rows and columns, depending on the number of users.
     /// </summary>
     public void DisplayUsers()
 	{
@@ -69,9 +72,10 @@ public partial class UserOverviewPage : ContentPage
     }
 
     /// <summary>
-    /// Handles the tap event on a user frame, navigating to the User Rights page for the selected user.
+    /// Handles the tap event on a user frame, navigating to the User Rights page to view or modify the selected user's rights.
     /// </summary>
     /// <param name="id">The unique identifier of the user whose rights are to be viewed.</param>
+    /// <exception cref="Exception">Throws if navigating to the UserRights page fails due to missing user data or other issues.</exception>
     private static void OnFrameTapped(Guid id)
     {
         try 
@@ -85,10 +89,11 @@ public partial class UserOverviewPage : ContentPage
     }
 
     /// <summary>
-    /// Handles the back navigation event, returning to the previous Search and View page.
+    /// Handles the back navigation event, returning the user to the previous Search and View page.
     /// </summary>
-    /// <param name="sender">The source of the event.</param>
+    /// <param name="sender">The source of the event (usually the back button).</param>
     /// <param name="e">The event data.</param>
+    /// <exception cref="Exception">Throws if navigation back to the Search and View page fails.</exception>
     private void OnBack(object sender, EventArgs e)
     {
         //TODO: Missing searchdata

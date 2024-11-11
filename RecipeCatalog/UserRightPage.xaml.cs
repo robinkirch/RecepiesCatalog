@@ -9,6 +9,10 @@ public partial class UserRightPage : ContentPage
 {
     private readonly User _user;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserRightPage"/> class.
+    /// </summary>
+    /// <param name="user">The user whose rights and details will be displayed and managed on this page.</param>
     public UserRightPage(User user)
     {
         _user = user;
@@ -26,6 +30,9 @@ public partial class UserRightPage : ContentPage
             PromoteButton.Text = AppLanguage.DemoteAdmin;
     }
 
+    /// <summary>
+    /// Loads the user-specific base data such as username and the current rights.
+    /// </summary>
     public void LoadData()
     {
         LabelNameEntry.Text = AppLanguage.Username + ": " + _user.Username;
@@ -61,6 +68,9 @@ public partial class UserRightPage : ContentPage
         DynamicTableControlRecipe.BuildTable(AppLanguage.User_CustomRights + ": " + AppLanguage.Filter_Recipes);
     }
 
+    /// <summary>
+    /// Loads the campaign data into the campaign picker control for the user.
+    /// </summary>
     private void LoadPickerData()
     {
         var campaigns = MauiProgram._context.Campaigns.ToList();
@@ -70,7 +80,11 @@ public partial class UserRightPage : ContentPage
             CampaignPicker.SelectedItem = campaigns.Where(c => c.Id == _user.CampaignId).Single();
     }
 
-
+    /// <summary>
+    /// Handles the send button click event, updating the user data and saving changes to the database.
+    /// </summary>
+    /// <param name="sender">The sender object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnSendButtonClicked(object sender, EventArgs e)
     {
         _user.Username = NameEntry.Text;
@@ -158,6 +172,11 @@ public partial class UserRightPage : ContentPage
         App.Current!.MainPage = new UserRightPage(_user);
     }
 
+    /// <summary>
+    /// Handles the delete button click event, deleting the user and their associated data.
+    /// </summary>
+    /// <param name="sender">The sender object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnDeleteButtonClicked(object sender, EventArgs e)
     {
         //TODO: Sicherheitsabfrage
@@ -168,11 +187,21 @@ public partial class UserRightPage : ContentPage
         App.Current!.MainPage = new UserOverviewPage();
     }
 
+    /// <summary>
+    /// Handles the cancel button click event, navigating back to the user overview page without saving changes.
+    /// </summary>
+    /// <param name="sender">The sender object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnCancelButtonClicked(object sender, EventArgs e)
     {
         App.Current!.MainPage = new UserOverviewPage();
     }
 
+    /// <summary>
+    /// Handles the promote button click event, toggling the admin status of the user.
+    /// </summary>
+    /// <param name="sender">The sender object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnPromoteButtonClicked(object sender, EventArgs e)
     {
         _user.IsAdmin = !_user.IsAdmin;

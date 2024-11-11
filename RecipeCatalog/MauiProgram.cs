@@ -5,7 +5,6 @@ using System.Globalization;
 using CommunityToolkit.Maui;
 using RecipeCatalog.Models;
 using Microsoft.Maui.LifecycleEvents;
-using System;
 using NLog.Extensions.Logging;
 using NLog;
 using RecipeCatalog.Resources.Language;
@@ -122,13 +121,14 @@ namespace RecipeCatalog
 
     /// <summary>
     /// Enum representing selection options for filtering.
-    /// <para>'Groups' is always the highest value and represents groups or higher, 
-    /// since the actual number of group values is dynamic and stored in the database.</para>
+    /// <para>'Categories' is always the highest value and represents Categories or higher, 
+    /// since the actual number of Categories values is dynamic and stored in the database.</para>
     /// <para>The 'OffSet' value corresponds to 'Recipes' and is used for calculating 
-    /// the offset when determining the selected index for groups.</para>
+    /// the offset when determining the selected index for Categories.</para>
     /// <br />
     /// Enum values:
     /// <br />- <b>All</b>: Represents all options.
+    /// <br />- <b>Bookmarks</b>: Represents filtering by bookmarks.
     /// <br />- <b>Components</b>: Represents filtering by components.
     /// <br />- <b>Recipes</b>: Represents filtering by recipes.
     /// <br />- <b>Categories</b>: Represents filtering by categories or any value above (dynamically defined).

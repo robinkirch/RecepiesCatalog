@@ -11,6 +11,12 @@ namespace RecipeCatalog.CustomMAUIComponents
     {
         private ObservableCollection<object> _itemsSource;
 
+        /// <summary>
+        /// Sets the items source for the table and rebuilds the table based on the provided data.
+        /// </summary>
+        /// <value>
+        /// The collection of objects to be displayed in the table.
+        /// </value>
         public ObservableCollection<object> ItemsSource
         {
             get => _itemsSource;
@@ -27,6 +33,11 @@ namespace RecipeCatalog.CustomMAUIComponents
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Builds the table UI based on the provided items source.
+        /// Dynamically generates columns and rows based on the properties of the items in the collection.
+        /// </summary>
+        /// <param name="title">The title to display at the top of the table (optional).</param>
         public void BuildTable(string title = "")
         {
             TableTitle.Text = title;
@@ -153,6 +164,12 @@ namespace RecipeCatalog.CustomMAUIComponents
             }
         }
 
+        /// <summary>
+        /// Retrieves the translated name for the given property using the TranslationAttribute.
+        /// If no translation is found, the default property name is returned, split into words.
+        /// </summary>
+        /// <param name="property">The property to get the translated name for.</param>
+        /// <returns>The translated property name, or the default name if no translation is found.</returns>
         private string GetTranslatedPropertyName(PropertyInfo property)
         {
             var attribute = property.GetCustomAttribute<TranslationAttribute>();

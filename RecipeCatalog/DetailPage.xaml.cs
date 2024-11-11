@@ -5,7 +5,6 @@ using RecipeCatalog.Models;
 using RecipeCatalog.Popups;
 using RecipeCatalog.Resources.Language;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Category = RecipeCatalog.Models.Category;
 
 namespace RecipeCatalog;
@@ -17,10 +16,10 @@ public partial class DetailPage : ContentPage
     private byte[]? selectedImage;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DetailPage"/> class.
-    /// Sets up the detail page with data based on the provided <paramref name="data"/> object.
+    /// Initializes a new instance of the <see cref="DetailPage"/> class. It sets up the page to display details for the provided <paramref name="data"/> object.
+    /// If the data type is a Recipe or Component, it adjusts the page accordingly by adding components or associated recipes.
     /// </summary>
-    /// <param name="data">The data object containing details to display on the page.</param>
+    /// <param name="data">The data object (either Recipe or Component) that contains the details to display on the page.</param>
     public DetailPage(IData data)
     {
         InitializeComponent();
@@ -43,9 +42,11 @@ public partial class DetailPage : ContentPage
     }
 
     /// <summary>
-    /// Updates the common data fields on the detail page with values from the provided <paramref name="data"/> object.
+    /// Updates common fields on the page such as the image, alias, name, description, and category based on the provided <paramref name="data"/> object.
+    /// The description is shown unless the user doesn't have the rights to view it (in which case "???" is displayed).
+    /// If the current user is an admin, it shows a secret description if available.
     /// </summary>
-    /// <param name="data">The data object containing information to display.</param>
+    /// <param name="data">The data object (either Recipe or Component) containing the information to be displayed on the page.</param>
     public void ChangeCommonData(IData data)
     {
         DetailImage.Source = MauiProgram.ByteArrayToImageSource(data.Image);
@@ -68,6 +69,10 @@ public partial class DetailPage : ContentPage
             
     }
 
+    /// <summary>
+    /// Retrieves the recipes that use the current recipe (referenced in RecipeComponents) and adds them to the page.
+    /// It also checks for user rights to see those recipes, ensuring that the user can view components associated with the recipe.
+    /// </summary>
     public void AddUsedInForRecipes()
     {
         //TODO: navigation in models are kinda shitty, so here we are
@@ -86,6 +91,10 @@ public partial class DetailPage : ContentPage
         AddUsedIn(recipes, rightsToSee);
     }
 
+    /// <summary>
+    /// Retrieves the recipes that use the current component (referenced in RecipeComponents) and adds them to the page.
+    /// It also checks for user rights to see those recipes, ensuring that the user can view recipes that use the component.
+    /// </summary>
     public void AddUsedInForComponents()
     {
         //TODO: navigation in models are kinda shitty, so here we are
@@ -104,6 +113,13 @@ public partial class DetailPage : ContentPage
         AddUsedIn(recipes, rightsToSee);
     }
 
+    /// <summary>
+    /// Adds the recipes that use the current item (either Recipe or Component) to the page.
+    /// It ensures that recipes the user doesn't have permission to view are handled correctly by displaying "???" for restricted recipes.
+    /// Additionally, it adjusts the styling of the recipe names based on category visibility and user permissions.
+    /// </summary>
+    /// <param name="recipes">A list of recipes that use the current item (Recipe or Component).</param>
+    /// <param name="rightsToSee">A list of MissingViewRightRecipe objects that define the recipes the user has restricted access to.</param>
     public void AddUsedIn(List<Recipe> recipes, List<MissingViewRightRecipe> rightsToSee)
     {
         var categories = MauiProgram._context.MissingViewRightsCategories.Where(m => m.UserId == MauiProgram.CurrentUser.Id && recipes.Select(r => r.CategoryId).Contains(m.CategoryId)).ToList();
@@ -151,10 +167,10 @@ public partial class DetailPage : ContentPage
     }
 
     /// <summary>
-    /// Adds a list of components used in the specified recipe to the detail page.
+    /// Adds a list of components used in the specified recipe to the detail page. It checks whether the components are accessible to the current user, displaying either the component's name or a placeholder ("???") for restricted components.
     /// </summary>
-    /// <param name="data">The list of recipe components to add.</param>
-    /// <param name="isAccessible">Indicates whether the components are accessible to the current user or should be displayed different.</param>
+    /// <param name="data">The list of recipe components to add to the page.</param>
+    /// <param name="isAccessible">Indicates whether the components are accessible to the current user. If false, the component details will be hidden or replaced with placeholders.</param>
     public void AddComponents(List<RecipeComponents> data, bool isAccessible)
     {
         int row = 0;
