@@ -60,6 +60,7 @@ public partial class SearchAndViewPage : ContentPage
         var missingRightsComponent = MauiProgram._context.MissingViewRightsComponents.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
         var missingRightsRecipe = MauiProgram._context.MissingViewRightsRecipes.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
         var missingRightsCategory = MauiProgram._context.MissingViewRightsCategories.Where(m => m.UserId == MauiProgram.CurrentUser.Id).ToList();
+        var bookmarks = MauiProgram._context.Bookmarks.Where(b => b.UserId == MauiProgram.CurrentUser.Id).ToList();
 
 
         for (int i = 0; i < (viewableItems.Count + numberOfColumns - 1) / numberOfColumns; i++)
@@ -72,6 +73,12 @@ public partial class SearchAndViewPage : ContentPage
         {
             var currentObject = viewableItems[realCounter];
             bool canAccessCategory = !missingRightsCategory.Any(g => g.CategoryId == currentObject.CategoryId);
+            bool hasBookmark = currentObject switch
+            {
+                Component component => bookmarks.Any(b => b.ComponentId == component.Id),
+                Recipe recipe => bookmarks.Any(b => b.RecipeId == recipe.Id),
+                _ => false
+            };
             string denied = "-";
 
             //needed for dispatcher
@@ -81,6 +88,21 @@ public partial class SearchAndViewPage : ContentPage
             // Dispatcher needed for ui
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                var bookmark = new Button
+                {
+                    BackgroundColor = Color.FromHsla(0, 0, 0, 0),
+                    HorizontalOptions = LayoutOptions.End,
+                    VerticalOptions = LayoutOptions.Start,
+                    Margin = new Thickness(1, 1),
+                    ImageSource = new FontImageSource
+                    {
+                        Glyph = "\uf02e",
+                        FontFamily = hasBookmark ? "FontAwesomeSolid" : "FontAwesomeRegular",
+                        Size = 15,
+                    },
+
+                };
+
                 var frame = new Frame
                 {
                     BorderColor = canAccessCategory ? Color.Parse("Gray") : Color.Parse("DarkRed"),
@@ -92,53 +114,54 @@ public partial class SearchAndViewPage : ContentPage
                     {
                         Orientation = StackOrientation.Vertical,
                         Children =
-                {
-                    new Frame
-                    {
-                        CornerRadius = 10,
-                        BackgroundColor = Color.FromHsla(0, 0, 0, 0),
-                        HeightRequest = 100,
-                        WidthRequest = 100,
-                        BorderColor = Color.FromHsla(0, 0, 0, 0),
-                        Content = new Image
                         {
-                            Source = MauiProgram.ByteArrayToImageSource(currentObject.Image),
-                            Aspect = Aspect.AspectFill,
-                            WidthRequest = 100,
-                            HeightRequest = 100
+                            bookmark,
+                            new Frame
+                            {
+                                CornerRadius = 10,
+                                BackgroundColor = Color.FromHsla(0, 0, 0, 0),
+                                HeightRequest = 100,
+                                WidthRequest = 100,
+                                BorderColor = Color.FromHsla(0, 0, 0, 0),
+                                Content = new Image
+                                {
+                                    Source = MauiProgram.ByteArrayToImageSource(currentObject.Image),
+                                    Aspect = Aspect.AspectFill,
+                                    WidthRequest = 100,
+                                    HeightRequest = 100
+                                }
+                            },
+                            new Label
+                            {
+                                Text = currentObject.Name,
+                                FontAttributes = FontAttributes.Bold,
+                                FontSize = 16
+                            },
+                            new Label
+                            {
+                                Text = canAccessCategory ? currentObject switch
+                                {
+                                    Component component => !missingRightsComponent.Any(c => c.ComponentId == component.Id && c.CannotSeeDescription)
+                                        ? GetTruncatedDescription(currentObject.Description)
+                                        : denied,
+
+                                    Recipe recipe => !missingRightsRecipe.Any(r => r.RecipeId == recipe.Id && r.CannotSeeDescription)
+                                        ? GetTruncatedDescription(currentObject.Description)
+                                        : denied,
+
+                                    _ => denied
+                                } : denied,
+                                FontSize = 14
+                            },
+                            new Label
+                            {
+                                Text = currentObject.CategoryId != null ?
+                                    MauiProgram._context.Categories.Where(g => g.Id == currentObject.CategoryId).Select(g => g.CategoryName).Single()
+                                    : string.Empty,
+                                FontSize = 9,
+                                TextColor = canAccessCategory ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
+                            }
                         }
-                    },
-                    new Label
-                    {
-                        Text = currentObject.Name,
-                        FontAttributes = FontAttributes.Bold,
-                        FontSize = 16
-                    },
-                    new Label
-                    {
-                        Text = canAccessCategory ? currentObject switch
-                        {
-                            Component component => !missingRightsComponent.Any(c => c.ComponentId == component.Id && c.CannotSeeDescription)
-                                ? GetTruncatedDescription(currentObject.Description)
-                                : denied,
-
-                            Recipe recipe => !missingRightsRecipe.Any(r => r.RecipeId == recipe.Id && r.CannotSeeDescription)
-                                ? GetTruncatedDescription(currentObject.Description)
-                                : denied,
-
-                            _ => denied
-                        } : denied,
-                        FontSize = 14
-                    },
-                    new Label
-                    {
-                        Text = currentObject.CategoryId != null ?
-                            MauiProgram._context.Categories.Where(g => g.Id == currentObject.CategoryId).Select(g => g.CategoryName).Single()
-                            : string.Empty,
-                        FontSize = 9,
-                        TextColor = canAccessCategory ? Color.Parse("DarkGray") : Color.Parse("DarkRed"),
-                    }
-                }
                     }
                 };
 
@@ -148,6 +171,10 @@ public partial class SearchAndViewPage : ContentPage
                     tapGestureRecognizer.Tapped += (s, e) => OnFrameTapped(currentObject.Id, currentObject.GetType());
                     frame.GestureRecognizers.Add(tapGestureRecognizer);
                 }
+
+                var tapGestureRecognizerBookmark = new TapGestureRecognizer();
+                tapGestureRecognizerBookmark.Tapped += (s, e) => OnBookmarkTapped(currentObject.Id, currentObject.GetType(), hasBookmark, frame);
+                bookmark.GestureRecognizers.Add(tapGestureRecognizerBookmark);
 
                 ResultView.Children.Add(frame);
                 Grid.SetRow(frame, rowIndex);
@@ -261,6 +288,56 @@ public partial class SearchAndViewPage : ContentPage
                 .Any(m => m.UserId == user.Id && m.CategoryId == r.CategoryId));
     }
 
+    private async Task<List<IData>> GetBookmarkedItemsQuery(User user, bool displayAllCategories = true, int overrideTake = -1)
+    {
+        List<IData> result = new();
+        try
+        {
+            //stopped in InitializeAsync or OnEntryCompleted or here when no results
+            _isLoading = true;
+            LoadingSpinner.IsRunning = true;
+            LoadingSpinner.IsVisible = true;
+            user ??= MauiProgram.CurrentUser;
+            var res = (overrideTake == -1)
+                ?
+                    await GetViewableComponentsQuery(user, displayAllCategories).Where(c => MauiProgram._context.Bookmarks.Any(b => b.ComponentId == c.Id)).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllCategories).Where(c => MauiProgram._context.Bookmarks.Any(b => b.RecipeId == c.Id)).Select(c => new { c.Name, c.Id, Type = "R" }))
+                    .OrderBy(x => x.Name)
+                    .Skip(currentlyLoaded)
+                    .Take(itemsToLoad)
+                    .ToListAsync()
+                : (overrideTake == 0)
+                    ?
+                    await GetViewableComponentsQuery(user, displayAllCategories).Where(c => MauiProgram._context.Bookmarks.Any(b => b.ComponentId == c.Id)).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllCategories).Where(c => MauiProgram._context.Bookmarks.Any(b => b.RecipeId == c.Id)).Select(c => new { c.Name, c.Id, Type = "R" }))
+                    .OrderBy(x => x.Name)
+                    .ToListAsync()
+                    :
+                    await GetViewableComponentsQuery(user, displayAllCategories).Where(c => MauiProgram._context.Bookmarks.Any(b => b.ComponentId == c.Id)).Select(c => new { c.Name, c.Id, Type = "C" }).Union(GetViewableRecipesQuery(user, displayAllCategories).Where(c => MauiProgram._context.Bookmarks.Any(b => b.RecipeId == c.Id)).Select(c => new { c.Name, c.Id, Type = "R" }))
+                    .OrderBy(x => x.Name)
+                    .Take(overrideTake)
+                    .ToListAsync()
+            ;
+
+            foreach (var item in res)
+            {
+                if (item.Type == "C")
+                    result.Add(await MauiProgram._context.Components.Where(c => c.Id == item.Id).SingleAsync());
+                else
+                    result.Add(await MauiProgram._context.Recipes.Where(c => c.Id == item.Id).SingleAsync());
+            }
+            if (result.Count == 0)
+            {
+                LoadingSpinner.IsRunning = false;
+                LoadingSpinner.IsVisible = false;
+                _isLoading = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+        return result;
+    }
+
     /// <summary>
     /// Loads data into the picker component, including pre-filling the search entry and setting the selected index.
     /// Retrieves available groups and populates the picker with them.
@@ -271,7 +348,7 @@ public partial class SearchAndViewPage : ContentPage
 {
         SearchEntry.Text = search;
 
-        List<Category> entrys = new List<Category>() { new() { CategoryName = "-" }, new() { CategoryName = AppLanguage.Filter_Components }, new() { CategoryName = AppLanguage.Filter_Recipes } };
+        List<Category> entrys = new List<Category>() { new() { CategoryName = "-" }, new() { CategoryName = AppLanguage.Filter_Bookmarks }, new() { CategoryName = AppLanguage.Filter_Components }, new() { CategoryName = AppLanguage.Filter_Recipes } };
         entrys.AddRange(MauiProgram._context.Categories.ToList());
         TypeCategoryPicker.ItemsSource = entrys;
         TypeCategoryPicker.ItemDisplayBinding = new Binding(nameof(Category.CategoryName));
@@ -314,7 +391,14 @@ public partial class SearchAndViewPage : ContentPage
                 ? items
                 : items.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
         }
-        else
+        else if (TypeCategoryPicker.SelectedIndex == (int)Selection.Bookmarks)
+        {
+            var items = await GetBookmarkedItemsQuery(MauiProgram.CurrentUser, overrideTake: overrideTake);
+            results = string.IsNullOrEmpty(search)
+                ? items
+                : items.Where(c => c.Name.ToLower().Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search))).ToList();
+        }
+        else 
         {
             if (TypeCategoryPicker.SelectedIndex == (int)Selection.Components)
             {
@@ -361,6 +445,70 @@ public partial class SearchAndViewPage : ContentPage
         catch (Exception ex)
         {
             //TODO: DoLater
+        }
+    }
+
+    private static void OnBookmarkTapped(int id, Type type, bool currentlyMarked, Frame frame)
+    {
+        try
+        {
+            if (currentlyMarked)
+            {
+                var mark = type switch
+                {
+                    Type t when t == typeof(Component) => MauiProgram._context.Bookmarks.Single(c => c.UserId == MauiProgram.CurrentUser.Id && c.ComponentId == id),
+                    Type t when t == typeof(Recipe) => MauiProgram._context.Bookmarks.Single(c => c.UserId == MauiProgram.CurrentUser.Id && c.RecipeId == id),
+                    _ => throw new NotImplementedException("type not implemented"),
+                };
+                MauiProgram._context.Bookmarks.Remove(mark);
+            }
+            else
+            {
+                Bookmark mark = new()
+                {
+                    UserId = MauiProgram.CurrentUser.Id,
+                };
+                switch (type)
+                {
+                    case Type t when t == typeof(Component):
+                        mark.ComponentId = id;
+                        break;
+                    case Type t when t == typeof(Recipe):
+                        mark.RecipeId = id;
+                        break;
+                    case Type _:
+                        throw new NotImplementedException("type not implemented");
+                }
+                MauiProgram._context.Bookmarks.Add(mark);
+            }
+            MauiProgram._context.SaveChanges();
+            UpdateFrameContent(frame, !currentlyMarked, id, type);
+        }
+        catch (Exception ex)
+        {
+            //TODO: DoLater
+        }
+    }
+
+    private static void UpdateFrameContent(Frame frame, bool isNowMarked, int id, Type type)
+    {
+        var stackLayout = frame.Content as StackLayout;
+        if (stackLayout != null)
+        {
+            var buttonBookmark = stackLayout.Children.OfType<Button>().FirstOrDefault();
+            if (buttonBookmark != null)
+            {
+                buttonBookmark.ImageSource = new FontImageSource
+                {
+                    Glyph = "\uf02e",
+                    FontFamily = isNowMarked ? "FontAwesomeSolid" : "FontAwesomeRegular",
+                    Size = 15,
+                };
+                buttonBookmark.GestureRecognizers.Clear();
+                var tapGestureRecognizerBookmark = new TapGestureRecognizer();
+                tapGestureRecognizerBookmark.Tapped += (s, e) => OnBookmarkTapped(id, type, isNowMarked, frame);
+                buttonBookmark.GestureRecognizers.Add(tapGestureRecognizerBookmark);
+            }
         }
     }
 

@@ -259,6 +259,15 @@ namespace RecipeCatalog.Resources.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bookmarks.
+        /// </summary>
+        internal static string Filter_Bookmarks {
+            get {
+                return ResourceManager.GetString("Filter_Bookmarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Components.
         /// </summary>
         internal static string Filter_Components {

@@ -9,7 +9,7 @@ namespace RecipeCatalog.Models
         public Guid UserId { get; set; }
         public int? ComponentId { get; set; }
         public int? RecipeId { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         public virtual User User { get; set; }
         public virtual Category Category { get; set; }

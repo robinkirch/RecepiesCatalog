@@ -137,9 +137,10 @@ namespace RecipeCatalog
     public enum Selection
     {
         All = 0,
-        Components = 1,
-        Recipes = 2,
-        Categories = 3,
+        Bookmarks = 1,
+        Components = 2,
+        Recipes = 3,
+        Categories = 4,
         OffSet = Recipes,
     }
 }

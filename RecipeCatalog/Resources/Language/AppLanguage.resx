@@ -123,6 +123,9 @@
   <data name="Component_InformationText" xml:space="preserve">
     <value>Please add all Information. Pictures and aliases are optional. Aliases are with , listed.</value>
   </data>
+  <data name="Filter_Bookmarks" xml:space="preserve">
+    <value>Bookmarks</value>
+  </data>
   <data name="Filter_Components" xml:space="preserve">
     <value>Components</value>
   </data>
